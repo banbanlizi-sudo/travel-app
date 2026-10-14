@@ -1,0 +1,19 @@
+{
+  "name": "travel-package-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "行程包 · 安卓封装（Capacitor）",
+  "scripts": {
+    "sync:web": "node scripts/sync-web.js && npx cap sync android",
+    "sync": "cap sync android",
+    "build:debug": "cd android && gradlew.bat assembleDebug",
+    "build:release": "cd android && gradlew.bat assembleRelease"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/core": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^7.0.0"
+  }
+}

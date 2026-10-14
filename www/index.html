@@ -1,0 +1,1384 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="aXrzdxAHRFUQcwEC07HJDb">
+<head data-page-node-id="zAb5Im2cC8mrBkKd8cw0nL">
+<meta charset="utf-8" data-page-node-id="Czf3YKyWqTFt8BNcbiz5WP">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" data-page-node-id="YakPDye6KHNKxhae8iU8Sk">
+<meta name="theme-color" content="#3b6ef5" data-page-node-id="rm4HzlQ6oaBBtmIRwfUBbA">
+<meta name="apple-mobile-web-app-capable" content="yes" data-page-node-id="TCzLotbCSuOVMoZMviAnpX">
+<meta name="apple-mobile-web-app-status-bar-style" content="default" data-page-node-id="kiLiAc4ZCJTn8MMWXSY9qd">
+<meta name="apple-mobile-web-app-title" content="行程" data-page-node-id="oUsgCSOp0d5yFKDsqaJE4g">
+<title>行程 · 行程包</title>
+<link rel="manifest" href="manifest.json" data-page-node-id="kpkYarnkWKy4qbCNb9o5hS">
+<link rel="apple-touch-icon" href="icon.svg" data-page-node-id="xuKsU06IDXbRl2gHXQjx5y">
+<style>
+:root{
+  --bg:#f2f4f9; --card:#ffffff; --card2:#f7f9fc; --text:#161a22; --sub:#7b8496;
+  --line:#e3e7f0; --pri:#3b6ef5; --pri-s:#e8eeff; --red:#e5484d; --red-s:#fdecec;
+  --green:#16a34a; --amber:#d97706; --gold:#c9971a;
+  --day:#eaf3e4; --day-b:#a9cc93; --plan:#fdf3d1; --plan-b:#e2c96e; --loc:#fbdfe4; --loc-b:#eda3b3;
+  --sh:0 2px 10px rgba(18,28,58,.07); --sh2:0 12px 34px rgba(18,28,58,.22);
+}
+@media (prefers-color-scheme:dark){
+  :root{ --bg:#0e1116; --card:#171b22; --card2:#1e232b; --text:#e9edf5; --sub:#8a94a6;
+    --line:#262c36; --pri:#5b86ff; --pri-s:#1a2440; --red:#ff5f65; --red-s:#2a1618;
+    --green:#34d399; --amber:#f59e0b; --gold:#e5b83b;
+    --day:#1c271b; --day-b:#41663c; --plan:#2c2716; --plan-b:#6f5e26; --loc:#2e1b20; --loc-b:#6e3a46;
+    --sh:0 2px 10px rgba(0,0,0,.35); --sh2:0 12px 34px rgba(0,0,0,.55); }
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0;height:100%}
+body{background:var(--bg);color:var(--text);font:15px/1.45 system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif;overscroll-behavior:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer;text-align:left}
+input,textarea,select{font:inherit;color:var(--text);background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:9px 11px;width:100%;outline:none}
+input:focus,textarea:focus,select:focus{border-color:var(--pri)}
+.app{height:100vh;height:100dvh;display:flex;flex-direction:column;overflow:hidden;position:relative;isolation:isolate}
+.page{flex:1;display:none;flex-direction:column;min-height:0;overflow:hidden}
+.page.on{display:flex}
+.scroll{flex:1;overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding-bottom:calc(env(safe-area-inset-bottom) + 20px)}
+
+.hd{display:flex;align-items:center;gap:8px;padding:calc(env(safe-area-inset-top) + 9px) 12px 9px;background:var(--card);border-bottom:1px solid var(--line);flex-wrap:wrap}
+.hd .name{font-size:16px;font-weight:650;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hd .sub{font-size:11px;color:var(--sub);flex-basis:100%;margin-top:-4px}
+.back{width:34px;height:34px;border-radius:9px;background:var(--card2);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:16px;flex:0 0 auto;text-align:center}
+.tbtn{border:1px solid var(--line);background:var(--card2);border-radius:8px;padding:6px 10px;font-size:12.5px;color:var(--sub);white-space:nowrap;display:flex;align-items:center;gap:4px;flex:0 0 auto}
+.tbtn.on{background:var(--pri-s);border-color:var(--pri);color:var(--pri);font-weight:600}
+.tbtn.money{color:var(--red);border-color:var(--red);background:var(--red-s);font-weight:600}
+.tool{display:flex;align-items:center;gap:7px;padding:8px 12px;background:var(--card);border-bottom:1px solid var(--line);overflow-x:auto;scrollbar-width:none;flex-wrap:wrap}
+.tool::-webkit-scrollbar{display:none}
+.seg{display:flex;background:var(--card2);border:1px solid var(--line);border-radius:9px;padding:2px;gap:2px;flex:0 0 auto}
+.seg button{padding:5px 11px;border-radius:7px;font-size:13px;color:var(--sub);white-space:nowrap}
+.seg button.on{background:var(--pri);color:#fff;font-weight:600}
+.seg.sm button{padding:4px 8px;font-size:12px}
+.stat{display:flex;gap:8px;padding:8px 12px;background:var(--card);border-bottom:1px solid var(--line);font-size:12px;color:var(--sub);align-items:center}
+.stat b{color:var(--text)}
+.stat .money{color:var(--red);font-weight:700}
+
+.wrap{padding:12px}
+.hint{font-size:11.5px;color:var(--sub);line-height:1.7;padding:2px 2px 8px}
+.pkcard{position:relative;background:var(--card);border-radius:13px;box-shadow:var(--sh);padding:12px 13px;margin-bottom:9px;border-left:5px solid var(--pri);touch-action:pan-y}
+.pkcard .t1{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:650}
+.pkcard .t1 .ttl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pkcard .t2{display:flex;gap:6px;align-items:center;margin-top:5px;flex-wrap:wrap}
+.pkcard.drag{box-shadow:var(--sh2);z-index:990}
+.tiny{font-size:10.5px;padding:1.5px 6px;border-radius:6px;background:var(--card2);border:1px solid var(--line);color:var(--sub);white-space:nowrap}
+.tiny.money{color:var(--red);border-color:var(--red);background:var(--red-s);font-weight:600}
+.ph{height:46px;border-radius:12px;background:var(--pri-s);border:1.5px dashed var(--pri);display:flex;align-items:center;justify-content:center;color:var(--pri);font-size:12px;margin:9px 0}
+.empty{text-align:center;color:var(--sub);font-size:13px;padding:46px 22px;line-height:1.9}
+.chiprow{display:flex;gap:8px;padding:8px 12px calc(env(safe-area-inset-bottom) + 8px);overflow-x:auto;background:var(--card);border-top:1px solid var(--line);scrollbar-width:none}
+.chiprow::-webkit-scrollbar{display:none}
+.dchip{flex:0 0 auto;display:flex;align-items:center;gap:6px;padding:7px 11px;border-radius:10px;background:var(--card2);border:1px solid var(--line);font-size:12.5px;white-space:nowrap}
+.dchip b{font-weight:600}
+.dchip .n{font-size:10.5px;color:var(--sub);background:var(--bg);border-radius:6px;padding:0 5px}
+.dchip.drop{border-color:var(--pri);background:var(--pri-s);transform:scale(1.07);box-shadow:var(--sh2)}
+.addbtn{width:100%;padding:11px;border-radius:11px;border:1.5px dashed var(--line);color:var(--sub);font-size:13px;text-align:center;margin-bottom:10px;background:var(--card)}
+.card-day{border-left-color:var(--day-b);background:var(--day)}
+.card-plan{border-left-color:var(--plan-b);background:var(--plan)}
+.card-loc{border-left-color:var(--loc-b);background:var(--loc)}
+.rt{display:inline-flex;align-items:center;justify-content:center;min-width:15px;height:15px;border-radius:4px;color:#fff;font-size:9.5px;font-weight:800;padding:0 3px}
+
+.tl{padding:10px 12px 20px}
+.tgrid{position:relative;display:flex}
+.rail{flex:0 0 40px;position:relative}
+.rail .hr{position:absolute;right:5px;font-size:9.5px;color:var(--sub);transform:translateY(-50%)}
+.col{flex:1;position:relative;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+.col .hline{position:absolute;left:0;right:0;border-top:1px dashed var(--line)}
+.col .hline.half{border-top-style:dotted;opacity:.5}
+.lanes{position:absolute;inset:0}
+.lane{position:absolute;top:0;bottom:0;border-left:1px solid var(--line)}
+.lane:first-child{border-left:0}
+.lane .lanehd{position:absolute;top:0;left:0;right:0;font-size:9px;text-align:center;color:var(--sub);background:var(--card2);border-bottom:1px solid var(--line);padding:1px 0;z-index:5}
+.blk{position:absolute;left:0;right:0;border-radius:9px;overflow:hidden;touch-action:pan-y;box-shadow:0 1px 5px rgba(18,28,58,.16);border-left:4px solid transparent}
+.blk .in{padding:4px 7px;height:100%;display:flex;flex-direction:column;gap:1px;pointer-events:none;justify-content:center}
+.blk .t1{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;line-height:1.25}
+.blk .t1 .ttl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.blk .t2{font-size:10px;color:var(--sub);display:flex;gap:5px;align-items:center;flex-wrap:wrap}
+.blk .teamtag{font-size:9px;background:var(--card2);border:1px solid var(--line);color:var(--sub);border-radius:5px;padding:0 4px}
+.blk .grip{position:absolute;left:0;top:0;bottom:0;width:15px;touch-action:none;cursor:grab}
+.blk .t1{touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
+.blk .rz{position:absolute;left:0;right:0;bottom:0;height:13px;touch-action:none;cursor:ns-resize}
+.blk.drag{box-shadow:var(--sh2);z-index:980;opacity:.96}
+.compact .blk .t1{font-size:10.5px}
+.compact .blk .t2{font-size:8.5px}
+.expl{position:absolute;left:0;right:0;pointer-events:none;z-index:900}
+.expl .ln{border-top:2px solid var(--red);opacity:.92}
+.expl .eh{position:absolute;right:2px;top:-9px;height:18px;display:flex;align-items:center;font-size:10px;font-weight:700;color:#fff;background:var(--red);border-radius:6px;padding:1px 6px;pointer-events:auto;touch-action:none;box-shadow:0 1px 4px rgba(229,72,77,.4)}
+.costcol{flex:0 0 80px;position:relative}
+.costcol .ce{position:absolute;left:4px;right:0;transform:translateY(-50%);font-size:10px;line-height:1.25;background:var(--card);border:1px solid var(--red);color:var(--red);border-radius:6px;padding:1px 5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.costcol .ct{position:absolute;left:4px;right:0;transform:translateY(-50%);font-size:9.5px;color:var(--sub);border-bottom:1px solid var(--line);padding-bottom:2px}
+.palette{flex:0 0 88px;position:relative;padding:4px 4px 30px;background:var(--loc);border-left:1px solid var(--loc-b)}
+.palette .pin{position:sticky;top:0;z-index:6}
+.palette .pttl{font-size:9.5px;color:var(--sub);text-align:center;padding:2px 0 5px;font-weight:700}
+.pchip{display:flex;align-items:center;gap:5px;background:var(--card);border:1px solid var(--line);border-radius:8px;padding:5px 6px;margin-bottom:5px;font-size:10.5px;font-weight:600;touch-action:pan-y;box-shadow:0 1px 3px rgba(18,28,58,.1)}
+.pchip .dot{width:9px;height:9px;border-radius:50%;flex:0 0 auto}
+.pchip .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ghost{position:fixed;z-index:1300;pointer-events:none;box-shadow:var(--sh2);opacity:.95}
+.delx{position:fixed;left:50%;bottom:calc(env(safe-area-inset-bottom) + 76px);transform:translateX(-50%);width:44px;height:44px;border-radius:50%;background:rgba(229,72,77,.40);-webkit-backdrop-filter:blur(9px);backdrop-filter:blur(9px);border:1px solid rgba(255,255,255,.42);color:#fff;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:800;z-index:1400;pointer-events:none;opacity:0;transition:opacity .18s,transform .18s,background .18s;box-shadow:0 3px 14px rgba(229,72,77,.22)}
+.delx.on{opacity:1}
+.delx.hot{background:rgba(229,72,77,.92);transform:translateX(-50%) scale(1.3)}
+.nohint .hint{display:none}
+
+.mask{position:fixed;inset:0;background:rgba(10,14,24,.45);opacity:0;pointer-events:none;transition:opacity .2s;z-index:1200}
+.mask.on{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-radius:18px 18px 0 0;padding:14px 14px calc(env(safe-area-inset-bottom) + 14px);
+  transform:translateY(102%);transition:transform .24s cubic-bezier(.3,.8,.3,1);z-index:1201;max-height:88vh;overflow:auto;box-shadow:var(--sh2)}
+.sheet.on{transform:none}
+.sheet h3{margin:2px 0 12px;font-size:15px;display:flex;align-items:center;gap:8px}
+.sheet h3 .spacer{flex:1}
+.fld{margin-bottom:10px}
+.fld label{display:block;font-size:11.5px;color:var(--sub);margin-bottom:5px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chips .tdel{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;margin-left:6px;margin-right:-3px;border-radius:50%;background:rgba(0,0,0,.16);font-size:10px;line-height:1}
+.chips button{padding:7px 12px;border-radius:9px;border:1px solid var(--line);background:var(--card2);font-size:13px;color:var(--sub)}
+.chips button.on{color:#fff;font-weight:600;border-color:transparent}
+.swatches{display:flex;flex-wrap:wrap;gap:9px}
+.swatches button{width:34px;height:34px;border-radius:50%;border:2.5px solid transparent;flex:0 0 auto}
+.swatches button.on{border-color:var(--text);transform:scale(1.12)}
+.btn{padding:10px 14px;border-radius:9px;background:var(--pri);color:#fff;font-weight:600;white-space:nowrap;text-align:center}
+.btn.gh{background:var(--card2);color:var(--text);border:1px solid var(--line);font-weight:500}
+.btn.red{background:var(--red);color:#fff}
+.btn.gold{background:var(--gold);color:#fff}
+.btn.full{display:block;width:100%;margin-bottom:9px}
+.toast{position:fixed;left:50%;bottom:96px;transform:translate(-50%,20px);background:#1b2130;color:#fff;font-size:13px;
+  padding:10px 14px;border-radius:11px;display:flex;align-items:center;gap:12px;opacity:0;pointer-events:none;transition:.22s;z-index:1400;box-shadow:var(--sh2);max-width:90vw}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+.toast button{color:#8ab0ff;font-weight:700;font-size:13px;pointer-events:auto}
+.sumrow{display:flex;align-items:center;gap:8px;padding:9px 2px;border-bottom:1px solid var(--line);font-size:13.5px;flex-wrap:wrap}
+.sumrow .n{flex:1;min-width:0}
+.sumrow .v{font-weight:700;color:var(--red);white-space:nowrap}
+.ck{display:flex;align-items:center;gap:11px;background:var(--card);border-radius:11px;padding:11px 12px;margin-bottom:7px;box-shadow:var(--sh)}
+.ck .box{width:22px;height:22px;border-radius:7px;border:1.8px solid var(--line);flex:0 0 auto;display:flex;align-items:center;justify-content:center;font-size:13px;color:transparent}
+.ck.on .box{background:var(--green);border-color:var(--green);color:#fff}
+.ck .txt{flex:1;min-width:0;font-size:14.5px}
+.ck.on .txt{color:var(--sub);text-decoration:line-through}
+.ck .del{color:var(--sub);font-size:15px;padding:2px 4px}
+</style>
+</head>
+<body data-page-node-id="BAGEutCipLMnxztIPCLZW1">
+<div class="app" data-page-node-id="cZ2czG8ezJHg2MVW5C62Ii">
+
+  <section class="page on" id="v-home" data-page-node-id="4TVA3HlhtDxDzTK3UWWZhJ">
+    <div class="hd" data-page-node-id="ePZgkEkc80qHAXTxNHrUM3">
+      <div class="name" data-page-node-id="LqpWDb5G0TUYXsdW0fUrOC">我的行程包</div>
+      <button class="tbtn" id="homeMore" data-page-node-id="qKCYhVDpXCtITCSx9WCZll">⋯</button>
+    </div>
+    <div class="scroll" data-page-node-id="H9qDlZ7i1502jyAILJDhbE"><div class="wrap" id="homeBody" data-page-node-id="OB0GE3RBMoPWkd1RNChEHk"></div></div>
+  </section>
+
+  <section class="page" id="v-pkg" data-page-node-id="yQ8mS16FJjtTKpGtkPxqgn">
+    <div class="hd" data-page-node-id="LgDkIiqWMJbQ7F1lyniu7j">
+      <button class="back" id="pkgBack" data-page-node-id="Pz8aASOc2fnRmxzSKymNJV">←</button>
+      <div class="name" id="pkgName" data-page-node-id="kyAVGY5Q7bqk6fHDHZOFxk">行程包</div>
+      <button class="tbtn" id="btnTodo" data-page-node-id="RfyxxGm9K4w48of2hVkKTn">to-do</button>
+      <button class="tbtn" id="btnBrowse" data-page-node-id="OezZ1N5bS24wFeCJi2UJWp">☰ 行程卡</button>
+    </div>
+    <div class="stat" id="pkgStat" data-page-node-id="avrVRr4kdC3EWK8pLdRj1y"></div>
+    <div class="tool" id="pkgTabs" data-page-node-id="6xfDWwc1FjBUoRRTd96ufl">
+      <div class="seg" id="pkgSeg" data-page-node-id="Slj0rCelncfHX1CFFHtMlj">
+        <button data-v="days" data-page-node-id="RkxFZGytMiw8qNYiECELuB">行程卡</button>
+        <button data-v="plans" data-page-node-id="6k1yV19FJuWqEOauDdRuYl">计划卡</button>
+        <button data-v="locs" data-page-node-id="VLJO9xMcG6c8qQaxIIuack">地点卡</button>
+      </div>
+      <div style="flex:1" data-page-node-id="fWuEykJd6ztyc7q0CYxwmm"></div>
+      <button class="tbtn" id="pkgAdd" data-page-node-id="MpbQ4RXD94ozv1NK27fxKB">＋ 添加</button>
+    </div>
+    <div class="scroll" data-page-node-id="cf5MfCl7IgOLY8HHxOdqjY"><div class="wrap" id="pkgBody" data-page-node-id="imNjrHkHvB9qkkAC6wQPbG"></div></div>
+    <div class="chiprow" id="dayChips" style="display:none" data-page-node-id="sE0Cz3jwpFbalvEAeJNY4U"></div>
+  </section>
+
+  <section class="page" id="v-day" data-page-node-id="VdogeS4vQ9eBFiUmFoIwOT">
+    <div class="hd" data-page-node-id="ZfAK5QYXjOoRKebWhRnRb1">
+      <button class="back" id="dayBack" data-page-node-id="8kPoRpbZuJea05K1QxLWvP">←</button>
+      <div class="name" id="dayName" data-page-node-id="fxdboCasagqRRdARuaLuhP">行程卡</div>
+      <div class="seg sm" id="snapSeg" data-page-node-id="rxlscaHf9E1wu4bZWwP2gx">
+        <button data-v="10" data-page-node-id="oMbgPEWwnqSib9WM5rAssF">10分</button>
+        <button data-v="30" data-page-node-id="lvvEHonvpdx3kdF8JcSksk">30分</button>
+      </div>
+    </div>
+    <div class="tool" id="teamTool" style="display:none" data-page-node-id="I59x1eMSsoHTzpfidmKWIh"><div class="seg sm" id="teamSeg" data-page-node-id="dJccNHPiRTJoSS526LBG9x"></div></div>
+    <div class="tool" id="dayTool" data-page-node-id="Pk3kiPlg70tki8cxQr0oWI">
+      <button class="tbtn" id="dayDate" data-page-node-id="p28TRQGVTqFX1isUOjp6wn">📅 日期</button>
+      <button class="tbtn" id="dayImport" data-page-node-id="dX5SIH58wPNk6fzB1R3wDS">＋ 导入计划卡</button>
+      <button class="tbtn money" id="dayAddCost" data-page-node-id="22dJl4dGYMchDGDUIANZxZ">＋ 额外花销</button>
+    </div>
+    <div class="scroll" id="dayScroll" data-page-node-id="Kl7KJLvRD4sugM53hdjRRg"><div class="tl" id="dayBody" data-page-node-id="Ixv51CHg5upG5PZKUrrzWl"></div></div>
+    <div class="chiprow" id="locBar" data-page-node-id="PhbNhwfOInd1BeQWnyNKEI"></div>
+  </section>
+
+  <section class="page" id="v-plan" data-page-node-id="2XGnpHyDDz5c3plTkauWAe">
+    <div class="hd" data-page-node-id="n4N7NLaF2QM5xQHOLtOl0W">
+      <button class="back" id="planBack" data-page-node-id="GHgKVJsjF5FkOFADrd9sBK">←</button>
+      <div class="name" id="planName" data-page-node-id="pLqAOTZhd37HxehVmX4CBR">计划卡</div>
+      <button class="tbtn" id="planCopy" data-page-node-id="5Mnz3ciYCoMG4KLw40w0N4">⧉ 复制</button>
+    </div>
+    <div class="tool" id="planTool" data-page-node-id="EITkPWZgvJDAor2zcLOZN9">
+      <div class="seg sm" id="planSnapSeg" data-page-node-id="8WXNu38lpnbA85wnqv5zZV">
+        <button data-v="10" data-page-node-id="hStHc7lkcuQzsdatbvLBnm">10分</button>
+        <button data-v="30" data-page-node-id="LdO9NcSaTOScraG4W3biPi">30分</button>
+      </div>
+      <div style="flex:1" data-page-node-id="IVBs9nN6PryWlj5PZsd4cH"></div>
+      <button class="tbtn" id="planApply" data-page-node-id="evPrpQIY4FFlKBHajiKHwb">↓ 放入行程卡</button>
+    </div>
+    <div class="scroll" id="planScroll" data-page-node-id="agErSSXP55FnTnQGG4iE7i"><div class="tl" id="planBody" data-page-node-id="79xfqk2282NtxRMY2OvTXn"></div></div>
+  </section>
+
+  <section class="page" id="v-browse" data-page-node-id="X9R0B7LgSWlIW0le1PUxcy">
+    <div class="hd" data-page-node-id="QQuDIECigQBpsVYHsFN9mO">
+      <button class="back" id="browseBack" data-page-node-id="baAveENNoFzGTWnIA7wWe5">←</button>
+      <div class="name" data-page-node-id="67Dr0N5IZcdmA8Z3mtDrtB">行程卡浏览</div>
+      <button class="tbtn money" id="btnSum" data-page-node-id="cST4koO1ernTIBpUZSIiRd">¥ 花费总计</button>
+    </div>
+    <div class="tool" id="bTeamTool" style="display:none" data-page-node-id="AIGfHIL8H39l3HHY4Xh8Hj"><div class="seg sm" id="bTeamSeg" data-page-node-id="LHQrHkXctnxDicwTFVF6AC"></div></div>
+    <div class="scroll" id="browseScroll" data-page-node-id="cH0D92zfrWWjUlntHIAfem"><div id="browseBody" data-page-node-id="hvHxmjb1e5S5xkzEw2IG8r"></div></div>
+  </section>
+</div>
+
+<div class="mask" id="mask" data-page-node-id="N1qhmKGdOVJCUvqE1vGiLM"></div>
+<div class="sheet" id="sheet" data-page-node-id="lnTF3Op962NQ0MEPouSf95"></div>
+<div class="toast" id="toast" data-page-node-id="78vioYpltAVHaaN2kNEbzG"></div>
+
+<script>
+'use strict';
+/* ==================== 工具 ==================== */
+const $=(s,r=document)=>r.querySelector(s);
+const $$=(s,r=document)=>Array.prototype.slice.call(r.querySelectorAll(s));
+const pad2=n=>String(n).padStart(2,'0');
+const dateStr=dt=>dt.getFullYear()+'-'+pad2(dt.getMonth()+1)+'-'+pad2(dt.getDate());
+const uid=p=>p+Date.now().toString(36).slice(-4)+Math.random().toString(36).slice(2,6);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const fmtHM=m=>{m=Math.round(m);return pad2(Math.floor(m/60))+':'+pad2(m%60);};
+const parseHM=s=>{const a=String(s||'0:00').split(':');return (parseInt(a[0],10)||0)*60+(parseInt(a[1],10)||0);};
+const durLabel=m=>{const h=Math.floor(m/60),mm=m%60;return (h?h+'h':'')+(mm||!h?mm+'分':'');};
+const money=n=>'¥'+(Math.round((+n||0)*100)/100);
+const PALETTE=['#3b6ef5','#16a34a','#d97706','#e5484d','#9333ea','#0891b2','#db2777','#65a30d','#ca8a04','#475569','#0d9488','#7c3aed'];
+const COST_CATS=['门票','项目','食物','交通','额外花销'];
+const TODO_CATS=[{k:'spot',n:'景点'},{k:'food',n:'美食'},{k:'act',n:'项目'}];
+const RATING={S:{c:'#c9971a'},A:{c:'#3b6ef5'},B:{c:'#16a34a'},C:{c:'#9aa4b2'}};
+const numCN=n=>['一','二','三','四','五','六','七','八','九','十'][clamp(n-1,0,9)]||n;
+const dShort=s=>{if(!s)return'';const a=s.split('-');return (+a[1])+'/'+(+a[2]);};
+const tint=(c,a)=>c+a;
+
+/* ==================== 数据 ==================== */
+const KEY='travel_app_v5';
+function newToilet(){return {id:uid('l'),name:'厕所',color:'#9aa4b2',rating:'C',dur:10,cost:0,costCat:'额外花销',booking:'',note:''};}
+function seed(){
+  const l1={id:uid('l'),name:'景区1',color:'#3b6ef5',rating:'S',dur:120,cost:120,costCat:'门票',booking:'提前1天线上预约',note:'带身份证'};
+  const l2={id:uid('l'),name:'坎门渔港',color:'#16a34a',rating:'A',dur:90,cost:88,costCat:'食物',booking:'排号',note:''};
+  const l3={id:uid('l'),name:'玉环湿地公园',color:'#d97706',rating:'B',dur:120,cost:60,costCat:'门票',booking:'',note:'观鸟点在东侧'};
+  const lc=newToilet();
+  const it=(l,start)=>({id:uid('i'),locId:l.id,start,dur:l.dur});
+  return {
+    v:5, activeId:'pk1',
+    packages:[{
+      id:'pk1', name:'台州',
+      locs:[l1,l2,l3,lc],
+      plans:[
+        {id:uid('p'),name:'计划1',items:[it(l1,8*60),it(l2,11*60),it(l3,14*60)]},
+        {id:uid('p'),name:'计划2',items:[it(l3,9*60),it(l2,17*60)]}
+      ],
+      days:[
+        {id:uid('d'),name:'第一天',date:'2026-10-20',arrs:[
+          {id:uid('a'),locId:l1.id,start:8*60,dur:120,teamId:null},
+          {id:uid('a'),locId:l2.id,start:11*60,dur:90,teamId:null},
+          {id:uid('a'),locId:l1.id,start:14*60,dur:120,teamId:null},
+          {id:uid('a'),locId:l2.id,start:18*60,dur:120,teamId:null}
+        ],extras:[{id:uid('e'),name:'矿泉水/零食',amount:15,cat:'额外花销',at:10*60+30}]},
+        {id:uid('d'),name:'第二天',date:'2026-10-21',arrs:[
+          {id:uid('a'),locId:l3.id,start:9*60,dur:120,teamId:null},
+          {id:uid('a'),locId:l2.id,start:17*60,dur:120,teamId:null}
+        ],extras:[]}
+      ],
+      teams:[],
+      todos:[
+        {id:uid('t'),text:'大鹿岛',cat:'spot',done:true},
+        {id:uid('t'),text:'漩门湾观鸟',cat:'spot',done:false},
+        {id:uid('t'),text:'海鲜排档',cat:'food',done:false},
+        {id:uid('t'),text:'姜汤面',cat:'food',done:true},
+        {id:uid('t'),text:'玻璃栈道',cat:'act',done:false},
+        {id:uid('t'),text:'快艇出海',cat:'act',done:false}
+      ]
+    }],
+    ui:{snap:10,view:'home',pkgTab:'days',dayId:null,planId:null,teamFilter:'all',hideHints:false}
+  };
+}
+function ensureToilet(p){ if(!p.locs.some(l=>l.name==='厕所')) p.locs.push(newToilet()); }
+function migrate(d){
+  d.v=d.v||5; d.packages=d.packages||[]; d.activeId=d.activeId||(d.packages[0]&&d.packages[0].id);
+  d.ui=Object.assign({snap:10,view:'home',pkgTab:'days',dayId:null,planId:null,teamFilter:'all',hideHints:false},d.ui||{});
+  d.packages.forEach(p=>{
+    p.locs=p.locs||[]; p.plans=p.plans||[]; p.days=p.days||[]; p.teams=p.teams||[]; p.todos=p.todos||[];
+    const cc=v=>v==='项目费'?'项目':v==='食物费'?'食物':v;
+    p.locs.forEach(l=>{ l.rating=l.rating||'C'; l.dur=l.dur||60; l.cost=l.cost||0; l.costCat=cc(l.costCat)||'门票'; l.booking=l.booking||''; l.note=l.note||''; });
+    ensureToilet(p);
+    p.plans.forEach(pl=>{ pl.items=(pl.items||[]).map(i=>Object.assign({id:i.id||uid('i'),locId:i.locId,start:i.start||0,dur:i.dur||60},i)); });
+    p.days.forEach(dy=>{ dy.arrs=dy.arrs||[]; dy.extras=(dy.extras||[]).map(e=>Object.assign({},e,{cat:cc(e.cat)})); dy.date=dy.date||''; });
+  });
+  return d;
+}
+let S;
+try{ const raw=localStorage.getItem(KEY); S=raw?migrate(JSON.parse(raw)):seed(); }catch(e){ S=seed(); }
+if(!S.packages.length){ S=seed(); }
+if(!S.packages.find(p=>p.id===S.activeId)) S.activeId=S.packages[0].id;
+let undoStack=[];
+function save(){ try{ localStorage.setItem(KEY,JSON.stringify(S)); }catch(e){} }
+function snapState(){ undoStack.push(JSON.stringify(S)); if(undoStack.length>25)undoStack.shift(); }
+function doUndo(){ if(!undoStack.length) return; S=JSON.parse(undoStack.pop()); save(); render(); toast('已撤销'); }
+
+const PK=()=>S.packages.find(p=>p.id===S.activeId)||S.packages[0];
+const dayById=id=>PK().days.find(d=>d.id===id);
+const planById=id=>PK().plans.find(p=>p.id===id);
+const locById=id=>PK().locs.find(l=>l.id===id);
+const teamById=id=>PK().teams.find(t=>t.id===id);
+const locCost=l=>+l.cost||0;
+const arrCost=a=>{ const l=locById(a.locId); return l?locCost(l):0; };
+const dayPlanCost=d=>d.arrs.reduce((s,a)=>s+arrCost(a),0);
+const dayExtraCost=d=>(d.extras||[]).reduce((s,e)=>s+(+e.amount||0),0);
+const dayCost=d=>dayPlanCost(d)+dayExtraCost(d);
+const planCost=p=>(p.items||[]).reduce((s,i)=>{ const l=locById(i.locId); return s+(l?locCost(l):0); },0);
+const pkgActual=p=>p.days.reduce((s,d)=>s+dayCost(d),0);
+const pkgPlan=p=>p.plans.reduce((s,pl)=>s+planCost(pl),0);
+const pkgRange=p=>{
+  const ds=p.days.map(d=>d.date).filter(Boolean).sort();
+  return ds.length?(dShort(ds[0])+(ds.length>1?' ~ '+dShort(ds[ds.length-1]):'')):'';
+};
+function costRows(cat){
+  const rows=[];
+  PK().days.forEach(d=>{
+    d.arrs.forEach(a=>{ const l=locById(a.locId); if(l&&locCost(l)>0) rows.push({day:d,name:l.name,cat:l.costCat||'门票',amount:locCost(l),kind:'plan',rating:l.rating}); });
+    (d.extras||[]).forEach(e=>rows.push({day:d,name:e.name,cat:e.cat||'额外花销',amount:+e.amount||0,kind:'extra'}));
+  });
+  return cat?rows.filter(r=>r.cat===cat):rows;
+}
+const totalCost=cat=>costRows(cat).reduce((s,r)=>s+r.amount,0);
+
+/* ==================== 通用 UI ==================== */
+let toastTimer=null;
+function toast(msg,undoLabel,cb){
+  const t=$('#toast');
+  t.innerHTML='<span>'+esc(msg)+'</span>'+(undoLabel?'<button id="toastBtn">'+esc(undoLabel)+'</button>':'');
+  t.classList.add('on'); clearTimeout(toastTimer);
+  if(undoLabel) $('#toastBtn').onclick=()=>{ t.classList.remove('on'); clearTimeout(toastTimer); cb&&cb(); };
+  toastTimer=setTimeout(()=>t.classList.remove('on'),undoLabel?3600:1900);
+}
+function openSheet(html){ $('#sheet').innerHTML=html; $('#mask').classList.add('on'); $('#sheet').classList.add('on'); }
+function closeSheet(){ $('#mask').classList.remove('on'); $('#sheet').classList.remove('on'); }
+$('#mask').addEventListener('click',closeSheet);
+
+function longPress(el,opt){
+  const o=Object.assign({delay:260,onStart:null,onMove:null,onEnd:null,onCancel:null,tapLong:null,ignore:null},opt);
+  let pid=null,timer=null,act=false,moved=false,sx=0,sy=0;
+  function onDocTouch(e){ if(act) e.preventDefault(); }
+  const activate=e=>{
+    if(act) return;
+    act=true;
+    try{ navigator.vibrate&&navigator.vibrate(12); }catch(_){}
+    try{ el.setPointerCapture(e.pointerId); }catch(_){}
+    document.addEventListener('touchmove',onDocTouch,{passive:false});
+    o.onStart&&o.onStart(e);
+  };
+  const down=e=>{
+    if(pid!==null||(e.button&&e.button>0)) return;
+    if(o.ignore&&o.ignore(e)) return;
+    pid=e.pointerId; sx=e.clientX; sy=e.clientY; act=false; moved=false;
+    const d=e.pointerType==='mouse'?110:o.delay;
+    timer=setTimeout(()=>{ activate(e); },d);
+  };
+  const move=e=>{
+    if(pid===null||e.pointerId!==pid) return;
+    if(!act){
+      const mx=Math.abs(e.clientX-sx), my=Math.abs(e.clientY-sy);
+      if(e.pointerType==='mouse'&&(mx>4||my>4)){ clearTimeout(timer); moved=true; activate(e); return; } // 电脑：按下即可直接拖动
+      if(mx>9||my>9){ clearTimeout(timer); pid=null; }
+      return;
+    }
+    if(Math.abs(e.clientX-sx)>6||Math.abs(e.clientY-sy)>6) moved=true;
+    e.preventDefault(); o.onMove&&o.onMove(e);
+  };
+  const up=e=>{
+    if(pid===null||e.pointerId!==pid) return;
+    clearTimeout(timer);
+    document.removeEventListener('touchmove',onDocTouch);
+    if(act){ o.onEnd&&o.onEnd(e,moved); if(!moved) o.tapLong&&o.tapLong(e); }
+    else { o.onCancel&&o.onCancel(e); }
+    act=false; pid=null; moved=false;
+  };
+  el.addEventListener('pointerdown',down);
+  el.addEventListener('pointermove',move,{passive:false});
+  window.addEventListener('pointerup',up);
+  window.addEventListener('pointercancel',up);
+}
+function directDrag(el,opt){
+  const o=Object.assign({onStart:null,onMove:null,onEnd:null},opt);
+  let pid=null,act=false;
+  function onDocTouch(e){ if(act) e.preventDefault(); }
+  const down=e=>{ if(pid!==null||(e.button&&e.button>0)) return; pid=e.pointerId; act=true;
+    document.addEventListener('touchmove',onDocTouch,{passive:false});
+    try{ el.setPointerCapture(pid); }catch(_){}
+    o.onStart&&o.onStart(e); };
+  const move=e=>{ if(pid===null||e.pointerId!==pid) return; e.preventDefault(); o.onMove&&o.onMove(e); };
+  const up=e=>{ if(pid===null||e.pointerId!==pid) return; act=false; document.removeEventListener('touchmove',onDocTouch); o.onEnd&&o.onEnd(e); pid=null; };
+  el.addEventListener('pointerdown',down);
+  el.addEventListener('pointermove',move,{passive:false});
+  window.addEventListener('pointerup',up);
+  window.addEventListener('pointercancel',up);
+}
+function setChipDrop(chip){ $$('.dchip').forEach(c=>c.classList.toggle('drop',chip&&c===chip)); }
+
+function bindCard(el,box,opt){
+  const o=Object.assign({commit:null,menu:null,hoverChips:null,onDropChip:null,onDelete:null},opt);
+  let startY=0,ph=null,drag=null,delHot=false;
+  const delxShow=()=>{ let x=$('#delx'); if(!x){ x=document.createElement('div'); x.id='delx'; x.className='delx'; x.textContent='✕'; document.body.appendChild(x); } x.classList.add('on'); };
+  const delxHide=()=>{ const x=$('#delx'); if(x) x.classList.remove('on','hot'); delHot=false; };
+  const delxHit=e=>{ const x=$('#delx'); if(!x) return; const r=x.getBoundingClientRect();
+    delHot=e.clientX>r.left-24&&e.clientX<r.right+24&&e.clientY>r.top-24&&e.clientY<r.bottom+24;
+    x.classList.toggle('hot',delHot); };
+  const cleanup=()=>{ if(ph){ph.remove();ph=null;} if(drag){drag.classList.remove('drag');drag.style.transform='';drag.style.transition='';} setChipDrop(null); drag=null; };
+  longPress(el,{
+    onStart:e=>{ drag=el; startY=e.clientY; el.classList.add('drag'); el.style.transition='none';
+      ph=document.createElement('div'); ph.className='ph'; ph.textContent=o.hoverChips?'拖动调整顺序 / 拖到下方行程卡…':'拖动调整顺序 · 拖到底部 ✕ 删除';
+      el.parentNode.insertBefore(ph,el.nextSibling);
+      if(o.onDelete) delxShow(); },
+    onMove:e=>{
+      if(!drag) return;
+      if(o.onDelete) delxHit(e);
+      drag.style.transform='translateY('+(e.clientY-startY)+'px)';
+      const order=$$('.pkcard',box), cur=order.indexOf(drag);
+      const rc=drag.getBoundingClientRect(), mid=rc.top+rc.height/2;
+      for(let i=0;i<order.length;i++){
+        if(order[i]===drag) continue;
+        const b=order[i].getBoundingClientRect(), bm=b.top+b.height/2;
+        if(i<cur&&mid<bm){ ph.parentNode.insertBefore(ph,order[i]); break; }
+        if(i>cur&&mid>bm){ ph.parentNode.insertBefore(ph,order[i].nextSibling); break; }
+      }
+      drag.dataset.chip='';
+      const chips=typeof o.hoverChips==='function'?o.hoverChips():(o.hoverChips||[]);
+      if(chips.length){
+        let hit=null;
+        chips.forEach(c=>{ const r=c.getBoundingClientRect();
+          if(e.clientY>r.top-10&&e.clientY<r.bottom+10&&e.clientX>r.left-16) hit=c; });
+        setChipDrop(hit);
+        if(hit) drag.dataset.chip=hit.dataset.drop||'';
+      }
+    },
+    onEnd:(e,moved)=>{
+      if(!drag) return;
+      const chip=drag.dataset.chip||'';
+      // 插入位 = 占位块之前的卡片数（不含被拖卡片）
+      let ins=0;
+      for(const n of Array.prototype.slice.call(box.children)){
+        if(n===ph) break;
+        if(n===drag) continue;
+        if(n.classList.contains('pkcard')) ins++;
+      }
+      if(moved){ el.dataset.noClick='1'; setTimeout(()=>{ delete el.dataset.noClick; },400); }
+      cleanup();
+      const wasDel=delHot; delxHide();
+      if(moved&&wasDel&&o.onDelete){ o.onDelete(); return; }
+      if(moved&&chip&&o.onDropChip){ o.onDropChip(chip); return; }
+      if(moved&&o.commit){ o.commit(ins); }
+    },
+    onCancel:()=>{ cleanup(); delxHide(); },
+    tapLong:()=>{ if(o.menu) o.menu(); }
+  });
+}
+
+/* ==================== 时间轴渲染 ==================== */
+function blkHtml(a,HH,o){
+  const l=locById(a.locId); if(!l) return '';
+  const c=l.color||'#7b8496', y=a.start/60*HH, h=Math.max(a.dur/60*HH-2,16);
+  const rt=RATING[l.rating]||RATING.C;
+  const tm=teamById(a.teamId);
+  const tag=(tm&&(o.teamFilter==='all'))?'<span class="teamtag">'+esc(tm.name)+'</span>':'';
+  const tail=o.noteInBlk?(l.note?' · '+esc(l.note):(locCost(l)>0?' · '+money(locCost(l)):'')):(locCost(l)>0?' · '+money(locCost(l)):'');
+  const t2=(h>=36)?'<div class="t2">'+fmtHM(a.start)+' ~ '+fmtHM(a.start+a.dur)+tail+'</div>':'';
+  return '<div class="blk" data-arr="'+a.id+'" style="top:'+y+'px;height:'+h+'px;background:'+tint(c,'26')+';border-left-color:'+c+'">'
+    +(o.interactive?'<div class="grip"></div><div class="rz"></div>':'')
+    +'<div class="in"><div class="t1" style="color:'+c+'">'
+      +'<span class="rt" style="background:'+rt.c+'">'+esc(l.rating||'C')+'</span>'
+      +'<span class="ttl">'+esc(l.name)+'</span>'+tag+'</div>'+t2+'</div></div>';
+}
+function tlMarkup(arrs,extras,HH,opt){
+  const o=Object.assign({interactive:false,showHalf:true,teamFilter:'all',costCol:true,lanes:null},opt);
+  const H=24*HH;
+  let rail='',grid='';
+  for(let t=0;t<=24*60;t+=60){
+    const y=t/60*HH;
+    grid+='<div class="hline" style="top:'+y+'px"></div>';
+    rail+='<div class="hr" style="top:'+y+'px">'+(t/60)+':00</div>';
+    if(o.showHalf&&t<24*60) grid+='<div class="hline half" style="top:'+(y+HH/2)+'px"></div>';
+  }
+  let inner='';
+  if(o.lanes&&o.lanes.length>1){
+    const n=o.lanes.length;
+    inner='<div class="lanes'+(o.compact?' compact':'')+'">';
+    o.lanes.forEach((ln,i)=>{
+      inner+='<div class="lane" style="left:'+(i*100/n)+'%;width:'+(100/n)+'%"><div class="lanehd">'+esc(ln.title)+'</div>';
+      (ln.arrs||[]).forEach(a=>{ inner+=blkHtml(a,HH,Object.assign({},o,{teamFilter:'all'})); });
+      inner+='</div>';
+    });
+    inner+='</div>';
+  } else {
+    (arrs||[]).filter(a=>o.teamFilter==='all'||!a.teamId||a.teamId===o.teamFilter)
+      .forEach(a=>{ inner+=blkHtml(a,HH,o); });
+  }
+  let exl='';
+  (extras||[]).forEach(e=>{
+    const y=(e.at||9*60)/60*HH, w=clamp(2+Math.sqrt(+e.amount||0)/3,2,6);
+    exl+='<div class="expl" data-ex="'+e.id+'" style="top:'+y+'px"><div class="ln" style="border-top-width:'+w.toFixed(1)+'px"></div>'
+      +(o.interactive?'<div class="eh" data-e="'+e.id+'">'+esc(e.name)+' '+money(e.amount)+'</div>':'')
+    +'</div>';
+  });
+  let cost='';
+  if(o.costCol){
+    const list=(arrs||[]).filter(a=>o.teamFilter==='all'||!a.teamId||a.teamId===o.teamFilter);
+    list.forEach(a=>{
+      const l=locById(a.locId); if(!l||!(locCost(l)>0)) return;
+      cost+='<div class="ce" style="top:'+(a.start/60*HH)+'px">'+money(l.cost)+'</div>';
+    });
+    (extras||[]).forEach(e=>{
+      cost+='<div class="ct" style="top:'+((e.at||9*60)/60*HH)+'px">额外 '+money(e.amount)+'</div>';
+    });
+  }
+  return '<div class="tgrid" style="height:'+H+'px">'
+    +'<div class="rail">'+rail+'</div>'
+    +'<div class="col">'+grid+inner+exl+'</div>'
+    +(o.costCol?'<div class="costcol">'+cost+'</div>':'')
+    +'</div>';
+}
+
+/* ==================== 主页 ==================== */
+function renderHome(){
+  $('#homeBody').innerHTML=S.packages.map(p=>{
+    const rng=pkgRange(p);
+    return '<div class="pkcard" data-id="'+p.id+'">'
+      +'<div class="t1"><span class="ttl">'+esc(p.name)+'</span>'+(rng?'<span class="tiny">'+rng+'</span>':'')+'</div>'
+      +'<div class="t2"><span class="tiny">'+p.days.length+' 张行程卡</span>'
+      +'<span class="tiny">计划 <b style="color:var(--red)">'+money(pkgPlan(p))+'</b></span>'
+      +'<span class="tiny money">实际 '+money(pkgActual(p))+'</span></div>'
+    +'</div>'; }).join('')
+    +'<button class="addbtn" id="pkAdd">＋ 新的旅途</button>'
+    +'<div class="hint">点行程包进入编辑 · 长按卡片可重命名 / 复制 / 删除 · 拖动调整顺序 · 日期在行程卡里设置</div>';
+  $$('#homeBody .pkcard').forEach(el=>{
+    const p=S.packages.find(x=>x.id===el.dataset.id);
+    let tapped=false;
+    el.addEventListener('click',()=>{ if(el.dataset.noClick||tapped){ tapped=false; return; } S.activeId=p.id; S.ui.view='pkg'; S.ui.pkgTab='days'; save(); render(); });
+    bindCard(el,$('#homeBody'),{
+      commit:ins=>{ snapState();
+        S.packages=S.packages.filter(x=>x.id!==p.id);
+        S.packages.splice(clamp(ins,0,S.packages.length),0,p);
+        save(); render(); toast('顺序已调整','撤销',doUndo); },
+      onDelete:()=>{ if(S.packages.length<2){ toast('至少保留一个行程包'); return; }
+        snapState(); S.packages=S.packages.filter(x=>x.id!==p.id);
+        if(S.activeId===p.id) S.activeId=S.packages[0].id;
+        save(); render(); toast('已删除「'+p.name+'」','撤销',doUndo); },
+      menu:()=>{ tapped=true; setTimeout(()=>tapped=false,400); pkgMenu(p); }
+    });
+  });
+  $('#pkAdd').onclick=()=>{
+    openSheet('<h3>新的旅途</h3><div class="fld"><label>行程包名称</label><input id="pkN" placeholder="例如：台州"></div>'
+      +'<button class="btn full" id="pkOk">创建行程包</button>');
+    $('#pkOk').onclick=()=>{
+      const v=$('#pkN').value.trim(); if(!v){ toast('请填写名称'); return; }
+      snapState();
+      const p={id:uid('pk'),name:v,locs:[newToilet()],plans:[],days:[{id:uid('d'),name:'第一天',date:'',arrs:[],extras:[]}],teams:[],todos:[]};
+      S.packages.push(p); S.activeId=p.id; S.ui.view='pkg'; S.ui.pkgTab='days';
+      save(); closeSheet(); render(); toast('已创建「'+v+'」','撤销',doUndo);
+    };
+  };
+}
+function regenIds(p){
+  const lm={};
+  p.id=uid('pk'); p.locs=p.locs.map(l=>{ const ni=uid('l'); lm[l.id]=ni; return Object.assign({},l,{id:ni}); });
+  p.plans=p.plans.map(pl=>Object.assign({},pl,{id:uid('p'),items:(pl.items||[]).map(i=>Object.assign({},i,{id:uid('i'),locId:lm[i.locId]||i.locId}))}));
+  p.days=p.days.map(d=>Object.assign({},d,{id:uid('d'),
+    arrs:(d.arrs||[]).map(a=>Object.assign({},a,{id:uid('a'),locId:lm[a.locId]||a.locId})),
+    extras:(d.extras||[]).map(e=>Object.assign({},e,{id:uid('e')}))}));
+  p.teams=p.teams.map(t=>Object.assign({},t,{id:uid('tm')}));
+  p.todos=p.todos.map(t=>Object.assign({},t,{id:uid('t')}));
+  return p;
+}
+function pkgMenu(p){
+  openSheet('<h3>'+esc(p.name)+'</h3>'
+    +'<button class="btn gh full" id="mRen">重命名</button>'
+    +'<button class="btn gh full" id="mCopy">复制行程包</button>'
+    +'<button class="btn red full" id="mDel">删除行程包</button>'
+    +'<button class="btn gh full" id="mCancel">取消</button>');
+  $('#mRen').onclick=()=>{ const v=prompt('行程包名称',p.name); if(v===null) return; snapState(); p.name=v.trim()||p.name; save(); closeSheet(); render(); toast('已重命名','撤销',doUndo); };
+  $('#mCopy').onclick=()=>{ snapState();
+    const c=regenIds(JSON.parse(JSON.stringify(p))); c.name=p.name+' 副本';
+    S.packages.push(c); save(); closeSheet(); render(); toast('已复制为「'+c.name+'」','撤销',doUndo); };
+  $('#mDel').onclick=()=>{ if(S.packages.length<2){ toast('至少保留一个行程包'); return; }
+    if(!confirm('删除「'+p.name+'」及其全部行程卡 / 计划卡？')) return;
+    snapState(); S.packages=S.packages.filter(x=>x.id!==p.id);
+    if(S.activeId===p.id) S.activeId=S.packages[0].id;
+    if(S.ui.view!=='home') S.ui.view='home';
+    save(); closeSheet(); render(); toast('已删除','撤销',doUndo); };
+  $('#mCancel').onclick=closeSheet;
+}
+$('#homeMore').onclick=()=>{
+  openSheet('<h3>更多</h3>'
+    +'<button class="btn gh full" id="mHint">'+(S.ui.hideHints?'显示提示文字':'隐藏提示文字')+'</button>'
+    +'<button class="btn gh full" id="mExp">导出备份 JSON</button>'
+    +'<button class="btn gh full" id="mImp">导入备份</button>'
+    +'<button class="btn gh full" id="mReset">重置为示例数据</button>'
+    +'<div class="hint">数据保存在本机浏览器，建议定期导出备份。</div>');
+  $('#mHint').onclick=()=>{ snapState();
+    S.ui.hideHints=!S.ui.hideHints; save(); closeSheet(); render();
+    toast(S.ui.hideHints?'已隐藏提示文字':'已显示提示文字'); };
+  $('#mExp').onclick=()=>{ const json=JSON.stringify(S,null,2);
+    if(window.Capacitor){ // 安卓应用内无法直接下载文件，改为可复制文本
+      openSheet('<h3>导出备份</h3><div class="fld"><label>全部数据（复制后粘贴到备忘录/微信收藏保存）</label><textarea id="expTx" readonly rows="9" style="width:100%;font-size:10.5px;line-height:1.4">'+esc(json)+'</textarea></div>'
+        +'<button class="btn full" id="expCopy">复制到剪贴板</button>'
+        +'<button class="btn gh full" id="expCancel">关闭</button>');
+      $('#expCopy').onclick=()=>{ const t=$('#expTx'); t.focus(); t.select();
+        try{ document.execCommand('copy'); toast('已复制，请粘贴保存'); }catch(e){ toast('请长按文本全选复制'); } };
+      $('#expCancel').onclick=closeSheet; return; }
+    const blob=new Blob([json],{type:'application/json'});
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='travel-backup.json'; a.click(); closeSheet(); toast('已导出'); };
+  $('#mImp').onclick=()=>{ const inp=document.createElement('input'); inp.type='file'; inp.accept='.json';
+    inp.onchange=()=>{ const f=inp.files[0]; if(!f) return; const fr=new FileReader();
+      fr.onload=()=>{ try{ snapState(); S=migrate(JSON.parse(fr.result)); save(); closeSheet(); render(); toast('导入成功','撤销',doUndo); }catch(e){ toast('文件格式不正确'); } };
+      fr.readAsText(f); };
+    inp.click(); };
+  $('#mReset').onclick=()=>{ if(!confirm('清除全部数据并恢复示例？')) return; snapState(); S=seed(); save(); closeSheet(); render(); toast('已重置','撤销',doUndo); };
+};
+
+/* ==================== 行程包编辑 ==================== */
+function renderPkg(){
+  const p=PK();
+  $('#pkgName').textContent=p.name;
+  const rng=pkgRange(p);
+  $('#pkgStat').innerHTML='<span>旅行日期 <b>'+(rng||'未设置')+'</b></span><span style="flex:1"></span>'
+    +'<span>计划费用 <b class="money">'+money(pkgPlan(p))+'</b></span>'
+    +'<span>实际费用 <b class="money">'+money(pkgActual(p))+'</b></span>';
+  $$('#pkgSeg button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.ui.pkgTab));
+  $('#dayChips').style.display=S.ui.pkgTab==='plans'?'':'none';
+  $('#pkgAdd').textContent='＋ '+(S.ui.pkgTab==='days'?'新行程卡':S.ui.pkgTab==='plans'?'新计划卡':'新地点卡');
+  if(S.ui.pkgTab==='days') renderDaysTab();
+  else if(S.ui.pkgTab==='plans') renderPlansTab();
+  else renderLocsTab();
+}
+function renderDaysTab(){
+  const p=PK();
+  $('#pkgBody').innerHTML='<div class="hint">行程卡是实际执行的每一天：点卡片编辑时间轴与日期；长按可重命名 / 删除；拖动调整前后顺序。计划卡拖到下方行程卡条，直接替换该天安排。</div>'
+    +p.days.map(d=>'<div class="pkcard card-day" data-id="'+d.id+'">'
+      +'<div class="t1"><span class="ttl">'+esc(d.name)+'</span>'+(d.date?'<span class="tiny">'+dShort(d.date)+'</span>':'')+'</div>'
+      +'<div class="t2"><span class="tiny">'+d.arrs.length+' 项安排</span><span class="tiny money">'+money(dayCost(d))+'</span></div>'
+    +'</div>').join('')
+    +(p.days.length?'':'<div class="empty">还没有行程卡<br>点右上角「＋ 添加」创建</div>');
+  const box=$('#pkgBody');
+  $$('#pkgBody .pkcard').forEach(el=>{
+    const d=dayById(el.dataset.id); if(!d) return;
+    let tapped=false;
+    el.addEventListener('click',()=>{ if(el.dataset.noClick||tapped){ tapped=false; return; } S.ui.dayId=d.id; S.ui.view='day'; S.ui.teamFilter='all'; save(); render(); });
+    bindCard(el,box,{
+      commit:ins=>{ snapState();
+        p.days=p.days.filter(x=>x.id!==d.id);
+        p.days.splice(clamp(ins,0,p.days.length),0,d);
+        const dts=p.days.map(x=>x.date).filter(Boolean).sort();
+        if(dts.length) p.days.forEach((x,i)=>{ x.date=dts[i]||''; });
+        save(); render(); toast('行程卡顺序已调整，日期随之对调','撤销',doUndo); },
+      onDelete:()=>{ if(PK().days.length<2){ toast('一个行程至少要有一张行程卡'); return; }
+        snapState(); PK().days=PK().days.filter(x=>x.id!==d.id); save(); render(); toast('已删除'+d.name,'撤销',doUndo); },
+      menu:()=>{ tapped=true; setTimeout(()=>tapped=false,400); dayMenu(d); }
+    });
+  });
+}
+function dayMenu(d){
+  openSheet('<h3>'+esc(d.name)+'</h3>'
+    +'<button class="btn gh full" id="dRen">重命名</button>'
+    +'<button class="btn gh full" id="dDate">设置日期</button>'
+    +'<button class="btn red full" id="dDel">删除行程卡</button>'
+    +'<button class="btn gh full" id="dCancel">取消</button>');
+  $('#dRen').onclick=()=>{ const v=prompt('行程卡名称',d.name); if(v===null) return; snapState(); d.name=v.trim()||d.name; save(); closeSheet(); render(); toast('已重命名','撤销',doUndo); };
+  $('#dDate').onclick=()=>{ closeSheet(); dateEditor(d); };
+  $('#dDel').onclick=()=>{ if(PK().days.length<2){ toast('一个行程至少要有一张行程卡'); return; }
+    if(!confirm('删除「'+d.name+'」及其全部安排？')) return;
+    snapState(); PK().days=PK().days.filter(x=>x.id!==d.id); save(); closeSheet(); render(); toast('已删除','撤销',doUndo); };
+  $('#dCancel').onclick=closeSheet;
+}
+function dateEditor(d){
+  openSheet('<h3>设置日期<span class="spacer"></span><span class="tiny">'+esc(d.name)+'</span></h3>'
+    +'<div class="fld"><label>这一天对应的日期</label><input id="dtI" type="date" value="'+(d.date||'')+'"></div>'
+    +'<button class="btn full" id="dtOk">保存</button>'
+    +'<div class="hint">行程包卡片与首页会按各张行程卡的日期显示旅行日期范围。</div>');
+  $('#dtOk').onclick=()=>{ snapState(); d.date=$('#dtI').value||'';
+    const p=PK();
+    if(d.date){ // 后面的行程卡日期自动顺延
+      const idx=p.days.indexOf(d), base=new Date(d.date+'T00:00:00');
+      for(let i=idx+1;i<p.days.length;i++){
+        const dt=new Date(base); dt.setDate(dt.getDate()+(i-idx));
+        p.days[i].date=dateStr(dt);
+      }
+    }
+    save(); closeSheet(); render(); toast(d.date?('日期 '+d.date+'，后续行程卡已自动顺延'):'已清除日期','撤销',doUndo); };
+}
+function renderPlansTab(){
+  const p=PK();
+  $('#pkgBody').innerHTML='<div class="hint">计划卡是提前安排好的一日行程，由地点卡组成；实际旅行中只修改行程卡，临时变动时把计划卡导入行程卡再改。</div>'
+    +p.plans.map(pl=>'<div class="pkcard card-plan" data-id="'+pl.id+'">'
+      +'<div class="t1"><span class="ttl">'+esc(pl.name)+'</span></div>'
+      +'<div class="t2"><span class="tiny">'+pl.items.length+' 个地点</span><span class="tiny money">'+money(planCost(pl))+'</span></div>'
+    +'</div>').join('')
+    +(p.plans.length?'':'<div class="empty">还没有计划卡<br>点右上角「＋ 添加」创建</div>');
+  const box=$('#pkgBody');
+  $$('#pkgBody .pkcard').forEach(el=>{
+    const pl=planById(el.dataset.id); if(!pl) return;
+    let tapped=false;
+    el.addEventListener('click',()=>{ if(el.dataset.noClick||tapped){ tapped=false; return; } S.ui.planId=pl.id; S.ui.view='plan'; save(); render(); });
+    bindCard(el,box,{
+      hoverChips:()=>$$('#dayChips .dchip'),
+      onDropChip:chipId=>applyPlanToDay(pl.id,chipId),
+      commit:ins=>{ snapState();
+        p.plans=p.plans.filter(x=>x.id!==pl.id);
+        p.plans.splice(clamp(ins,0,p.plans.length),0,pl);
+        save(); render(); toast('计划卡顺序已调整','撤销',doUndo); },
+      onDelete:()=>{ snapState(); PK().plans=PK().plans.filter(x=>x.id!==pl.id); save(); render(); toast('已删除'+pl.name,'撤销',doUndo); },
+      menu:()=>{ tapped=true; setTimeout(()=>tapped=false,400); planMenu(pl); }
+    });
+  });
+  renderDayChips();
+}
+function applyPlanToDay(planId,chipId){
+  const pl=planById(planId); if(!pl) return;
+  snapState();
+  let d=dayById(chipId), created=false;
+  if(!d){ d={id:uid('d'),name:'第'+numCN(PK().days.length+1)+'天',date:'',arrs:[],extras:[]}; PK().days.push(d); created=true; }
+  const oldArrs=d.arrs;
+  d.arrs=pl.items.map(i=>({id:uid('a'),locId:i.locId,start:i.start,dur:i.dur,teamId:null}));
+  save(); render();
+  toast('「'+d.name+'」已替换为「'+pl.name+'」'+(created?' · 已新建行程卡':''),'撤销',()=>{ snapState(); d.arrs=oldArrs; save(); render(); toast('已还原'); });
+}
+function renderDayChips(){
+  const p=PK();
+  $('#dayChips').innerHTML='<button class="dchip" data-drop="__new">＋ 新行程卡</button>'
+    +p.days.map(d=>'<button class="dchip" data-drop="'+d.id+'">📅 '+esc(d.name)+'<span class="n">'+d.arrs.length+'</span></button>').join('');
+}
+function planMenu(pl){
+  openSheet('<h3>'+esc(pl.name)+'</h3>'
+    +'<div class="hint">'+pl.items.length+' 个地点 · 计划费用 '+money(planCost(pl))+'</div>'
+    +'<button class="btn gh full" id="pToDay">替换行程卡…</button>'
+    +'<button class="btn gh full" id="pRen">重命名</button>'
+    +'<button class="btn gh full" id="pCopy">复制计划卡</button>'
+    +'<button class="btn red full" id="pDel">删除计划卡</button>'
+    +'<button class="btn gh full" id="pCancel">取消</button>');
+  $('#pToDay').onclick=()=>{ closeSheet(); pickDayForPlan(pl.id); };
+  $('#pRen').onclick=()=>{ const v=prompt('计划卡名称',pl.name); if(v===null) return; snapState(); pl.name=v.trim()||pl.name; save(); closeSheet(); render(); toast('已重命名','撤销',doUndo); };
+  $('#pCopy').onclick=()=>{ snapState();
+    const c=JSON.parse(JSON.stringify(pl)); c.id=uid('p'); c.name=pl.name+' 副本';
+    c.items=(c.items||[]).map(i=>Object.assign({},i,{id:uid('i')}));
+    PK().plans.push(c); save(); closeSheet(); render(); toast('已复制为「'+c.name+'」','撤销',doUndo); };
+  $('#pDel').onclick=()=>{ if(!confirm('删除「'+pl.name+'」？')) return;
+    snapState(); PK().plans=PK().plans.filter(x=>x.id!==pl.id); save(); closeSheet(); render(); toast('已删除','撤销',doUndo); };
+  $('#pCancel').onclick=closeSheet;
+}
+function pickDayForPlan(planId){
+  const p=PK();
+  openSheet('<h3>替换哪张行程卡？</h3><div class="chips">'
+    +'<button class="btn gh" data-d="__new">＋ 新行程卡</button>'
+    +p.days.map(d=>'<button class="btn gh" data-d="'+d.id+'">'+esc(d.name)+'</button>').join('')+'</div>');
+  $$('#sheet .chips button').forEach(b=>b.onclick=()=>{
+    closeSheet(); applyPlanToDay(planId,b.dataset.d);
+  });
+}
+/* ---- 地点卡 ---- */
+function renderLocsTab(){
+  const p=PK();
+  $('#pkgBody').innerHTML='<div class="hint">地点卡是完整的花费与信息单元：名称 / 颜色 / 评级 / 时间段 / 花费 / 预约 / 备注。行程卡与计划卡都由地点卡组成；「厕所」为保留地点，便于随手添加。</div>'
+    +p.locs.map(l=>{ const rt=RATING[l.rating]||RATING.C;
+      return '<div class="pkcard card-loc" data-id="'+l.id+'">'
+      +'<div class="t1"><span style="width:14px;height:14px;border-radius:50%;background:'+l.color+';flex:0 0 auto"></span><span class="ttl">'+esc(l.name)+'</span>'
+      +'<span class="rt" style="background:'+rt.c+'">'+esc(l.rating||'C')+'</span></div>'
+      +'<div class="t2"><span class="tiny">'+durLabel(l.dur||60)+'</span>'
+      +(locCost(l)>0?'<span class="tiny money">'+money(l.cost)+' · '+esc(l.costCat)+'</span>':'')
+      +(l.booking?'<span class="tiny">预约 '+esc(l.booking)+'</span>':'')
+      +'<span class="tiny">'+p.plans.filter(x=>(x.items||[]).some(i=>i.locId===l.id)).length+' 计划 / '+p.days.filter(d=>d.arrs.some(a=>a.locId===l.id)).length+' 行程引用</span></div>'
+    +'</div>'; }).join('');
+  const box=$('#pkgBody');
+  $$('#pkgBody .pkcard').forEach(el=>{
+    const l=locById(el.dataset.id); if(!l) return;
+    let tapped=false;
+    el.addEventListener('click',()=>{ if(el.dataset.noClick||tapped){ tapped=false; return; } locEditor(l.id); });
+    bindCard(el,box,{
+      commit:ins=>{ snapState();
+        p.locs=p.locs.filter(x=>x.id!==l.id);
+        p.locs.splice(clamp(ins,0,p.locs.length),0,l);
+        save(); render(); toast('顺序已调整','撤销',doUndo); },
+      onDelete:()=>{ if(l.name==='厕所'){ toast('「厕所」为保留地点，不能删除'); return; }
+        snapState(); PK().locs=PK().locs.filter(x=>x.id!==l.id);
+        PK().plans.forEach(x=>x.items=x.items.filter(i=>i.locId!==l.id));
+        PK().days.forEach(dd=>{ dd.arrs=dd.arrs.filter(a=>a.locId!==l.id); });
+        save(); render(); toast('已删除「'+l.name+'」','撤销',doUndo); },
+      menu:()=>{ tapped=true; setTimeout(()=>tapped=false,400); locMenu(l); }
+    });
+  });
+}
+function locMenu(l){
+  openSheet('<h3>'+esc(l.name)+'</h3>'
+    +'<button class="btn gh full" id="lEdit">编辑</button>'
+    +'<button class="btn gh full" id="lRen">重命名</button>'
+    +'<button class="btn red full" id="lDel">删除地点卡</button>'
+    +'<button class="btn gh full" id="lCancel">取消</button>');
+  $('#lEdit').onclick=()=>{ closeSheet(); locEditor(l.id); };
+  $('#lRen').onclick=()=>{ const v=prompt('地点名称',l.name); if(v===null) return; snapState(); l.name=v.trim()||l.name; save(); closeSheet(); render(); toast('已重命名','撤销',doUndo); };
+  $('#lDel').onclick=()=>{
+    if(l.name==='厕所'){ toast('「厕所」为保留地点，不能删除'); return; }
+    const usedP=PK().plans.filter(x=>(x.items||[]).some(i=>i.locId===l.id)).length;
+    const usedD=PK().days.filter(d=>d.arrs.some(a=>a.locId===l.id)).length;
+    if((usedP||usedD)&&!confirm('该地点被 '+usedP+' 张计划卡、'+usedD+' 张行程卡引用，删除后这些条目一并移除。继续？')) return;
+    snapState(); PK().locs=PK().locs.filter(x=>x.id!==l.id);
+    PK().plans.forEach(x=>x.items=x.items.filter(i=>i.locId!==l.id));
+    PK().days.forEach(d=>{ d.arrs=d.arrs.filter(a=>a.locId!==l.id); });
+    save(); closeSheet(); render(); toast('已删除','撤销',doUndo); };
+  $('#lCancel').onclick=closeSheet;
+}
+function locEditor(id,opt){
+  opt=opt||{};
+  const p=PK(), l=id?locById(id):null;
+  let color=l?l.color:PALETTE[0], rating=l?(l.rating||'C'):'C';
+  openSheet('<h3>'+(l?'编辑地点卡':'新地点卡')+'<span class="spacer"></span><span class="tiny" style="background:var(--loc);border-color:var(--loc-b)">地点卡</span></h3>'
+    +'<div class="fld"><label>名称</label><input id="leN" value="'+esc(l?l.name:'')+'" placeholder="例如：景区1"></div>'
+    +'<div class="grid2"><div class="fld"><label>颜色</label><div class="swatches" id="leC">'
+      +PALETTE.map(c=>'<button data-c="'+c+'" style="background:'+c+'"'+(c===color?' class="on"':'')+'></button>').join('')
+    +'</div></div>'
+    +'<div class="fld"><label>评级</label><div class="chips" id="leR">'
+      +['S','A','B','C'].map(r=>'<button data-r="'+r+'"'+(rating===r?' class="on" style="background:'+RATING[r].c+'"':'')+'>'+r+'</button>').join('')
+    +'</div></div></div>'
+    +'<div class="grid2"><div class="fld"><label>时间段 · 分钟</label><input id="leD" type="number" step="5" value="'+(l?l.dur||60:60)+'"></div>'
+    +'<div class="fld"><label>预览时长</label><input id="leDD" disabled value="'+durLabel(l?l.dur||60:60)+'"></div></div>'
+    +'<div class="grid2"><div class="fld"><label>花费</label><input id="leCst" type="number" step="0.01" value="'+(l&&l.cost?l.cost:'')+'" placeholder="0"></div>'
+    +'<div class="fld"><label>花费类型</label><select id="leCC">'+COST_CATS.map(c=>'<option'+((l&&l.costCat)===c?' selected':'')+'>'+c+'</option>').join('')+'</select></div></div>'
+    +'<div class="fld"><label>预约</label><input id="leB" value="'+esc(l?l.booking:'')+'" placeholder="如：提前1天预约"></div>'
+    +'<div class="fld"><label>备注</label><input id="leNote" value="'+esc(l?l.note:'')+'"></div>'
+    +'<button class="btn full" id="leOk">保存</button>'
+    +'<div class="hint">时间段只填预计时长，不填具体时间点；具体时间在行程卡与计划卡里安排。</div>');
+  $$('#leC button').forEach(b=>b.onclick=()=>{ color=b.dataset.c; $$('#leC button').forEach(x=>x.classList.toggle('on',x===b)); });
+  $$('#leR button').forEach(b=>b.onclick=()=>{ rating=b.dataset.r;
+    $$('#leR button').forEach(x=>{ x.classList.toggle('on',x===b); x.style.background=x===b?RATING[rating].c:''; }); });
+  $('#leD').oninput=()=>{ $('#leDD').value=durLabel(clamp(parseInt($('#leD').value,10)||0,0,1440)); };
+  $('#leOk').onclick=()=>{
+    const name=$('#leN').value.trim(); if(!name){ toast('请填写名称'); return; }
+    const dur=clamp(parseInt($('#leD').value,10)||60,5,1440);
+    snapState();
+    const data={name,color,rating,dur,cost:+$('#leCst').value||0,costCat:$('#leCC').value,booking:$('#leB').value.trim(),note:$('#leNote').value.trim()};
+    if(l) Object.assign(l,data);
+    else PK().locs.push(Object.assign({id:uid('l')},data));
+    save(); closeSheet();
+    if(opt.then){ opt.then(); }
+    else { render(); toast(l?'地点卡已保存':'已创建地点卡','撤销',doUndo); }
+  };
+}
+/* ---- to-do ---- */
+$('#btnTodo').onclick=()=>{
+  const p=PK();
+  const body=TODO_CATS.map(c=>{
+    const list=p.todos.filter(t=>t.cat===c.k);
+    return '<div class="fld"><label>'+c.n+'</label>'
+      +(list.length?list.map(t=>'<div class="ck'+(t.done?' on':'')+'" data-id="'+t.id+'"><div class="box">✓</div><div class="txt">'+esc(t.text)+'</div><button class="del" data-act="del">✕</button></div>').join(''):'<div class="hint">暂无</div>')+'</div>';
+  }).join('');
+  openSheet('<h3>to-do<span class="spacer"></span><span class="tiny">整包通用</span></h3>'+body
+    +'<div class="fld"><div class="grid2"><select id="tdC">'+TODO_CATS.map(c=>'<option value="'+c.k+'">'+c.n+'</option>').join('')+'</select>'
+    +'<input id="tdN" placeholder="添加待办…"></div></div>'
+    +'<button class="btn full" id="tdAdd">添加</button>');
+  $('#tdAdd').onclick=()=>{ const v=$('#tdN').value.trim(); if(!v) return; snapState();
+    PK().todos.push({id:uid('t'),text:v,cat:$('#tdC').value,done:false}); save();
+    $('#btnTodo').click(); toast('已添加','撤销',doUndo); };
+  $$('#sheet .ck').forEach(el=>{
+    const t=PK().todos.find(x=>x.id===el.dataset.id); if(!t) return;
+    el.onclick=ev=>{
+      if(ev.target.dataset.act==='del'){ snapState(); PK().todos=PK().todos.filter(x=>x.id!==t.id); save(); $('#btnTodo').click(); toast('已删除','撤销',doUndo); return; }
+      snapState(); t.done=!t.done; save(); $('#btnTodo').click();
+    };
+  });
+};
+
+/* ==================== 行程卡编辑 ==================== */
+const HH_EDIT=56;
+function teamModes(p){
+  if(!p.teams.length) return [['all','全体']];
+  return [['all','全体'],['par','并联']].concat(p.teams.map(t=>[t.id,t.name]));
+}
+function renderDay(){
+  const p=PK(), d=dayById(S.ui.dayId);
+  if(!d){ S.ui.view='pkg'; render(); return; }
+  const rng=d.date?dShort(d.date):'';
+  $('#dayName').textContent=p.name+' · '+d.name+(rng?' · '+rng:'');
+  $$('#snapSeg button').forEach(b=>b.classList.toggle('on',+b.dataset.v===S.ui.snap));
+  const hasTeams=p.teams.length>0;
+  $('#teamTool').style.display=hasTeams?'':'none';
+  if(hasTeams){
+    $('#teamSeg').innerHTML=teamModes(p).map(m=>'<button data-v="'+m[0]+'"'+(S.ui.teamFilter===m[0]?' class="on"':'')+'>'+m[1]+'</button>').join('')
+      +'<button data-v="__new">＋团队</button>';
+    $$('#teamSeg button').forEach(b=>b.onclick=()=>{
+      if(b.dataset.v==='__new'){ addTeam(); return; }
+      S.ui.teamFilter=b.dataset.v; save(); renderDay(); });
+  }
+  const lanes=(hasTeams&&S.ui.teamFilter==='par')?[ {title:'全体',arrs:d.arrs.filter(a=>!a.teamId)} ].concat(p.teams.map(t=>({title:t.name,arrs:d.arrs.filter(a=>a.teamId===t.id)}))):null;
+  $('#dayBody').innerHTML=tlMarkup(d.arrs,d.extras,HH_EDIT,{
+      interactive:true,noteInBlk:true,teamFilter:lanes?'all':S.ui.teamFilter,lanes:lanes})
+    +'<div style="height:26px"></div>'
+    +'<div class="hint">长按安排块拖动改时间 · 拖底部横条改时长 · 点安排块编辑 / 换团队 / 移除 · 红线标签可拖动调整花销时间</div>';
+  bindDayTimeline(d);
+  const first=d.arrs.length?Math.min.apply(null,d.arrs.map(a=>a.start)):8*60;
+  $('#dayScroll').scrollTop=clamp(first/60*HH_EDIT-130,0,1e6);
+  renderLocBar(d);
+}
+function addTeam(){
+  const v=prompt('团队名称','团队'+(PK().teams.length+1)); if(v===null) return;
+  snapState(); const t={id:uid('tm'),name:v.trim()||'团队'};
+  PK().teams.push(t); S.ui.teamFilter=t.id;
+  save(); render(); toast('已创建 '+t.name,'撤销',doUndo);
+}
+function renderLocBar(d){
+  const p=PK();
+  $('#locBar').innerHTML='<button class="dchip" data-add="__tap">⇊ 末尾添加：点地点卡</button>'
+    +p.locs.map(l=>{ const rt=RATING[l.rating]||RATING.C;
+      return '<button class="dchip" data-loc="'+l.id+'"><span class="rt" style="background:'+rt.c+'">'+esc(l.rating||'C')+'</span> '+esc(l.name)
+        +(locCost(l)>0?'<span class="n">'+money(l.cost)+'</span>':'')+'</button>'; }).join('');
+  $$('#locBar [data-loc]').forEach(c=>{
+    const l=locById(c.dataset.loc); if(!l) return;
+    c.onclick=()=>{ if(c.dataset.noClick) return; appendArr(d,l); };
+    bindLocDrag(c,l,d);
+  });
+}
+function appendArr(d,l,start){
+  const pxPerMin=HH_EDIT/60;
+  snapState();
+  let st=start;
+  if(st==null){ let last=0; d.arrs.forEach(a=>{ last=Math.max(last,a.start+a.dur); }); st=clamp(Math.ceil(last/S.ui.snap)*S.ui.snap,0,1440-(l.dur||60)); }
+  const a={id:uid('a'),locId:l.id,start:clamp(st,0,1440-(l.dur||60)),dur:l.dur||60,teamId:null};
+  d.arrs.push(a); save(); renderDay();
+  toast('已加入「'+l.name+'」 '+fmtHM(a.start),'撤销',doUndo);
+}
+function laneAtX(col,x){
+  const lanes=$$('.lane',col);
+  if(!lanes.length) return null;
+  const r=col.getBoundingClientRect();
+  for(let i=0;i<lanes.length;i++){
+    const lr=lanes[i].getBoundingClientRect();
+    if(x>=lr.left&&x<=lr.right) return i;
+  }
+  return null;
+}
+function edgeScroll(scrollEl,e){
+  if(!scrollEl) return;
+  const r=scrollEl.getBoundingClientRect(), M=64, sp=13;
+  if(e.clientY<r.top+M) scrollEl.scrollTop-=sp*(1-(e.clientY-r.top)/M);
+  else if(e.clientY>r.bottom-M) scrollEl.scrollTop+=sp*(1-(r.bottom-e.clientY)/M);
+}
+function bindLocDrag(chip,loc,d){
+  let ghost=null,offY=0;
+  longPress(chip,{
+    onStart:e=>{ snapState();
+      const rc=chip.getBoundingClientRect(); offY=e.clientY-rc.top;
+      ghost=chip.cloneNode(true); ghost.classList.add('ghost');
+      ghost.style.cssText+=';left:'+(rc.left)+'px;top:'+rc.top+'px;width:'+rc.width+'px;';
+      document.body.appendChild(ghost);
+      toast('拖到时间轴上松手，即在该时间添加'); },
+    onMove:e=>{ if(ghost) ghost.style.top=(e.clientY-offY)+'px'; edgeScroll($('#dayScroll'),e); },
+    onEnd:e=>{
+      if(ghost){ ghost.remove(); ghost=null; }
+      const el=document.elementFromPoint(e.clientX,e.clientY);
+      const col=el&&el.closest?el.closest('.col'):null;
+      if(col){
+        const rc=col.getBoundingClientRect();
+        const st=clamp(Math.round(((e.clientY-rc.top)/(HH_EDIT/60))/S.ui.snap)*S.ui.snap,0,1435);
+        const li=laneAtX(col,e.clientX);
+        const lanes=$$('.lane',col);
+        let teamId=null;
+        if(lanes.length&&li!=null&&li>0){ const hd=$$('.lane',col)[li].querySelector('.lanehd'); const nm=hd?hd.textContent:''; const tm=PK().teams.find(t=>t.name===nm); teamId=tm?tm.id:null; }
+        const a={id:uid('a'),locId:loc.id,start:st,dur:loc.dur||60,teamId:teamId};
+        d.arrs.push(a); save(); renderDay();
+        toast('已加入「'+loc.name+'」 '+fmtHM(st)+(teamId?' · '+teamById(teamId).name:''),'撤销',doUndo);
+      } else { undoStack.pop(); toast('已取消'); }
+    }
+  });
+}
+function bindDayTimeline(d){
+  const col=$('#dayBody .col'); if(!col) return;
+  const pxPerMin=HH_EDIT/60;
+  const redrawCosts=()=>{
+    const cc=$('#dayBody .costcol'); if(!cc) return;
+    const entries=[];
+    d.arrs.filter(a=>S.ui.teamFilter!=='par'||true).forEach(a=>{
+      const l=locById(a.locId); if(l&&locCost(l)>0) entries.push({y:a.start*pxPerMin,txt:money(l.cost),cls:'ce'}); });
+    (d.extras||[]).forEach(e=>entries.push({y:(e.at||9*60)*pxPerMin,txt:'额外 '+money(e.amount),cls:'ct'}));
+    cc.innerHTML=entries.map(x=>'<div class="'+x.cls+'" style="top:'+x.y+'px">'+esc(x.txt)+'</div>').join('');
+  };
+  $$('.blk',col).forEach(blk=>{
+    const a=d.arrs.find(x=>x.id===blk.dataset.arr); if(!a) return;
+    let startY=0,startVal=0,moved=false,snapped=false,justTapped=false;
+    const applyStart=ns=>{
+      ns=clamp(Math.round(ns/S.ui.snap)*S.ui.snap,0,1440-a.dur);
+      a.start=ns; blk.style.top=(ns*pxPerMin)+'px'; moved=true; redrawCosts();
+    };
+    const applyDur=nd=>{
+      nd=clamp(Math.round(nd/S.ui.snap)*S.ui.snap,S.ui.snap,1440-a.start);
+      a.dur=nd; blk.style.height=Math.max(nd*pxPerMin-2,16)+'px'; moved=true; redrawCosts();
+    };
+    const startCommon=e=>{ snapState(); snapped=true; startY=e.clientY; startVal=a.start; moved=false; justTapped=false; blk.classList.add('drag'); };
+    longPress(blk,{ignore:e=>{ const t=e.target; return !!(t&&t.closest&&t.closest('.rz,.grip,.eh,.t1')); },
+      onStart:startCommon,
+      onMove:e=>applyStart(startVal+(e.clientY-startY)/pxPerMin),
+      onEnd:(e,mv)=>{ blk.classList.remove('drag');
+        if(mv&&moved){ save(); renderDay(); toast('已调整到 '+fmtHM(a.start),'撤销',doUndo); }
+        else if(snapped&&!moved) undoStack.pop(); },
+      onCancel:()=>{ if(snapped&&!moved) undoStack.pop(); },
+      tapLong:()=>{ justTapped=true; openArr(a,d); } });
+    const dragMove=el=>directDrag(el,{onStart:startCommon,
+      onMove:e=>applyStart(startVal+(e.clientY-startY)/pxPerMin),
+      onEnd:()=>{ blk.classList.remove('drag'); if(moved){ save(); renderDay(); toast('已调整到 '+fmtHM(a.start),'撤销',doUndo); } else undoStack.pop(); }});
+    const grip=$('.grip',blk);
+    if(grip) dragMove(grip);
+    const t1=$('.t1',blk);
+    if(t1) dragMove(t1);
+    const rz=$('.rz',blk);
+    if(rz) directDrag(rz,{onStart:e=>{ snapState(); snapped=true; startY=e.clientY; startVal=a.dur; moved=false; blk.classList.add('drag'); },
+      onMove:e=>applyDur(startVal+(e.clientY-startY)/pxPerMin),
+      onEnd:()=>{ blk.classList.remove('drag'); if(moved){ save(); renderDay(); toast('时长 '+durLabel(a.dur),'撤销',doUndo); } else undoStack.pop(); }});
+    blk.addEventListener('click',()=>{ if(moved||justTapped) return; openArr(a,d); });
+  });
+  // 红色花销线：拖动标签调整时间点
+  $$('.expl',col).forEach(ex=>{
+    const e=d.extras.find(x=>x.id===ex.dataset.ex); if(!e) return;
+    const h=$('.eh',ex); if(!h) return;
+    let startY=0,at0=0,moved=false;
+    directDrag(h,{
+      onStart:ev=>{ snapState(); startY=ev.clientY; at0=e.at; moved=false; },
+      onMove:ev=>{
+        const na=clamp(Math.round((at0+(ev.clientY-startY)/pxPerMin)/S.ui.snap)*S.ui.snap,0,1435);
+        e.at=na; moved=true;
+        ex.style.top=(na*pxPerMin)+'px';
+        h.textContent=e.name+' '+money(e.amount);
+      },
+      onEnd:()=>{ if(moved){ save(); renderDay(); toast('花销时间已调到 '+fmtHM(e.at),'撤销',doUndo); } else undoStack.pop(); }
+    });
+    h.addEventListener('click',()=>{ if(moved) return; extraList(d); });
+  });
+}
+function openArr(a,d){
+  const l=locById(a.locId); if(!l) return;
+  const tm=teamById(a.teamId);
+  const p=PK();
+  openSheet('<h3>'+esc(l.name)+'<span class="spacer"></span><span class="rt" style="background:'+(RATING[l.rating]||RATING.C).c+'">'+esc(l.rating||'C')+'</span>'
+    +'<span class="tiny">'+esc(tm?tm.name:'全体')+'</span></h3>'
+    +'<div class="grid2"><div class="fld"><label>开始时间</label><input id="arS" type="time" value="'+fmtHM(a.start)+'"></div>'
+    +'<div class="fld"><label>时长 · 分钟</label><input id="arD" type="number" step="5" value="'+a.dur+'"></div></div>'
+    +'<div class="fld"><label>所属团队</label><div class="chips" id="arT">'
+      +'<button data-t=""'+(!a.teamId?' class="on"':'')+'>全体</button>'
+      +p.teams.map(t=>'<button data-t="'+t.id+'"'+(a.teamId===t.id?' class="on" style="background:var(--pri)"':'')+'>'+esc(t.name)+'<span class="tdel" data-del="'+t.id+'">✕</span></button>').join('')
+      +'<button data-t="__new">＋ 新团队</button></div></div>'
+    +'<div class="hint">花费 '+money(locCost(l))+' · '+esc(l.costCat)+(l.booking?'　预约：'+esc(l.booking):'')+(l.note?'　备注：'+esc(l.note):'')+'</div>'
+    +'<button class="btn full" id="arOk">保存</button>'
+    +(p.teams.length?'<button class="btn gold full" id="arSync">同步到所有团队</button>':'')
+    +'<button class="btn gh full" id="arLoc">编辑地点卡</button>'
+    +'<button class="btn red full" id="arDel">从本行程卡移除</button>'
+    +'<button class="btn gh full" id="arCancel">取消</button>');
+  $$('#arT button').forEach(b=>b.onclick=()=>{
+    if(b.dataset.t==='__new'){ closeSheet(); addTeam(); openArr(a,d); return; }
+    $$('#arT button').forEach(x=>x.classList.toggle('on',x===b));
+  });
+  $$('#arT .tdel').forEach(x=>x.onclick=ev=>{
+    ev.stopPropagation();
+    const t=PK().teams.find(y=>y.id===x.dataset.del); if(!t) return;
+    if(!confirm('删除团队「'+t.name+'」？其专属安排将归入全体。')) return;
+    snapState();
+    const pk=PK();
+    pk.teams=pk.teams.filter(y=>y.id!==t.id);
+    d.arrs.forEach(ar=>{ if(ar.teamId===t.id) ar.teamId=null; });
+    if(S.ui.teamFilter===t.id) S.ui.teamFilter='all';
+    save(); closeSheet(); render(); toast('已删除团队 '+t.name,'撤销',doUndo);
+  });
+  $('#arOk').onclick=()=>{
+    snapState();
+    a.start=clamp(parseHM($('#arS').value),0,1439);
+    a.dur=clamp(parseInt($('#arD').value,10)||a.dur,5,1440);
+    const sel=$('#arT button.on'); if(sel) a.teamId=sel.dataset.t||null;
+    save(); closeSheet(); render(); toast('已保存','撤销',doUndo);
+  };
+  const sy=$('#arSync');
+  if(sy) sy.onclick=()=>{
+    if(!confirm('把这条安排复制到每一个团队？')) return;
+    snapState();
+    PK().teams.forEach(t=>{ if(t.id!==a.teamId) d.arrs.push({id:uid('a'),locId:a.locId,start:a.start,dur:a.dur,teamId:t.id}); });
+    save(); closeSheet(); render(); toast('已同步到全部团队','撤销',doUndo);
+  };
+  $('#arLoc').onclick=()=>{ closeSheet(); locEditor(l.id); };
+  $('#arDel').onclick=()=>{ snapState(); d.arrs=d.arrs.filter(x=>x.id!==a.id); save(); closeSheet(); render(); toast('已从'+d.name+'移除（地点卡保留）','撤销',doUndo); };
+  $('#arCancel').onclick=closeSheet;
+}
+$('#dayDate').onclick=()=>{ const d=dayById(S.ui.dayId); if(d) dateEditor(d); };
+$('#dayImport').onclick=()=>{
+  const p=PK(), d=dayById(S.ui.dayId);
+  openSheet('<h3>计划卡替换<span class="spacer"></span><span class="tiny">'+esc(d.name)+'</span></h3>'
+    +'<div class="hint">用计划卡直接替换该行程卡的安排，之后可自由调整。</div>'
+    +'<div class="chips" style="flex-direction:column;align-items:stretch">'
+    +(p.plans.length?p.plans.map(pl=>'<button class="btn gh" data-p="'+pl.id+'">'+esc(pl.name)
+        +'　<span class="tiny">'+pl.items.length+' 个地点</span><span class="tiny money">'+money(planCost(pl))+'</span></button>').join('')
+      :'<div class="hint">还没有计划卡</div>')+'</div>');
+  $$('#sheet [data-p]').forEach(b=>b.onclick=()=>{ closeSheet(); applyPlanToDay(b.dataset.p,d.id); });
+};
+$('#dayAddCost').onclick=()=>{
+  const d=dayById(S.ui.dayId);
+  openSheet('<h3>额外花销<span class="spacer"></span><span class="tiny">'+esc(d.name)+'</span></h3>'
+    +'<div class="grid2"><div class="fld"><label>名称</label><input id="ecN" placeholder="如：打车"></div>'
+    +'<div class="fld"><label>金额</label><input id="ecA" type="number" step="0.01" placeholder="0"></div></div>'
+    +'<div class="grid2"><div class="fld"><label>类型</label><select id="ecC">'+COST_CATS.map(c=>'<option'+(c==='额外花销'?' selected':'')+'>'+c+'</option>').join('')+'</select></div>'
+    +'<div class="fld"><label>时间点</label><input id="ecT" type="time" value="12:00"></div></div>'
+    +'<button class="btn full" id="ecOk">保存，时间轴标红线</button>'
+    +((d.extras||[]).length?'<button class="btn gh full" id="ecList">管理已有额外花销…</button>':''));
+  $('#ecOk').onclick=()=>{
+    const name=$('#ecN').value.trim()||'额外花销', amt=+$('#ecA').value||0;
+    if(!amt){ toast('请填写金额'); return; }
+    snapState();
+    (d.extras=d.extras||[]).push({id:uid('e'),name,amount:amt,cat:$('#ecC').value,at:parseHM($('#ecT').value)});
+    save(); closeSheet(); render(); toast('已记录 '+money(amt),'撤销',doUndo);
+  };
+  const el=$('#ecList'); if(el) el.onclick=()=>{ closeSheet(); extraList(d); };
+};
+function extraList(d){
+  openSheet('<h3>额外花销 · '+esc(d.name)+'</h3>'
+    +(d.extras||[]).map(e=>'<div class="sumrow" data-e="'+e.id+'" style="cursor:pointer"><span class="n">'+esc(e.name)+' <span class="tiny">'+fmtHM(e.at||0)+' · '+esc(e.cat)+'</span></span><span class="v">'+money(e.amount)+'</span><button class="tbtn" data-del="'+e.id+'">删除</button></div>').join('')
+    +'<div class="sumrow"><span class="n"><b>小计</b></span><span class="v">'+money(dayExtraCost(d))+'</span></div>'
+    +'<div class="hint">点任意条目即可编辑内容 / 时间点 / 金额；也可在时间轴上拖动红色标签调时间。</div>');
+  $$('#sheet [data-e]').forEach(r=>r.onclick=ev=>{
+    if(ev.target.dataset.del) return;
+    extraEditor(d,r.dataset.e);
+  });
+  $$('#sheet [data-del]').forEach(b=>b.onclick=ev=>{
+    ev.stopPropagation();
+    snapState(); d.extras=d.extras.filter(x=>x.id!==b.dataset.del); save(); closeSheet(); render(); toast('已删除','撤销',doUndo); });
+}
+function extraEditor(d,eid){
+  const e=(d.extras||[]).find(x=>x.id===eid); if(!e) return;
+  openSheet('<h3>编辑花销<span class="spacer"></span><span class="tiny">'+esc(d.name)+'</span></h3>'
+    +'<div class="grid2"><div class="fld"><label>内容</label><input id="eeN" value="'+esc(e.name)+'" placeholder="如：打车"></div>'
+    +'<div class="fld"><label>金额</label><input id="eeA" type="number" step="0.01" value="'+(+e.amount||0)+'"></div></div>'
+    +'<div class="grid2"><div class="fld"><label>类型</label><select id="eeC">'+COST_CATS.map(c=>'<option'+(e.cat===c?' selected':'')+'>'+c+'</option>').join('')+'</select></div>'
+    +'<div class="fld"><label>时间点</label><input id="eeT" type="time" value="'+fmtHM(e.at||0)+'"></div></div>'
+    +'<button class="btn full" id="eeOk">保存</button>'
+    +'<button class="btn red full" id="eeDel">删除这条花销</button>'
+    +'<button class="btn gh full" id="eeBack">返回列表</button>');
+  $('#eeOk').onclick=()=>{ snapState();
+    e.name=$('#eeN').value.trim()||e.name;
+    e.amount=+$('#eeA').value||0;
+    e.cat=$('#eeC').value;
+    e.at=parseHM($('#eeT').value);
+    save(); closeSheet(); render(); toast('已保存','撤销',doUndo); };
+  $('#eeDel').onclick=()=>{ snapState(); d.extras=d.extras.filter(x=>x.id!==e.id); save(); closeSheet(); render(); toast('已删除','撤销',doUndo); };
+  $('#eeBack').onclick=()=>{ extraList(d); };
+}
+
+/* ==================== 计划卡编辑（整页时间轴 + 地点卡栏） ==================== */
+const HH_PLAN=56;
+function renderPlan(){
+  const p=PK(), pl=planById(S.ui.planId);
+  if(!pl){ S.ui.view='pkg'; render(); return; }
+  $('#planName').textContent=p.name+' · '+pl.name;
+  $$('#planSnapSeg button').forEach(b=>b.classList.toggle('on',+b.dataset.v===S.ui.snap));
+  const cost=planCost(pl);
+  $('#planBody').innerHTML=tlMarkup((pl.items||[]).map(i=>Object.assign({teamId:null},i)),[],HH_PLAN,{
+      interactive:true,costCol:false})
+    +'<div class="hint" style="padding-top:14px">计划费用 '+money(cost)+' · 长按块拖动改时间 / 拖底部改时长 / 点块编辑或移除</div>'
+    +'<div style="height:20px"></div>';
+  // 右侧地点卡栏
+  const col=$('#planBody .col');
+  const pal=document.createElement('div');
+  pal.className='palette';
+  pal.innerHTML='<div class="pin"><div class="pttl">地点卡 · 点按或拖入</div>'
+    +p.locs.map(l=>{ const rt=RATING[l.rating]||RATING.C;
+      return '<div class="pchip" data-loc="'+l.id+'"><span class="dot" style="background:'+l.color+'"></span><span class="nm">'+esc(l.name)+'</span><span class="rt" style="background:'+rt.c+'">'+esc(l.rating||'C')+'</span></div>'; }).join('')
+    +'</div>';
+  $('#planBody .tgrid').appendChild(pal);
+  bindPlanTimeline(pl);
+  bindPalette(pal,pl);
+  const first=(pl.items||[]).length?Math.min.apply(null,pl.items.map(i=>i.start)):8*60;
+  $('#planScroll').scrollTop=clamp(first/60*HH_PLAN-130,0,1e6);
+}
+function bindPlanTimeline(pl){
+  const col=$('#planBody .col'); if(!col) return;
+  const pxPerMin=HH_PLAN/60;
+  $$('.blk',col).forEach(blk=>{
+    const it=(pl.items||[]).find(x=>x.id===blk.dataset.arr); if(!it) return;
+    let startY=0,startVal=0,moved=false,snapped=false,justTapped=false;
+    const applyStart=ns=>{
+      ns=clamp(Math.round(ns/S.ui.snap)*S.ui.snap,0,1440-it.dur);
+      it.start=ns; blk.style.top=(ns*pxPerMin)+'px'; moved=true;
+    };
+    const applyDur=nd=>{
+      nd=clamp(Math.round(nd/S.ui.snap)*S.ui.snap,S.ui.snap,1440-it.start);
+      it.dur=nd; blk.style.height=Math.max(nd*pxPerMin-2,16)+'px'; moved=true;
+    };
+    const startCommon=e=>{ snapState(); snapped=true; startY=e.clientY; startVal=it.start; moved=false; justTapped=false; blk.classList.add('drag'); };
+    longPress(blk,{ignore:e=>{ const t=e.target; return !!(t&&t.closest&&t.closest('.rz,.grip,.eh,.t1')); },
+      onStart:startCommon,
+      onMove:e=>applyStart(startVal+(e.clientY-startY)/pxPerMin),
+      onEnd:(e,mv)=>{ blk.classList.remove('drag');
+        if(mv&&moved){ save(); renderPlan(); toast('已调整到 '+fmtHM(it.start),'撤销',doUndo); }
+        else if(snapped&&!moved) undoStack.pop(); },
+      onCancel:()=>{ if(snapped&&!moved) undoStack.pop(); },
+      tapLong:()=>{ justTapped=true; openPlanItem(pl,it); } });
+    const dragMove=el=>directDrag(el,{onStart:startCommon,onMove:e=>applyStart(startVal+(e.clientY-startY)/pxPerMin),
+      onEnd:()=>{ blk.classList.remove('drag'); if(moved){ save(); renderPlan(); toast('已调整到 '+fmtHM(it.start),'撤销',doUndo); } else undoStack.pop(); }});
+    const grip=$('.grip',blk);
+    if(grip) dragMove(grip);
+    const t1=$('.t1',blk);
+    if(t1) dragMove(t1);
+    const rz=$('.rz',blk);
+    if(rz) directDrag(rz,{onStart:e=>{ snapState(); snapped=true; startY=e.clientY; startVal=it.dur; moved=false; blk.classList.add('drag'); },
+      onMove:e=>applyDur(startVal+(e.clientY-startY)/pxPerMin),
+      onEnd:()=>{ blk.classList.remove('drag'); if(moved){ save(); renderPlan(); toast('时长 '+durLabel(it.dur),'撤销',doUndo); } else undoStack.pop(); }});
+    blk.addEventListener('click',()=>{ if(moved||justTapped) return; openPlanItem(pl,it); });
+  });
+}
+function openPlanItem(pl,it){
+  const l=locById(it.locId); if(!l) return;
+  openSheet('<h3>'+esc(l.name)+'<span class="spacer"></span><span class="tiny" style="background:var(--plan);border-color:var(--plan-b)">计划项</span></h3>'
+    +'<div class="grid2"><div class="fld"><label>开始时间</label><input id="piS" type="time" value="'+fmtHM(it.start)+'"></div>'
+    +'<div class="fld"><label>时长 · 分钟</label><input id="piD" type="number" step="5" value="'+it.dur+'"></div></div>'
+    +'<div class="fld"><label>换地点</label><div class="chips" id="piL">'
+      +PK().locs.map(x=>'<button data-l="'+x.id+'"'+(x.id===it.locId?' class="on"':'')+'>'+esc(x.name)+'</button>').join('')
+    +'</div></div>'
+    +'<div class="hint">花费 '+money(locCost(l))+' · '+esc(l.costCat)+(l.booking?'　预约：'+esc(l.booking):'')+'</div>'
+    +'<button class="btn full" id="piOk">保存</button>'
+    +'<button class="btn gh full" id="piLoc">编辑地点卡</button>'
+    +'<button class="btn red full" id="piDel">从计划卡移除</button>'
+    +'<button class="btn gh full" id="piCancel">取消</button>');
+  $$('#piL button').forEach(b=>b.onclick=()=>{ $$('#piL button').forEach(x=>x.classList.toggle('on',x===b)); });
+  $('#piOk').onclick=()=>{
+    snapState();
+    it.start=clamp(parseHM($('#piS').value),0,1439);
+    it.dur=clamp(parseInt($('#piD').value,10)||it.dur,5,1440);
+    const sel=$('#piL button.on'); if(sel&&sel.dataset.l) it.locId=sel.dataset.l;
+    save(); closeSheet(); renderPlan(); toast('已保存','撤销',doUndo);
+  };
+  $('#piLoc').onclick=()=>{ closeSheet(); locEditor(l.id); };
+  $('#piDel').onclick=()=>{ snapState(); pl.items=pl.items.filter(x=>x.id!==it.id); save(); closeSheet(); renderPlan(); toast('已移除','撤销',doUndo); };
+  $('#piCancel').onclick=closeSheet;
+}
+function bindPalette(pal,pl){
+  const p=PK();
+  $$('.pchip',pal).forEach(ch=>{
+    const l=locById(ch.dataset.loc); if(!l) return;
+    ch.onclick=()=>{ if(ch.dataset.noClick) return;
+      snapState();
+      let last=0; (pl.items||[]).forEach(i=>{ last=Math.max(last,i.start+i.dur); });
+      pl.items=pl.items||[];
+      pl.items.push({id:uid('i'),locId:l.id,start:clamp(Math.ceil(last/S.ui.snap)*S.ui.snap,0,1435),dur:l.dur||60});
+      save(); renderPlan(); toast('已加入「'+l.name+'」','撤销',doUndo); };
+    let ghost=null,offY=0;
+    longPress(ch,{
+      onStart:e=>{ snapState();
+        const rc=ch.getBoundingClientRect(); offY=e.clientY-rc.top;
+        ghost=ch.cloneNode(true); ghost.classList.add('ghost');
+        ghost.style.cssText+=';left:'+rc.left+'px;top:'+rc.top+'px;width:'+rc.width+'px;';
+        document.body.appendChild(ghost);
+        toast('拖到时间轴上松手，即在该时间安排'); },
+      onMove:e=>{ if(ghost) ghost.style.top=(e.clientY-offY)+'px'; edgeScroll($('#planScroll'),e); },
+      onEnd:e=>{
+        if(ghost){ ghost.remove(); ghost=null; }
+        const el=document.elementFromPoint(e.clientX,e.clientY);
+        const col=el&&el.closest?el.closest('#planBody .col'):null;
+        if(col){
+          const rc=col.getBoundingClientRect();
+          const st=clamp(Math.round(((e.clientY-rc.top)/(HH_PLAN/60))/S.ui.snap)*S.ui.snap,0,1435);
+          pl.items=pl.items||[];
+          pl.items.push({id:uid('i'),locId:l.id,start:st,dur:l.dur||60});
+          save(); renderPlan(); toast('已在 '+fmtHM(st)+' 安排「'+l.name+'」','撤销',doUndo);
+        } else { undoStack.pop(); toast('已取消'); }
+      }
+    });
+  });
+}
+$('#planBack').onclick=()=>{ S.ui.view='pkg'; save(); render(); };
+$('#planCopy').onclick=()=>{ const pl=planById(S.ui.planId); if(!pl) return;
+  snapState();
+  const c=JSON.parse(JSON.stringify(pl)); c.id=uid('p'); c.name=pl.name+' 副本';
+  c.items=(c.items||[]).map(i=>Object.assign({},i,{id:uid('i')}));
+  PK().plans.push(c); save(); render(); toast('已复制为「'+c.name+'」','撤销',doUndo); };
+$('#planApply').onclick=()=>{ const pl=planById(S.ui.planId); if(!pl) return; closeSheet(); pickDayForPlan(pl.id); };
+$$('#planSnapSeg button').forEach(b=>b.onclick=()=>{ S.ui.snap=+b.dataset.v; save(); renderPlan(); toast('拖动精度 '+b.dataset.v+' 分钟'); });
+
+/* ==================== 行程卡浏览 ==================== */
+const HH_BROWSE=30;
+function renderBrowse(){
+  const p=PK();
+  const hasTeams=p.teams.length>0;
+  $('#bTeamTool').style.display=hasTeams?'':'none';
+  if(hasTeams){
+    $('#bTeamSeg').innerHTML=teamModes(p).map(m=>'<button data-v="'+m[0]+'"'+(S.ui.teamFilter===m[0]?' class="on"':'')+'>'+m[1]+'</button>').join('');
+    $$('#bTeamSeg button').forEach(b=>b.onclick=()=>{ S.ui.teamFilter=b.dataset.v; save(); renderBrowse(); });
+  }
+  const lanesMode=hasTeams&&S.ui.teamFilter==='par';
+  $('#browseBody').innerHTML='<div class="hint" style="padding:10px 12px 0">向下滑动查看全部行程卡；同一地点同色并显示评级；右侧为该卡花费。</div>'
+    +p.days.map(d=>{
+      const lanes=lanesMode?[ {title:'全体',arrs:d.arrs.filter(a=>!a.teamId)} ].concat(p.teams.map(t=>({title:t.name,arrs:d.arrs.filter(a=>a.teamId===t.id)}))):null;
+      return '<div class="pkcard card-day" data-id="'+d.id+'" style="margin:10px 12px;padding:10px 10px 8px">'
+        +'<div class="t1" style="font-size:14px"><span class="ttl">'+esc(d.name)+'</span>'
+        +(d.date?'<span class="tiny">'+d.date+'</span>':'')
+        +'<span class="tiny money">'+money(dayCost(d))+'</span></div>'
+        +'<div style="margin-top:6px">'+tlMarkup(d.arrs,d.extras,HH_BROWSE,{interactive:false,showHalf:false,teamFilter:lanesMode?'all':S.ui.teamFilter,lanes:lanes})+'</div>'
+      +'</div>';
+    }).join('')
+    +'<div class="hint" style="padding:0 14px">点任意行程卡进入编辑。</div>';
+  $$('#browseBody .pkcard').forEach(el=>{
+    el.addEventListener('click',()=>{ if(el.dataset.noClick) return; S.ui.dayId=el.dataset.id; S.ui.view='day'; save(); render(); });
+  });
+}
+$('#btnSum').onclick=()=>{
+  const cats=['门票','项目','食物','交通','额外花销'];
+  openSheet('<h3>花费总计<span class="spacer"></span><span class="tiny">'+esc(PK().name)+'</span></h3>'
+    +cats.map(c=>'<div class="sumrow"><span class="n">'+c+'</span><span class="v">'+money(totalCost(c))+'</span></div>').join('')
+    +'<div class="sumrow"><span class="n"><b>实际总计</b></span><span class="v" style="font-size:16px">'+money(totalCost())+'</span></div>'
+    +'<div class="sumrow"><span class="n">计划费用合计</span><span class="v">'+money(pkgPlan(PK()))+'</span></div>'
+    +'<div class="fld" style="margin-top:14px"><label>分行程卡</label>'
+    +PK().days.map(d=>'<div class="sumrow"><span class="n">'+esc(d.name)
+      +(dayPlanCost(d)?' <span class="tiny">安排 '+money(dayPlanCost(d))+'</span>':'')
+      +(dayExtraCost(d)?' <span class="tiny">额外 '+money(dayExtraCost(d))+'</span>':'')+'</span>'
+      +'<span class="v">'+money(dayCost(d))+'</span></div>').join('')+'</div>'
+    +'<div class="fld"><label>明细</label>'
+    +(costRows().map(r=>'<div class="sumrow"><span class="n">'+(r.rating?'<span class="rt" style="background:'+(RATING[r.rating]||RATING.C).c+'">'+r.rating+'</span> ':'')+esc(r.name)+' <span class="tiny">'+esc(r.day.name)+' · '+esc(r.cat)+'</span></span><span class="v">'+money(r.amount)+'</span></div>').join('')||'<div class="hint">暂无花销</div>')+'</div>');
+};
+
+/* ==================== 导航 ==================== */
+$('#pkgBack').onclick=()=>{ S.ui.view='home'; save(); render(); };
+$('#dayBack').onclick=()=>{ S.ui.view='pkg'; save(); render(); };
+$('#browseBack').onclick=()=>{ S.ui.view='pkg'; S.ui.teamFilter='all'; save(); render(); };
+$('#btnBrowse').onclick=()=>{ S.ui.view='browse'; S.ui.teamFilter='all'; save(); render(); };
+$$('#pkgSeg button').forEach(b=>b.onclick=()=>{ S.ui.pkgTab=b.dataset.v; save(); renderPkg(); });
+$('#pkgAdd').onclick=()=>{
+  if(S.ui.pkgTab==='days'){
+    snapState();
+    const pk=PK(), dts=pk.days.map(x=>x.date).filter(Boolean).sort();
+    let date='';
+    if(dts.length){ const b=new Date(dts[dts.length-1]+'T00:00:00'); b.setDate(b.getDate()+1); date=dateStr(b); }
+    pk.days.push({id:uid('d'),name:'第'+numCN(pk.days.length+1)+'天',date:date,arrs:[],extras:[]});
+    save(); render(); toast('已新建行程卡'+(date?' · 日期 '+date:''),'撤销',doUndo);
+  } else if(S.ui.pkgTab==='plans'){
+    snapState();
+    const pl={id:uid('p'),name:'计划'+numCN(PK().plans.length+1),items:[]};
+    PK().plans.push(pl); S.ui.planId=pl.id; S.ui.view='plan';
+    save(); render(); toast('已新建计划卡，从右侧地点卡栏添加','撤销',doUndo);
+  } else { locEditor(null); }
+};
+$$('#snapSeg button').forEach(b=>b.onclick=()=>{ S.ui.snap=+b.dataset.v; save(); renderDay(); toast('拖动精度 '+b.dataset.v+' 分钟'); });
+
+/* ==================== 渲染入口 ==================== */
+function render(){
+  document.body.classList.toggle('nohint',!!S.ui.hideHints);
+  ['home','pkg','day','plan','browse'].forEach(v=>$('#v-'+v).classList.toggle('on',S.ui.view===v));
+  if(S.ui.view==='home') renderHome();
+  else if(S.ui.view==='pkg') renderPkg();
+  else if(S.ui.view==='day') renderDay();
+  else if(S.ui.view==='plan') renderPlan();
+  else if(S.ui.view==='browse') renderBrowse();
+  save();
+}
+render();
+window.addEventListener('beforeunload',save);
+if('serviceWorker' in navigator){ window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{})); }
+</script>
+</body>
+</html>
