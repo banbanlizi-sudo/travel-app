@@ -1436,22 +1436,8 @@ function renderCost(){
   const pkgCards=sorted.map(p=>{ const amts={}; cats.forEach(c=>amts[c]=cellAmt(p,c)); return costCard(p.id,esc(p.name),amts,pkgTotal(p)); }).join('');
   const gamts={}; cats.forEach(c=>gamts[c]=grand(c));
   const totalCard=costCard('','全部合计',gamts,grandAll,'var(--gold)');
-  $('#costBody').innerHTML='<div class="hint">行程包按实际花费从高到低排列；条形按类型占比分割，点条形或卡片看明细，下方矩阵点单元格看分类明细。</div>'
-    +pkgCards+totalCard
-    +'<div class="pkcard" style="padding:0;overflow:hidden"><div class="ctwrap"><table class="ctable"><thead><tr>'
-    +'<th>行程包</th>'+cats.map(c=>'<th><span class="cthead"><span class="csw" style="background:'+(COST_COLORS[c]||'#888')+'"></span>'+c+'</span></th>').join('')+'<th>合计</th></tr></thead><tbody>'
-    +ps.map(p=>'<tr><td data-pk="'+p.id+'">'+esc(p.name)+'</td>'
-      +cats.map(c=>{ const v=cellAmt(p,c); return '<td data-pk="'+p.id+'" data-c="'+c+'"'+(v?'':' class="zero"')+'>'+(v?money(v):'–')+'</td>'; }).join('')
-      +'<td data-pk="'+p.id+'" data-c="__all" style="color:var(--red);font-weight:700">'+money(pkgTotal(p))+'</td></tr>').join('')
-    +'<tr><td>总计</td>'+cats.map(c=>{ const v=grand(c); return '<td'+(v?' style="color:var(--red)"':' class="zero"')+'>'+(v?money(v):'–')+'</td>'; }).join('')
-    +'<td style="color:var(--red)">'+money(grandAll)+'</td></tr>'
-    +'</tbody></table></div></div>'
-    +'<div class="hint">类型顺序：'+cats.join(' / ')+'。地点卡花费与额外花销均按各自类型计入。</div>';
-  $$('#costBody td[data-pk]').forEach(td=>td.onclick=()=>{
-    const p=S.packages.find(x=>x.id===td.dataset.pk); if(!p) return;
-    if(!td.dataset.c){ S.activeId=p.id; S.ui.view='pkg'; S.ui.pkgTab='days'; save(); render(); return; }
-    costCellSheet(p,td.dataset.c);
-  });
+  $('#costBody').innerHTML='<div class="hint">行程包按实际花费从高到低排列；条形按类型占比分割，点条形看分类明细、点卡片看全部明细。底部金边为全部合计。</div>'
+    +pkgCards+totalCard;
   $$('#costBody .pkcost[data-pk]').forEach(card=>{
     const p=S.packages.find(x=>x.id===card.dataset.pk); if(!p) return;
     card.onclick=()=>costCellSheet(p,'__all',{open:true});
