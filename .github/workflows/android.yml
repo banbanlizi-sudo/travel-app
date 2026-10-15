@@ -20,8 +20,14 @@ jobs:
           distribution: temurin
           java-version: 21
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      # GitHub 官方 ubuntu-latest 运行环境已预装 Android SDK，直接用即可
+      # （此前的 android-actions/setup-android@v3 会失败，已移除）
+      - name: Use preinstalled Android SDK
+        run: |
+          SDK="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+          echo "ANDROID_HOME=$SDK" >> $GITHUB_ENV
+          echo "SDK 路径: $SDK"
+          ls "$SDK"
 
       - name: Install dependencies
         run: npm install --no-audit --no-fund
