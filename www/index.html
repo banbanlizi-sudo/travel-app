@@ -1408,6 +1408,9 @@ $('#btnSum').onclick=()=>{
     +'<div class="hint" style="padding-bottom:2px">实际统计 · 按类型</div>'
     +cats.map(c=>{ const v=totalCost(c); return '<div class="sumrow"><span class="n"><span class="csw" style="display:inline-block;width:8px;height:8px;border-radius:2.5px;background:'+(COST_COLORS[c]||'#888')+';margin-right:6px"></span>'+c+'</span><span class="v"'+(v?'':' style="color:var(--sub);font-weight:400"')+'>'+(v?money(v):'¥0')+'</span></div>'; }).join('')
     +'<div class="sumrow"><span class="n"><b>实际总计</b></span><span class="v" style="font-size:16px">'+money(totalCost())+'</span></div>'
+    +(function(){ const tot=totalCost();
+      return tot>0?'<div class="pbar" style="margin:4px 0 2px">'+COST_CATS.filter(c=>totalCost(c)>0).map(c=>{ const pct=totalCost(c)/tot*100; return '<div class="pseg" style="width:'+pct+'%;background:'+(COST_COLORS[c]||'#888')+'">'+(pct>=13?'<span>'+c+' '+Math.round(pct)+'%</span>':'')+'</div>'; }).join('')+'</div>':'';
+    })()
     +'<div class="sumrow"><span class="n">计划费用合计</span><span class="v">'+money(pkgPlan(PK()))+'</span></div>'
     +leg
     +'<div class="fld" style="margin-top:14px"><label>分行程卡 · 条内按 类型 比例堆叠</label>'+byDay+'</div>'
@@ -1422,7 +1425,14 @@ function renderCost(){
   const cellAmt=(p,c)=>costRowsFor(p,c).reduce((s,r)=>s+r.amount,0);
   const grand=c=>ps.reduce((s,p)=>s+cellAmt(p,c),0);
   const grandAll=ps.reduce((s,p)=>s+pkgTotal(p),0);
+  const barCats=COST_CATS.filter(c=>grand(c)>0);
+  const topBar=grandAll>0?'<div style="background:var(--card);border-radius:13px;box-shadow:var(--sh);padding:11px 12px;margin-bottom:10px;border-left:5px solid var(--pri)">'
+    +'<div class="t1" style="font-size:13.5px">全部花销占比<span style="flex:1"></span><span class="tiny money" style="font-size:14px">'+money(grandAll)+'</span></div>'
+    +'<div class="pbar" style="margin-top:8px">'+barCats.map(c=>{ const pct=grand(c)/grandAll*100; return '<div class="pseg" style="width:'+pct+'%;background:'+(COST_COLORS[c]||'#888')+'">'+(pct>=13?'<span>'+c+' '+Math.round(pct)+'%</span>':'')+'</div>'; }).join('')+'</div>'
+    +'<div class="pleg">'+barCats.map(c=>'<span class="li"><span class="sw" style="background:'+(COST_COLORS[c]||'#888')+'"></span><b>'+c+'</b> '+money(grand(c))+' · '+Math.round(grand(c)/grandAll*100)+'%</span>').join('')+'</div>'
+    +'</div>':'';
   $('#costBody').innerHTML='<div class="hint">按 行程包 × 类型 交叉统计实际花费：点单元格看明细，点行程包名进入该包。</div>'
+    +topBar
     +'<div class="pkcard" style="padding:0;overflow:hidden"><div class="ctwrap"><table class="ctable"><thead><tr>'
     +'<th>行程包</th>'+cats.map(c=>'<th><span class="cthead"><span class="csw" style="background:'+(COST_COLORS[c]||'#888')+'"></span>'+c+'</span></th>').join('')+'<th>合计</th></tr></thead><tbody>'
     +ps.map(p=>'<tr><td data-pk="'+p.id+'">'+esc(p.name)+'</td>'
