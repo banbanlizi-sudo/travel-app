@@ -160,6 +160,15 @@ input:focus,textarea:focus,select:focus{border-color:var(--pri)}
 .pleg .li{display:flex;align-items:center;gap:5px;white-space:nowrap}
 .pleg .sw{width:9px;height:9px;border-radius:3px;flex:0 0 auto}
 .pleg .li b{color:var(--text);font-weight:600}
+.clist{background:var(--card);border-radius:12px;box-shadow:var(--sh);padding:2px 12px}
+.clist.total{margin-top:12px}
+.crow{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.clist .crow:last-child{border-bottom:none}
+.crow .cn{flex:0 0 78px;font-size:12.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.crow.ctotal .cn{font-weight:700}
+.crow .pbar{flex:1;min-width:0;margin:0}
+.crow .cv{flex:0 0 auto}
+.crow .cempty{flex:1;text-align:center;font-size:11px;color:var(--sub)}
 .minibar{height:7px;border-radius:4px;overflow:hidden;display:flex;margin-top:5px;background:var(--card2)}
 .minibar i{display:block;height:100%}
 .ctwrap{overflow-x:auto}
@@ -1425,22 +1434,24 @@ function renderCost(){
   const cellAmt=(p,c)=>costRowsFor(p,c).reduce((s,r)=>s+r.amount,0);
   const grand=c=>ps.reduce((s,p)=>s+cellAmt(p,c),0);
   const grandAll=ps.reduce((s,p)=>s+pkgTotal(p),0);
-  const segSpan=pct=>pct>=8?'<span style="font-size:8.5px">'+Math.round(pct)+'%</span>':'';
-  const barHtml=(pk,amts,tot)=>tot>0?'<div class="pbar" style="margin-top:8px">'+cats.filter(c=>amts[c]>0).map(c=>{ const pct=amts[c]/tot*100; return '<div class="pseg" data-pk="'+pk+'" data-c="'+c+'" style="width:'+pct+'%;background:'+(COST_COLORS[c]||'#888')+'">'+segSpan(pct)+'</div>'; }).join('')+'</div>':'<div style="margin-top:8px;font-size:12px;color:var(--sub)">暂无花销</div>';
-  const costCard=(pk,name,amts,tot,col,legend)=>'<div class="pkcost" data-pk="'+pk+'" style="background:var(--card);border-radius:13px;box-shadow:var(--sh);padding:11px 12px;margin-bottom:10px;border-left:5px solid '+(col||'var(--pri)')+'">'
-    +'<div class="t1" style="font-size:14px;font-weight:650">'+name+'<span style="flex:1"></span><span class="tiny money" style="font-size:15px">'+money(tot)+'</span></div>'
+  const segSpan=pct=>pct>=8?'<span>'+Math.round(pct)+'%</span>':'';
+  const usedCats=cats.filter(c=>grand(c)>0);
+  const leg=usedCats.length?'<div class="pleg" style="margin:0 2px 10px">'+usedCats.map(c=>'<span class="li"><span class="sw" style="background:'+(COST_COLORS[c]||'#888')+'"></span>'+c+'</span>').join('')+'</div>':'';
+  const barHtml=(pk,amts,tot)=>'<div class="pbar">'+(tot>0?cats.filter(c=>amts[c]>0).map(c=>{ const pct=amts[c]/tot*100; return '<div class="pseg" data-pk="'+pk+'" data-c="'+c+'" style="width:'+pct+'%;background:'+(COST_COLORS[c]||'#888')+'">'+segSpan(pct)+'</div>'; }).join(''):'<span class="cempty">暂无花销</span>')+'</div>';
+  const row=(pk,name,amts,tot,total)=>'<div class="crow'+(total?' ctotal':'')+'" data-pk="'+pk+'">'
+    +'<div class="cn">'+name+'</div>'
     +barHtml(pk,amts,tot)
-    +(legend?'<div class="pleg" style="margin-top:8px">'+cats.filter(c=>amts[c]>0).map(c=>'<span class="li"><span class="sw" style="background:'+(COST_COLORS[c]||'#888')+'"></span><b>'+c+'</b> '+money(amts[c])+'</span>').join('')+'</div>':'')
+    +'<span class="tiny money cv">'+money(tot)+'</span>'
     +'</div>';
   const sorted=ps.slice().sort((a,b)=>pkgTotal(b)-pkgTotal(a));
-  const pkgCards=sorted.map(p=>{ const amts={}; cats.forEach(c=>amts[c]=cellAmt(p,c)); return costCard(p.id,esc(p.name),amts,pkgTotal(p),null,false); }).join('');
+  const rows=sorted.map(p=>{ const amts={}; cats.forEach(c=>amts[c]=cellAmt(p,c)); return row(p.id,esc(p.name),amts,pkgTotal(p)); }).join('');
   const gamts={}; cats.forEach(c=>gamts[c]=grand(c));
-  const totalCard=costCard('','全部合计',gamts,grandAll,'var(--gold)',true);
-  $('#costBody').innerHTML='<div class="hint">行程包按实际花费从高到低排列；条形按类型占比分割，点条形看分类明细、点卡片看全部明细。底部金边为全部合计。</div>'
-    +pkgCards+totalCard;
-  $$('#costBody .pkcost[data-pk]').forEach(card=>{
-    const p=S.packages.find(x=>x.id===card.dataset.pk); if(!p) return;
-    card.onclick=()=>costCellSheet(p,'__all',{open:true});
+  const totalRow=row('','全部合计',gamts,grandAll,true);
+  $('#costBody').innerHTML='<div class="hint">行程包按实际花费从高到低排列；点条形看分类明细、点行看全部明细。</div>'
+    +leg+'<div class="clist">'+rows+'</div><div class="clist total">'+totalRow+'</div>';
+  $$('#costBody .crow[data-pk]').forEach(rw=>{
+    const p=S.packages.find(x=>x.id===rw.dataset.pk); if(!p) return;
+    rw.onclick=()=>costCellSheet(p,'__all',{open:true});
   });
   $$('#costBody .pseg[data-pk]').forEach(seg=>{
     const p=S.packages.find(x=>x.id===seg.dataset.pk); if(!p) return;
