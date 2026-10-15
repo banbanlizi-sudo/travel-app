@@ -153,6 +153,27 @@ input:focus,textarea:focus,select:focus{border-color:var(--pri)}
 .ck .txt{flex:1;min-width:0;font-size:14.5px}
 .ck.on .txt{color:var(--sub);text-decoration:line-through}
 .ck .del{color:var(--sub);font-size:15px;padding:2px 4px}
+/* ---- 花销统计：比例格子 / 矩阵 / 迷你堆叠条 ---- */
+.pbar{display:flex;height:20px;border-radius:8px;overflow:hidden;background:var(--card2);border:1px solid var(--line)}
+.pbar .pseg{display:flex;align-items:center;justify-content:center;color:#fff;font-size:9.5px;font-weight:700;overflow:hidden;white-space:nowrap;min-width:2px;cursor:pointer;text-shadow:0 1px 2px rgba(0,0,0,.25)}
+.pleg{display:flex;flex-wrap:wrap;gap:5px 12px;margin-top:8px;font-size:11px;color:var(--sub)}
+.pleg .li{display:flex;align-items:center;gap:5px;white-space:nowrap}
+.pleg .sw{width:9px;height:9px;border-radius:3px;flex:0 0 auto}
+.pleg .li b{color:var(--text);font-weight:600}
+.minibar{height:7px;border-radius:4px;overflow:hidden;display:flex;margin-top:5px;background:var(--card2)}
+.minibar i{display:block;height:100%}
+.ctwrap{overflow-x:auto}
+.ctable{min-width:540px;border-collapse:collapse;width:100%;font-size:12px}
+.ctable th,.ctable td{padding:9px 7px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+.ctable th{font-size:11px;color:var(--sub);font-weight:600;position:sticky;top:0;background:var(--card);z-index:2}
+.ctable th:first-child,.ctable td:first-child{position:sticky;left:0;background:var(--card);text-align:left;font-weight:600;z-index:1;min-width:86px;max-width:110px;overflow:hidden;text-overflow:ellipsis}
+.ctable th:first-child{z-index:3}
+.ctable td{cursor:pointer}
+.ctable td:first-child{cursor:default}
+.ctable tr:last-child td{border-bottom:0;font-weight:700;border-top:2px solid var(--line)}
+.ctable td.zero{color:var(--line)}
+.ctable td .csw{display:inline-block;width:8px;height:8px;border-radius:2.5px;margin-right:4px;vertical-align:baseline}
+.cthead{display:flex;align-items:center;gap:5px;white-space:nowrap}
 </style>
 </head>
 <body data-page-node-id="BAGEutCipLMnxztIPCLZW1">
@@ -161,6 +182,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--pri)}
   <section class="page on" id="v-home" data-page-node-id="4TVA3HlhtDxDzTK3UWWZhJ">
     <div class="hd" data-page-node-id="ePZgkEkc80qHAXTxNHrUM3">
       <div class="name" data-page-node-id="LqpWDb5G0TUYXsdW0fUrOC">我的行程包</div>
+      <button class="tbtn money" id="btnCost">¥ 花销</button>
       <button class="tbtn" id="homeMore" data-page-node-id="qKCYhVDpXCtITCSx9WCZll">⋯</button>
     </div>
     <div class="scroll" data-page-node-id="H9qDlZ7i1502jyAILJDhbE"><div class="wrap" id="homeBody" data-page-node-id="OB0GE3RBMoPWkd1RNChEHk"></div></div>
@@ -227,10 +249,19 @@ input:focus,textarea:focus,select:focus{border-color:var(--pri)}
     <div class="hd" data-page-node-id="QQuDIECigQBpsVYHsFN9mO">
       <button class="back" id="browseBack" data-page-node-id="baAveENNoFzGTWnIA7wWe5">←</button>
       <div class="name" data-page-node-id="67Dr0N5IZcdmA8Z3mtDrtB">行程卡浏览</div>
+      <button class="tbtn" id="btnShot">📷 长截图</button>
       <button class="tbtn money" id="btnSum" data-page-node-id="cST4koO1ernTIBpUZSIiRd">¥ 花费总计</button>
     </div>
     <div class="tool" id="bTeamTool" style="display:none" data-page-node-id="AIGfHIL8H39l3HHY4Xh8Hj"><div class="seg sm" id="bTeamSeg" data-page-node-id="LHQrHkXctnxDicwTFVF6AC"></div></div>
     <div class="scroll" id="browseScroll" data-page-node-id="cH0D92zfrWWjUlntHIAfem"><div id="browseBody" data-page-node-id="hvHxmjb1e5S5xkzEw2IG8r"></div></div>
+  </section>
+
+  <section class="page" id="v-cost">
+    <div class="hd">
+      <button class="back" id="costBack">←</button>
+      <div class="name">花销统计</div>
+    </div>
+    <div class="scroll"><div class="wrap" id="costBody"></div></div>
   </section>
 </div>
 
@@ -253,7 +284,8 @@ const parseHM=s=>{const a=String(s||'0:00').split(':');return (parseInt(a[0],10)
 const durLabel=m=>{const h=Math.floor(m/60),mm=m%60;return (h?h+'h':'')+(mm||!h?mm+'分':'');};
 const money=n=>'¥'+(Math.round((+n||0)*100)/100);
 const PALETTE=['#3b6ef5','#16a34a','#d97706','#e5484d','#9333ea','#0891b2','#db2777','#65a30d','#ca8a04','#475569','#0d9488','#7c3aed'];
-const COST_CATS=['门票','项目','食物','交通','额外花销'];
+const COST_CATS=['食物','交通','门票','项目','额外花销'];
+const COST_COLORS={'食物':'#16a34a','交通':'#0891b2','门票':'#3b6ef5','项目':'#9333ea','额外花销':'#d97706'};
 const TODO_CATS=[{k:'spot',n:'景点'},{k:'food',n:'美食'},{k:'act',n:'项目'}];
 const RATING={S:{c:'#c9971a'},A:{c:'#3b6ef5'},B:{c:'#16a34a'},C:{c:'#9aa4b2'}};
 const numCN=n=>['一','二','三','四','五','六','七','八','九','十'][clamp(n-1,0,9)]||n;
@@ -343,15 +375,23 @@ const pkgRange=p=>{
   const ds=p.days.map(d=>d.date).filter(Boolean).sort();
   return ds.length?(dShort(ds[0])+(ds.length>1?' ~ '+dShort(ds[ds.length-1]):'')):'';
 };
-function costRows(cat){
+function costRowsFor(p,cat){
+  const locOf=id=>p.locs.find(l=>l.id===id);
   const rows=[];
-  PK().days.forEach(d=>{
-    d.arrs.forEach(a=>{ const l=locById(a.locId); if(l&&locCost(l)>0) rows.push({day:d,name:l.name,cat:l.costCat||'门票',amount:locCost(l),kind:'plan',rating:l.rating}); });
+  p.days.forEach(d=>{
+    d.arrs.forEach(a=>{ const l=locOf(a.locId); if(l&&locCost(l)>0) rows.push({day:d,name:l.name,cat:l.costCat||'门票',amount:locCost(l),kind:'plan',rating:l.rating}); });
     (d.extras||[]).forEach(e=>rows.push({day:d,name:e.name,cat:e.cat||'额外花销',amount:+e.amount||0,kind:'extra'}));
   });
   return cat?rows.filter(r=>r.cat===cat):rows;
 }
+function costRows(cat){ return costRowsFor(PK(),cat); }
 const totalCost=cat=>costRows(cat).reduce((s,r)=>s+r.amount,0);
+function dayCatSegs(d){
+  const m={};
+  d.arrs.forEach(a=>{ const l=locById(a.locId); if(l&&locCost(l)>0){ const c=l.costCat||'门票'; m[c]=(m[c]||0)+locCost(l); } });
+  (d.extras||[]).forEach(e=>{ const c=e.cat||'额外花销'; m[c]=(m[c]||0)+(+e.amount||0); });
+  return COST_CATS.filter(c=>m[c]).map(c=>({cat:c,amt:m[c]}));
+}
 
 /* ==================== 通用 UI ==================== */
 let toastTimer=null;
@@ -1312,7 +1352,30 @@ function renderBrowse(){
     $$('#bTeamSeg button').forEach(b=>b.onclick=()=>{ S.ui.teamFilter=b.dataset.v; save(); renderBrowse(); });
   }
   const lanesMode=hasTeams&&S.ui.teamFilter==='par';
+  const statList=p.days.map(d=>({d:d,cost:dayCost(d)}));
+  const actTotal=statList.reduce((s,x)=>s+x.cost,0);
+  let statCard='';
+  if(actTotal>0){
+    const segs=statList.filter(x=>x.cost>0).map((x,i)=>{
+      const col=PALETTE[i%PALETTE.length];
+      const pct=x.cost/actTotal*100;
+      return '<div class="pseg" data-day="'+x.d.id+'" style="width:'+pct+'%;background:'+col+'">'
+        +(pct>=13?'<span>'+esc(x.d.name)+' '+Math.round(pct)+'%</span>':'')+'</div>';
+    }).join('');
+    const leg=statList.filter(x=>x.cost>0).map((x,i)=>{
+      const col=PALETTE[i%PALETTE.length];
+      return '<span class="li"><span class="sw" style="background:'+col+'"></span><b>'+esc(x.d.name)+'</b> '+money(x.cost)+' · '+Math.round(x.cost/actTotal*100)+'%</span>';
+    }).join('');
+    statCard='<div style="background:var(--card);border-radius:13px;box-shadow:var(--sh);padding:11px 12px;margin-bottom:10px;border-left:5px solid var(--pri)">'
+      +'<div class="t1" style="font-size:13.5px">实际统计<span class="tiny">计划 '+money(pkgPlan(p))+'</span>'
+      +'<span style="flex:1"></span><span class="tiny money" style="font-size:14px">'+money(actTotal)+'</span></div>'
+      +'<div class="pbar" style="margin-top:8px">'+segs+'</div>'
+      +'<div class="pleg">'+leg+'</div>'
+      +'<div class="hint" style="padding-top:6px">格子宽度 = 该张行程卡花费占比，点格子进入该卡。</div>'
+      +'</div>';
+  }
   $('#browseBody').innerHTML='<div class="hint" style="padding:10px 12px 0">向下滑动查看全部行程卡；同一地点同色并显示评级；右侧为该卡花费。</div>'
+    +'<div class="wrap" style="padding-top:0">'+statCard+'</div>'
     +p.days.map(d=>{
       const lanes=lanesMode?[ {title:'全体',arrs:d.arrs.filter(a=>!a.teamId)} ].concat(p.teams.map(t=>({title:t.name,arrs:d.arrs.filter(a=>a.teamId===t.id)}))):null;
       return '<div class="pkcard card-day" data-id="'+d.id+'" style="margin:10px 12px;padding:10px 10px 8px">'
@@ -1326,21 +1389,156 @@ function renderBrowse(){
   $$('#browseBody .pkcard').forEach(el=>{
     el.addEventListener('click',()=>{ if(el.dataset.noClick) return; S.ui.dayId=el.dataset.id; S.ui.view='day'; save(); render(); });
   });
+  $$('#browseBody .pseg').forEach(el=>{
+    el.addEventListener('click',()=>{ S.ui.dayId=el.dataset.day; S.ui.view='day'; save(); render(); });
+  });
 }
 $('#btnSum').onclick=()=>{
-  const cats=['门票','项目','食物','交通','额外花销'];
-  openSheet('<h3>花费总计<span class="spacer"></span><span class="tiny">'+esc(PK().name)+'</span></h3>'
-    +cats.map(c=>'<div class="sumrow"><span class="n">'+c+'</span><span class="v">'+money(totalCost(c))+'</span></div>').join('')
-    +'<div class="sumrow"><span class="n"><b>实际总计</b></span><span class="v" style="font-size:16px">'+money(totalCost())+'</span></div>'
-    +'<div class="sumrow"><span class="n">计划费用合计</span><span class="v">'+money(pkgPlan(PK()))+'</span></div>'
-    +'<div class="fld" style="margin-top:14px"><label>分行程卡</label>'
-    +PK().days.map(d=>'<div class="sumrow"><span class="n">'+esc(d.name)
+  const cats=COST_CATS;
+  const leg='<div class="pleg" style="margin:0 0 10px">'+cats.map(c=>'<span class="li"><span class="sw" style="background:'+(COST_COLORS[c]||'#888')+'"></span>'+c+' '+money(totalCost(c))+'</span>').join('')+'</div>';
+  const byDay=PK().days.map(d=>{
+    const segs=dayCatSegs(d), tot=dayCost(d);
+    const bar=tot>0?'<div class="minibar">'+segs.map(s=>'<i style="width:'+(s.amt/tot*100)+'%;background:'+(COST_COLORS[s.cat]||'#888')+'"></i>').join('')+'</div>':'';
+    return '<div class="sumrow"><span class="n">'+esc(d.name)
       +(dayPlanCost(d)?' <span class="tiny">安排 '+money(dayPlanCost(d))+'</span>':'')
       +(dayExtraCost(d)?' <span class="tiny">额外 '+money(dayExtraCost(d))+'</span>':'')+'</span>'
-      +'<span class="v">'+money(dayCost(d))+'</span></div>').join('')+'</div>'
+      +'<span class="v">'+money(dayCost(d))+'</span></div>'+bar;
+  }).join('');
+  openSheet('<h3>花费总计<span class="spacer"></span><span class="tiny">'+esc(PK().name)+'</span></h3>'
+    +'<div class="hint" style="padding-bottom:2px">实际统计 · 按类型</div>'
+    +cats.map(c=>{ const v=totalCost(c); return '<div class="sumrow"><span class="n"><span class="csw" style="display:inline-block;width:8px;height:8px;border-radius:2.5px;background:'+(COST_COLORS[c]||'#888')+';margin-right:6px"></span>'+c+'</span><span class="v"'+(v?'':' style="color:var(--sub);font-weight:400"')+'>'+(v?money(v):'¥0')+'</span></div>'; }).join('')
+    +'<div class="sumrow"><span class="n"><b>实际总计</b></span><span class="v" style="font-size:16px">'+money(totalCost())+'</span></div>'
+    +'<div class="sumrow"><span class="n">计划费用合计</span><span class="v">'+money(pkgPlan(PK()))+'</span></div>'
+    +leg
+    +'<div class="fld" style="margin-top:14px"><label>分行程卡 · 条内按 类型 比例堆叠</label>'+byDay+'</div>'
     +'<div class="fld"><label>明细</label>'
     +(costRows().map(r=>'<div class="sumrow"><span class="n">'+(r.rating?'<span class="rt" style="background:'+(RATING[r.rating]||RATING.C).c+'">'+r.rating+'</span> ':'')+esc(r.name)+' <span class="tiny">'+esc(r.day.name)+' · '+esc(r.cat)+'</span></span><span class="v">'+money(r.amount)+'</span></div>').join('')||'<div class="hint">暂无花销</div>')+'</div>');
 };
+
+/* ==================== 花销统计页（行程包 × 类型 矩阵） ==================== */
+function renderCost(){
+  const ps=S.packages, cats=COST_CATS;
+  const pkgTotal=p=>costRowsFor(p).reduce((s,r)=>s+r.amount,0);
+  const cellAmt=(p,c)=>costRowsFor(p,c).reduce((s,r)=>s+r.amount,0);
+  const grand=c=>ps.reduce((s,p)=>s+cellAmt(p,c),0);
+  const grandAll=ps.reduce((s,p)=>s+pkgTotal(p),0);
+  $('#costBody').innerHTML='<div class="hint">按 行程包 × 类型 交叉统计实际花费：点单元格看明细，点行程包名进入该包。</div>'
+    +'<div class="pkcard" style="padding:0;overflow:hidden"><div class="ctwrap"><table class="ctable"><thead><tr>'
+    +'<th>行程包</th>'+cats.map(c=>'<th><span class="cthead"><span class="csw" style="background:'+(COST_COLORS[c]||'#888')+'"></span>'+c+'</span></th>').join('')+'<th>合计</th></tr></thead><tbody>'
+    +ps.map(p=>'<tr><td data-pk="'+p.id+'">'+esc(p.name)+'</td>'
+      +cats.map(c=>{ const v=cellAmt(p,c); return '<td data-pk="'+p.id+'" data-c="'+c+'"'+(v?'':' class="zero"')+'>'+(v?money(v):'–')+'</td>'; }).join('')
+      +'<td data-pk="'+p.id+'" data-c="__all" style="color:var(--red);font-weight:700">'+money(pkgTotal(p))+'</td></tr>').join('')
+    +'<tr><td>总计</td>'+cats.map(c=>{ const v=grand(c); return '<td'+(v?' style="color:var(--red)"':' class="zero"')+'>'+(v?money(v):'–')+'</td>'; }).join('')
+    +'<td style="color:var(--red)">'+money(grandAll)+'</td></tr>'
+    +'</tbody></table></div></div>'
+    +'<div class="hint">类型顺序：'+cats.join(' / ')+'。地点卡花费与额外花销均按各自类型计入。</div>';
+  $$('#costBody td[data-pk]').forEach(td=>td.onclick=()=>{
+    const p=S.packages.find(x=>x.id===td.dataset.pk); if(!p) return;
+    if(!td.dataset.c){ S.activeId=p.id; S.ui.view='pkg'; S.ui.pkgTab='days'; save(); render(); return; }
+    costCellSheet(p,td.dataset.c);
+  });
+}
+function costCellSheet(p,cat){
+  const rows=cat==='__all'?costRowsFor(p):costRowsFor(p,cat);
+  const tot=rows.reduce((s,r)=>s+r.amount,0);
+  openSheet('<h3>'+(cat==='__all'?'全部类型':esc(cat))+'<span class="spacer"></span><span class="tiny">'+esc(p.name)+'</span></h3>'
+    +(rows.length?rows.map(r=>'<div class="sumrow"><span class="n">'+(r.rating?'<span class="rt" style="background:'+(RATING[r.rating]||RATING.C).c+'">'+r.rating+'</span> ':'')+esc(r.name)+' <span class="tiny">'+esc(r.day.name)+'</span></span><span class="v">'+money(r.amount)+'</span></div>').join(''):'<div class="hint">暂无花销</div>')
+    +'<div class="sumrow"><span class="n"><b>小计</b></span><span class="v">'+money(tot)+'</span></div>');
+}
+$('#btnCost').onclick=()=>{ S.ui.view='cost'; save(); render(); };
+$('#costBack').onclick=()=>{ S.ui.view='home'; save(); render(); };
+
+/* ==================== 长截图（整包行程卡导出长图） ==================== */
+function rrPath(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
+function shotLong(){
+  const p=PK();
+  const cv=document.createElement('canvas');
+  const ctx=cv.getContext&&cv.getContext('2d');
+  if(!ctx||!ctx.measureText){ toast('当前环境不支持生成图片'); return; }
+  const W=720,PAD=24,ROWH=21,CPADX=16,CPADY=13,HEADH=86,GAP=14,FOOT=46;
+  const F=(w,s)=>w+' '+s+'px system-ui,-apple-system,"PingFang SC","Microsoft YaHei",sans-serif';
+  const cards=p.days.map(d=>{
+    const rows=[];
+    d.arrs.slice().sort((a,b)=>a.start-b.start).forEach(a=>{
+      const l=p.locs.find(x=>x.id===a.locId); if(!l) return;
+      rows.push({t:fmtHM(a.start)+'~'+fmtHM(a.start+a.dur),n:l.name,c:l.color||'#8a94a6',r:l.rating||'C',cost:locCost(l),extra:false});
+    });
+    (d.extras||[]).slice().sort((a,b)=>(a.at||0)-(b.at||0)).forEach(e=>{
+      rows.push({t:fmtHM(e.at||0),n:e.name,c:'#d97706',r:'',cost:+e.amount||0,extra:true});
+    });
+    return {d:d,rows:rows,cost:dayCost(d)};
+  });
+  let H=HEADH;
+  cards.forEach(c=>{ H+=CPADY*2+32+(c.rows.length?c.rows.length*ROWH:22)+GAP; });
+  H+=FOOT;
+  cv.width=W*2; cv.height=Math.round(H*2);
+  ctx.scale(2,2);
+  ctx.textBaseline='alphabetic';
+  const clipText=(s,maxW)=>{ s=String(s); if(ctx.measureText(s).width<=maxW) return s; while(s.length&&ctx.measureText(s+'…').width>maxW) s=s.slice(0,-1); return s+'…'; };
+  // 背景 + 顶部
+  ctx.fillStyle='#eef1f7'; ctx.fillRect(0,0,W,H);
+  const now=new Date();
+  const rng=pkgRange(p);
+  ctx.fillStyle='#161a22'; ctx.font=F('700',21);
+  ctx.fillText(clipText(p.name,W-PAD*2-120),PAD,PAD+22);
+  ctx.textAlign='right'; ctx.fillStyle='#e5484d'; ctx.font=F('700',18);
+  ctx.fillText(money(pkgActual(p)),W-PAD,PAD+22);
+  ctx.textAlign='left'; ctx.fillStyle='#7b8496'; ctx.font=F('400',12);
+  ctx.fillText((rng?rng+' · ':'')+p.days.length+' 张行程卡 · 实际统计 · 生成于 '+dateStr(now)+' '+pad2(now.getHours())+':'+pad2(now.getMinutes()),PAD,PAD+46);
+  // 各行程卡
+  let y=HEADH;
+  cards.forEach(c=>{
+    const rowsH=c.rows.length?c.rows.length*ROWH:22;
+    const ch=CPADY*2+32+rowsH;
+    rrPath(ctx,PAD,y,W-PAD*2,ch,14); ctx.fillStyle='#ffffff'; ctx.fill();
+    ctx.save(); rrPath(ctx,PAD,y,W-PAD*2,ch,14); ctx.clip();
+    ctx.fillStyle='#a9cc93'; ctx.fillRect(PAD,y,5,ch); ctx.restore();
+    const ix=PAD+CPADX+6, rx=W-PAD-CPADX+6;
+    let iy=y+CPADY+20;
+    ctx.fillStyle='#161a22'; ctx.font=F('700',15);
+    ctx.fillText(clipText(c.d.name+(c.d.date?'　'+c.d.date:''),rx-ix-90),ix,iy);
+    ctx.textAlign='right'; ctx.fillStyle='#e5484d'; ctx.font=F('700',14);
+    ctx.fillText(money(c.cost),rx,iy); ctx.textAlign='left';
+    iy+=10;
+    if(!c.rows.length){ ctx.fillStyle='#9aa4b2'; ctx.font=F('400',12); ctx.fillText('暂无安排',ix,iy+14); }
+    else c.rows.forEach(r=>{
+      iy+=ROWH;
+      ctx.beginPath(); ctx.arc(ix+4,iy-5,4,0,Math.PI*2); ctx.fillStyle=r.c; ctx.fill();
+      ctx.fillStyle='#7b8496'; ctx.font=F('400',11);
+      ctx.fillText(r.t,ix+16,iy);
+      const nx=ix+16+82;
+      const maxNm=rx-70-nx-(r.r&&!r.extra?26:0);
+      ctx.fillStyle=r.extra?'#d97706':'#161a22'; ctx.font=F(r.extra?'600':'400',12.5);
+      const nm=clipText((r.extra?'额外 · ':'')+r.n,Math.max(maxNm,40));
+      ctx.fillText(nm,nx,iy);
+      if(r.r&&!r.extra&&maxNm>=60){
+        const bw=ctx.measureText(nm).width;
+        ctx.fillStyle=(RATING[r.r]||RATING.C).c;
+        rrPath(ctx,nx+bw+7,iy-10.5,15,13,3); ctx.fill();
+        ctx.fillStyle='#fff'; ctx.font=F('700',9);
+        ctx.fillText(r.r,nx+bw+11,iy-0.5);
+      }
+      if(r.cost>0){ ctx.textAlign='right'; ctx.fillStyle='#e5484d'; ctx.font=F('600',12); ctx.fillText(money(r.cost),rx,iy); ctx.textAlign='left'; }
+    });
+    y+=ch+GAP;
+  });
+  ctx.textAlign='center'; ctx.fillStyle='#9aa4b2'; ctx.font=F('400',11);
+  ctx.fillText('行程包 · '+p.name+' · 由「行程」生成',W/2,H-22); ctx.textAlign='left';
+  showShot(cv.toDataURL('image/png'),p.name);
+}
+function showShot(dataUrl,name){
+  openSheet('<h3>长截图已生成<span class="spacer"></span><span class="tiny">'+esc(name)+'</span></h3>'
+    +'<img src="'+dataUrl+'" alt="长截图" style="width:100%;border-radius:10px;border:1px solid var(--line)">'
+    +'<button class="btn full" id="shotDl" style="margin-top:10px">下载图片</button>'
+    +'<div class="hint">电脑端点「下载图片」保存；手机应用内长按图片选「保存图片」，或直接截屏。</div>');
+  $('#shotDl').onclick=()=>{
+    const a=document.createElement('a'); a.href=dataUrl; a.download=name+'-长截图.png';
+    document.body.appendChild(a); a.click(); a.remove();
+    if(window.Capacitor) toast('若未开始下载，请长按上方图片保存');
+    else toast('已开始下载');
+  };
+}
+$('#btnShot').onclick=shotLong;
 
 /* ==================== 导航 ==================== */
 $('#pkgBack').onclick=()=>{ S.ui.view='home'; save(); render(); };
@@ -1368,12 +1566,13 @@ $$('#snapSeg button').forEach(b=>b.onclick=()=>{ S.ui.snap=+b.dataset.v; save();
 /* ==================== 渲染入口 ==================== */
 function render(){
   document.body.classList.toggle('nohint',!!S.ui.hideHints);
-  ['home','pkg','day','plan','browse'].forEach(v=>$('#v-'+v).classList.toggle('on',S.ui.view===v));
+  ['home','pkg','day','plan','browse','cost'].forEach(v=>$('#v-'+v).classList.toggle('on',S.ui.view===v));
   if(S.ui.view==='home') renderHome();
   else if(S.ui.view==='pkg') renderPkg();
   else if(S.ui.view==='day') renderDay();
   else if(S.ui.view==='plan') renderPlan();
   else if(S.ui.view==='browse') renderBrowse();
+  else if(S.ui.view==='cost') renderCost();
   save();
 }
 render();

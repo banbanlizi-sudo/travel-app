@@ -5,16 +5,24 @@
 ## 一、首次出 APK（约 5 分钟）
 
 1. 在 GitHub 上新建一个空仓库（例如 `travel-app`，不要勾选自动生成 README）。
-2. 把本文件夹推上去（在本目录打开终端执行）：
+2. 把本文件夹推上去：
+
+   > 本工程**已经**在本地 `git init` 并提交过一次了（分支 `main`，工作树干净），
+   > 所以**不要**再执行 `git init` / `git add` / `git commit` / `git branch`，
+   > 直接从「添加远程地址并推送」开始即可。
+
+   **命令行方式（在本目录打开终端执行）：**
 
    ```bash
-   git init
-   git add .
-   git commit -m "行程包安卓版"
-   git branch -M main
    git remote add origin https://github.com/你的用户名/travel-app.git
    git push -u origin main
    ```
+
+   > 推送时会要求输入用户名和密码：**密码不是你的 GitHub 登录密码**，而是
+   > 要在 GitHub 网页上生成的「Personal Access Token (PAT)」。
+   > 生成方法见文末「附录：生成 PAT」。
+
+   **不想敲命令？** 用 GitHub Desktop（见文末「附录：GitHub Desktop」），全程点鼠标。
 
 3. 打开 GitHub 仓库页面 → 顶部 **Actions** 标签 → 等待「Build Android APK」跑完（约 3~5 分钟，绿勾）。
 4. 点进该次构建 → 底部 **Artifacts** → 下载 `travel-app-apk` → 解压得到：
@@ -57,3 +65,37 @@ git add . && git commit -m "更新" && git push
 - **Actions 构建失败**：先看报错日志；最常见是网络原因，重新跑一次（Re-run jobs）即可。
 - **想改应用名/图标**：应用名在 `android/app/src/main/res/values/strings.xml`；图标替换 `android/app/src/main/res/mipmap-*/` 下的 png。
 - **想上架应用商店**：需要签名 release 包（生成 keystore 后配置 `signingConfig`），这是后续可加的步骤。
+
+---
+
+## 附录一：生成 Personal Access Token（PAT）
+
+GitHub 从 2021 年起**不允许用登录密码推代码**，必须用令牌代替密码。
+
+1. 登录 GitHub → 右上角头像 → **Settings** → 左侧最底部 **Developer settings**
+   → **Personal access tokens** → **Tokens (classic)** → **Generate new token (classic)**。
+2. Note 随便填（如 `travel-app-push`）。
+3. Expiration 选 `90 days` 或更长（以免过期）。
+4. 勾选 `repo`（这一项包含推送权限，展开后全勾上即可）。
+5. 页面底部点 **Generate token**。
+6. **立刻复制**那串 `ghp_xxx` 开头的字符——离开页面后就再也看不到了。
+
+推送时：用户名填你的 GitHub 账号，密码框粘贴这串令牌。
+
+## 附录二：GitHub Desktop（全程点鼠标，不用命令行）
+
+适合第一次用、不想敲命令的情况。
+
+1. 下载安装 [GitHub Desktop](https://desktop.github.com/) 并登录账号。
+2. 打开后选 **File → Add Local Repository**，选择本 `travel-app-android` 文件夹。
+   （会提示「这不是 git 仓库」——没关系，因为你已 init 过，直接 Add 即可。）
+3. 左上角 **Publish repository**（发布仓库）：
+   - Name 填 `travel-app`
+   - 取消勾选「Keep this code private」可公开，或勾选保持私有
+   - 不要勾「Initialize this repository with a README」
+   - 点 **Publish**
+4. 第一次发布时会让浏览器授权一次，按提示允许即可。
+5. 之后网页端打开仓库 → **Actions** 标签等构建完成，下载 APK。
+
+> 注意：GitHub Desktop 只负责「把代码推上去」。构建 APK 是 GitHub 云端自动做的，
+> 你推完代码后去网页的 Actions 标签等几分钟就好。
