@@ -332,13 +332,13 @@ function seed(){
         {id:uid('t'),text:'快艇出海',cat:'act',done:false}
       ]
     }],
-    ui:{snap:10,view:'home',pkgTab:'days',dayId:null,planId:null,teamFilter:'all',hideHints:false}
+    ui:{snap:10,view:'home',pkgTab:'days',dayId:null,planId:null,teamFilter:'all',hideHints:false,returnView:null}
   };
 }
 function ensureToilet(p){ if(!p.locs.some(l=>l.name==='厕所')) p.locs.push(newToilet()); }
 function migrate(d){
   d.v=d.v||5; d.packages=d.packages||[]; d.activeId=d.activeId||(d.packages[0]&&d.packages[0].id);
-  d.ui=Object.assign({snap:10,view:'home',pkgTab:'days',dayId:null,planId:null,teamFilter:'all',hideHints:false},d.ui||{});
+  d.ui=Object.assign({snap:10,view:'home',pkgTab:'days',dayId:null,planId:null,teamFilter:'all',hideHints:false,returnView:null},d.ui||{});
   d.packages.forEach(p=>{
     p.locs=p.locs||[]; p.plans=p.plans||[]; p.days=p.days||[]; p.teams=p.teams||[]; p.todos=p.todos||[];
     const cc=v=>v==='项目费'?'项目':v==='食物费'?'食物':v;
@@ -468,7 +468,7 @@ function setChipDrop(chip){ $$('.dchip').forEach(c=>c.classList.toggle('drop',ch
 
 function bindCard(el,box,opt){
   const o=Object.assign({commit:null,menu:null,hoverChips:null,onDropChip:null,onDelete:null},opt);
-  let startY=0,ph=null,drag=null,delHot=false;
+  let startY=0,ph=null,drag=null,delHot=false,fromT1=false;
   const delxShow=()=>{ let x=$('#delx'); if(!x){ x=document.createElement('div'); x.id='delx'; x.className='delx'; x.textContent='✕'; document.body.appendChild(x); } x.classList.add('on'); };
   const delxHide=()=>{ const x=$('#delx'); if(x) x.classList.remove('on','hot'); delHot=false; };
   const delxHit=e=>{ const x=$('#delx'); if(!x) return; const r=x.getBoundingClientRect();
@@ -476,7 +476,7 @@ function bindCard(el,box,opt){
     x.classList.toggle('hot',delHot); };
   const cleanup=()=>{ if(ph){ph.remove();ph=null;} if(drag){drag.classList.remove('drag');drag.style.transform='';drag.style.transition='';} setChipDrop(null); drag=null; };
   longPress(el,{
-    onStart:e=>{ drag=el; startY=e.clientY; el.classList.add('drag'); el.style.transition='none';
+    onStart:e=>{ fromT1=!!(e.target&&e.target.closest&&e.target.closest('.t1')); drag=el; startY=e.clientY; el.classList.add('drag'); el.style.transition='none';
       ph=document.createElement('div'); ph.className='ph'; ph.textContent=o.hoverChips?'拖动调整顺序 / 拖到下方行程卡…':'拖动调整顺序 · 拖到底部 ✕ 删除';
       el.parentNode.insertBefore(ph,el.nextSibling);
       if(o.onDelete) delxShow(); },
@@ -520,7 +520,7 @@ function bindCard(el,box,opt){
       if(moved&&o.commit){ o.commit(ins); }
     },
     onCancel:()=>{ cleanup(); delxHide(); },
-    tapLong:()=>{ if(o.menu) o.menu(); }
+    tapLong:()=>{ if(o.menu && !fromT1) o.menu(); }
   });
 }
 
@@ -603,7 +603,7 @@ function renderHome(){
   $$('#homeBody .pkcard').forEach(el=>{
     const p=S.packages.find(x=>x.id===el.dataset.id);
     let tapped=false;
-    el.addEventListener('click',()=>{ if(el.dataset.noClick||tapped){ tapped=false; return; } S.activeId=p.id; S.ui.view='pkg'; S.ui.pkgTab='days'; save(); render(); });
+    el.addEventListener('click',ev=>{ if(ev.target.closest('.t1')) return; if(el.dataset.noClick||tapped){ tapped=false; return; } S.activeId=p.id; S.ui.view='pkg'; S.ui.pkgTab='days'; save(); render(); });
     bindCard(el,$('#homeBody'),{
       commit:ins=>{ snapState();
         S.packages=S.packages.filter(x=>x.id!==p.id);
@@ -712,7 +712,7 @@ function renderDaysTab(){
   $$('#pkgBody .pkcard').forEach(el=>{
     const d=dayById(el.dataset.id); if(!d) return;
     let tapped=false;
-    el.addEventListener('click',()=>{ if(el.dataset.noClick||tapped){ tapped=false; return; } S.ui.dayId=d.id; S.ui.view='day'; S.ui.teamFilter='all'; save(); render(); });
+    el.addEventListener('click',ev=>{ if(ev.target.closest('.t1')) return; if(el.dataset.noClick||tapped){ tapped=false; return; } S.ui.dayId=d.id; S.ui.view='day'; S.ui.returnView='pkg'; S.ui.teamFilter='all'; save(); render(); });
     bindCard(el,box,{
       commit:ins=>{ snapState();
         p.days=p.days.filter(x=>x.id!==d.id);
@@ -767,7 +767,7 @@ function renderPlansTab(){
   $$('#pkgBody .pkcard').forEach(el=>{
     const pl=planById(el.dataset.id); if(!pl) return;
     let tapped=false;
-    el.addEventListener('click',()=>{ if(el.dataset.noClick||tapped){ tapped=false; return; } S.ui.planId=pl.id; S.ui.view='plan'; save(); render(); });
+    el.addEventListener('click',ev=>{ if(ev.target.closest('.t1')) return; if(el.dataset.noClick||tapped){ tapped=false; return; } S.ui.planId=pl.id; S.ui.view='plan'; save(); render(); });
     bindCard(el,box,{
       hoverChips:()=>$$('#dayChips .dchip'),
       onDropChip:chipId=>applyPlanToDay(pl.id,chipId),
@@ -1387,10 +1387,10 @@ function renderBrowse(){
     }).join('')
     +'<div class="hint" style="padding:0 14px">点任意行程卡进入编辑。</div>';
   $$('#browseBody .pkcard').forEach(el=>{
-    el.addEventListener('click',()=>{ if(el.dataset.noClick) return; S.ui.dayId=el.dataset.id; S.ui.view='day'; save(); render(); });
+    el.addEventListener('click',()=>{ if(el.dataset.noClick) return; S.ui.dayId=el.dataset.id; S.ui.view='day'; S.ui.returnView='browse'; save(); render(); });
   });
   $$('#browseBody .pseg').forEach(el=>{
-    el.addEventListener('click',()=>{ S.ui.dayId=el.dataset.day; S.ui.view='day'; save(); render(); });
+    el.addEventListener('click',()=>{ S.ui.dayId=el.dataset.day; S.ui.view='day'; S.ui.returnView='browse'; save(); render(); });
   });
 }
 $('#btnSum').onclick=()=>{
@@ -1426,16 +1426,16 @@ function renderCost(){
   const grand=c=>ps.reduce((s,p)=>s+cellAmt(p,c),0);
   const grandAll=ps.reduce((s,p)=>s+pkgTotal(p),0);
   const segSpan=pct=>pct>=8?'<span style="font-size:8.5px">'+Math.round(pct)+'%</span>':'';
-  const barHtml=(pk,amts,tot)=>tot>0?'<div class="pbar" style="margin-top:8px">'+cats.filter(c=>amts[c]>0).map(c=>{ const pct=amts[c]/tot*100; return '<div class="pseg" data-pk="'+pk+'" data-c="'+c+'" style="width:'+pct+'%;background:'+(COST_COLORS[c]||'#888')+'">'+segSpan(pct)+'</div>'; }).join('')+'</div>':'';
-  const costCard=(pk,name,amts,tot,col)=>'<div class="pkcost" data-pk="'+pk+'" style="background:var(--card);border-radius:13px;box-shadow:var(--sh);padding:11px 12px;margin-bottom:10px;border-left:5px solid '+(col||'var(--pri)')+'">'
-    +'<div class="t1" style="font-size:13.5px">'+name+'<span style="flex:1"></span><span class="tiny money" style="font-size:14px">'+money(tot)+'</span></div>'
+  const barHtml=(pk,amts,tot)=>tot>0?'<div class="pbar" style="margin-top:8px">'+cats.filter(c=>amts[c]>0).map(c=>{ const pct=amts[c]/tot*100; return '<div class="pseg" data-pk="'+pk+'" data-c="'+c+'" style="width:'+pct+'%;background:'+(COST_COLORS[c]||'#888')+'">'+segSpan(pct)+'</div>'; }).join('')+'</div>':'<div style="margin-top:8px;font-size:12px;color:var(--sub)">暂无花销</div>';
+  const costCard=(pk,name,amts,tot,col,legend)=>'<div class="pkcost" data-pk="'+pk+'" style="background:var(--card);border-radius:13px;box-shadow:var(--sh);padding:11px 12px;margin-bottom:10px;border-left:5px solid '+(col||'var(--pri)')+'">'
+    +'<div class="t1" style="font-size:14px;font-weight:650">'+name+'<span style="flex:1"></span><span class="tiny money" style="font-size:15px">'+money(tot)+'</span></div>'
     +barHtml(pk,amts,tot)
-    +'<div class="pleg">'+(tot>0?cats.filter(c=>amts[c]>0).map(c=>'<span class="li"><span class="sw" style="background:'+(COST_COLORS[c]||'#888')+'"></span><b>'+c+'</b> '+money(amts[c])+' · '+Math.round(amts[c]/tot*100)+'%</span>').join(''):'<span class="li">暂无花销</span>')+'</div>'
+    +(legend?'<div class="pleg" style="margin-top:8px">'+cats.filter(c=>amts[c]>0).map(c=>'<span class="li"><span class="sw" style="background:'+(COST_COLORS[c]||'#888')+'"></span><b>'+c+'</b> '+money(amts[c])+'</span>').join('')+'</div>':'')
     +'</div>';
   const sorted=ps.slice().sort((a,b)=>pkgTotal(b)-pkgTotal(a));
-  const pkgCards=sorted.map(p=>{ const amts={}; cats.forEach(c=>amts[c]=cellAmt(p,c)); return costCard(p.id,esc(p.name),amts,pkgTotal(p)); }).join('');
+  const pkgCards=sorted.map(p=>{ const amts={}; cats.forEach(c=>amts[c]=cellAmt(p,c)); return costCard(p.id,esc(p.name),amts,pkgTotal(p),null,false); }).join('');
   const gamts={}; cats.forEach(c=>gamts[c]=grand(c));
-  const totalCard=costCard('','全部合计',gamts,grandAll,'var(--gold)');
+  const totalCard=costCard('','全部合计',gamts,grandAll,'var(--gold)',true);
   $('#costBody').innerHTML='<div class="hint">行程包按实际花费从高到低排列；条形按类型占比分割，点条形看分类明细、点卡片看全部明细。底部金边为全部合计。</div>'
     +pkgCards+totalCard;
   $$('#costBody .pkcost[data-pk]').forEach(card=>{
@@ -1555,7 +1555,7 @@ $('#btnShot').onclick=shotLong;
 
 /* ==================== 导航 ==================== */
 $('#pkgBack').onclick=()=>{ S.ui.view='home'; save(); render(); };
-$('#dayBack').onclick=()=>{ S.ui.view='pkg'; save(); render(); };
+$('#dayBack').onclick=()=>{ const rv=S.ui.returnView||'pkg'; S.ui.returnView=null; S.ui.view=rv; save(); render(); };
 $('#browseBack').onclick=()=>{ S.ui.view='pkg'; S.ui.teamFilter='all'; save(); render(); };
 $('#btnBrowse').onclick=()=>{ S.ui.view='browse'; S.ui.teamFilter='all'; save(); render(); };
 $$('#pkgSeg button').forEach(b=>b.onclick=()=>{ S.ui.pkgTab=b.dataset.v; save(); renderPkg(); });
