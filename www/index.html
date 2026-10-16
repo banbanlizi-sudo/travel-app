@@ -184,6 +184,113 @@ input:focus,textarea:focus,select:focus{border-color:var(--pri)}
 .ctable td .csw{display:inline-block;width:8px;height:8px;border-radius:2.5px;margin-right:4px;vertical-align:baseline}
 .cthead{display:flex;align-items:center;gap:5px;white-space:nowrap}
 </style>
+<style id="gba-skin">
+/* ============================================================
+   GBA 塞尔达风格皮肤 —— 仅改【边框 / 文字 / 背景】
+   布局、结构、模板一律未动。
+   需要还原：删除 id 为 gba-skin 的整个样式块即可
+   ============================================================ */
+
+/* ---------- 配色（林克的绿色 + 海拉尔金/深蓝） ---------- */
+:root{
+  --bg:#20303f;          /* 深蓝底色 */
+  --card:#f6efd8;        /* 羊皮纸卡面 */
+  --card2:#e6dcc0;       /* 次级面 */
+  --text:#3a2a12;        /* 墨棕字 */
+  --sub:#8a7b52;         /* 次要字 */
+  --line:#8a6a2a;        /* 金色描边 */
+  --pri:#1f6f3a;         /* 林克绿 */
+  --pri-s:#cfe3d2;
+  --red:#b02430;         /* 心之红 */
+  --red-s:#f3d6d6;
+  --green:#2c8c46;
+  --amber:#c07a10;
+  --gold:#d9a520;
+  --day:#dceccb; --day-b:#4f8f3a;
+  --plan:#f8efc4; --plan-b:#b89a3c;
+  --loc:#f6dcdc; --loc-b:#b86e72;
+  --sh:3px 3px 0 rgba(30,22,8,.20);
+  --sh2:5px 7px 18px rgba(10,20,30,.45);
+}
+@media (prefers-color-scheme:dark){
+  :root{ --bg:#131c17; --card:#f2ecd6; --card2:#ded3b4; --text:#33240e; --sub:#7d6f48;
+    --line:#8a6a2a; --pri:#1f6f3a; --pri-s:#cfe3d2; --red:#b02430; --red-s:#f3d6d6;
+    --green:#2c8c46; --amber:#c07a10; --gold:#d9a520;
+    --day:#dceccb; --day-b:#4f8f3a; --plan:#f8efc4; --plan-b:#b89a3c; --loc:#f6dcdc; --loc-b:#b86e72;
+    --sh:3px 3px 0 rgba(30,22,8,.20); --sh2:5px 7px 18px rgba(0,0,0,.5); }
+}
+
+/* ---------- 像素字体 ---------- */
+html,body,.app,.page,.scroll,.wrap,.hint,.pkcard,.tbtn,.back,
+input,textarea,select,button{font-family:'Press Start 2P','宋体','SimSun','NSimSun',monospace}
+body{letter-spacing:.5px;-webkit-font-smoothing:none;font-smooth:never}
+.hint{font-size:10.5px;line-height:1.9}
+.tiny{font-size:9.5px;border-radius:3px;padding:2px 5px}
+
+/* ---------- 背景：GBA 液晶质感 + 扫描线 ---------- */
+body::after{content:'';position:fixed;inset:0;z-index:1201;pointer-events:none;
+  background:
+    repeating-linear-gradient(0deg,rgba(14,26,40,.055) 0 1px,transparent 1px 3px),
+    radial-gradient(ellipse at 50% 45%,transparent 58%,rgba(8,16,26,.30) 100%)}
+.app{background:
+    repeating-linear-gradient(45deg,rgba(255,255,255,.02) 0 5px,transparent 5px 10px),
+    linear-gradient(180deg,#2b3f52 0,#20303f 100%)}
+
+/* ---------- 顶栏：海拉尔金边 ---------- */
+.hd{background:linear-gradient(180deg,#1d3a52 0,#152c3e 100%);
+  border-bottom:3px solid var(--gold);box-shadow:0 3px 0 rgba(0,0,0,.25)}
+.hd .name{color:var(--gold-l,#ffe9a8);font-size:14px;text-shadow:2px 2px 0 #000;letter-spacing:2px}
+.hd .sub{color:#c9d6e2}
+
+/* ---------- 卡片：羊皮纸 + 粗描边 + 硬阴影 ---------- */
+.pkcard{background:linear-gradient(180deg,#fbf5e2 0,#fbf5e2 74%,#efe5c4 74%,#e8dcb8 100%);
+  border:3px solid #6b4a16;outline:2px solid #2a1608;outline-offset:-6px;
+  border-radius:5px;box-shadow:var(--sh)}
+.pkcard.drag{box-shadow:var(--sh2)}
+.pkcard .t1{font-size:13px;letter-spacing:1px}
+.pkcard .t2{font-size:11px}
+
+/* ---------- 工具条 / 统计条 ---------- */
+.tool,.stat{background:linear-gradient(180deg,#27485f,#1b3447);border-bottom:3px solid var(--gold)}
+.tool .tiny,.stat{color:#e8f0f6}.stat b{color:#fff}.stat .money{color:#8ef08e}
+
+/* ---------- 按钮：金色浮雕 ---------- */
+.tbtn{background:linear-gradient(180deg,#f2d98c 0,#f2d98c 45%,#d5ae48 45%,#c39a34 100%);
+  border:2px solid #6b4a16;color:#3a2a12;border-radius:4px;font-size:11px;font-weight:600;
+  box-shadow:2px 2px 0 rgba(0,0,0,.25)}
+.tbtn.on{background:linear-gradient(180deg,#ffe9a8 0,#ffe9a8 45%,#e0b84e 45%,#cfa038 100%);
+  border-color:#1f6f3a;color:#1f6f3a}
+.tbtn.money{background:linear-gradient(180deg,#f0a8ac 0,#f0a8ac 45%,#c86068 45%,#b02430 100%);
+  border-color:#6b1016;color:#fff2f2}
+.back{background:linear-gradient(180deg,#f2d98c 0,#d5ae48 100%);border:2px solid #6b4a16;
+  color:#3a2a12;border-radius:4px;box-shadow:2px 2px 0 rgba(0,0,0,.25)}
+.btn{background:linear-gradient(180deg,#3f8f5a 0,#3f8f5a 45%,#256b3f 45%,#1c5632 100%);
+  border:2px solid #123a1e;border-radius:4px;box-shadow:2px 2px 0 rgba(0,0,0,.28);color:#fff}
+.btn.gh{background:linear-gradient(180deg,#fbf5e2 0,#fbf5e2 45%,#e5d9b4 45%,#d8ca9e 100%);
+  border:2px solid #6b4a16;color:#3a2a12}
+.btn.red{background:linear-gradient(180deg,#c8404c 0,#c8404c 45%,#8f1e28 45%,#7a1520 100%);border-color:#4a0c10}
+.btn.gold{background:linear-gradient(180deg,#f2d98c 0,#f2d98c 45%,#cfa038 45%,#b8892a 100%);border-color:#6b4a16;color:#3a2a12}
+button:active{transform:translateY(2px)}
+
+/* ---------- 输入控件 ---------- */
+input,textarea,select{background:#fffdf2;border:2px solid #8a6a2a;border-radius:3px;color:var(--text)}
+
+/* ---------- 弹层 ---------- */
+.sheet{background:linear-gradient(180deg,#f7f1dd 0,#efe6c6 100%);border:3px solid #6b4a16;
+  box-shadow:0 -6px 26px rgba(0,0,0,.5);border-radius:10px 10px 0 0}
+.sheet h3{color:var(--text);text-shadow:1px 1px 0 rgba(255,255,255,.6);font-size:13px;letter-spacing:1px}
+
+/* ---------- 底部 chip ---------- */
+.chiprow{background:linear-gradient(180deg,#27485f,#1b3447);border-top:3px solid var(--gold)}
+.toast{background:#1b2b1e;border:2px solid var(--gold);border-radius:4px}
+
+/* ---------- 深底上的对比度修复（时间轴 / 次要文字） ---------- */
+.blk .t1,.blk .t2{color:#f8f0d8 !important;text-shadow:1px 1px 0 rgba(0,0,0,.75)}
+.blk .teamtag{color:#f8f0d8 !important;background:rgba(0,0,0,.28);border-color:rgba(255,255,255,.4)}
+.rail .hr,.costcol .ct,.palette .pttl,.hint,.empty{color:#cdb87c}
+.costcol .ce{background:#f6efd8}
+.delx{border:2px solid #f6efd8}
+</style>
 </head>
 <body data-page-node-id="BAGEutCipLMnxztIPCLZW1">
 <div class="app" data-page-node-id="cZ2czG8ezJHg2MVW5C62Ii">
