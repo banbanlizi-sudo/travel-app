@@ -1,6 +1,6 @@
 {
   "appId": "com.travelpackage.app",
-  "appName": "行程包",
+  "appName": "途记",
   "webDir": "www",
   "bundledWebRuntime": false,
   "android": {

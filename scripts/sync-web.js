@@ -3,7 +3,7 @@ const path = require('path');
 const SRC = path.join(__dirname, '..', '..', 'travel-app');
 const DST = path.join(__dirname, '..', 'www');
 let n = 0;
-for (const f of ['index.html', 'manifest.json', 'icon.svg']) {
+for (const f of ['index.html', 'manifest.json', 'icon.png']) {
   const s = path.join(SRC, f);
   if (fs.existsSync(s)) { fs.copyFileSync(s, path.join(DST, f)); n++; }
 }

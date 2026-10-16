@@ -1,6 +1,6 @@
 {
-  "name": "行程 · 旅行记录与记账",
-  "short_name": "行程",
+  "name": "途记 · 旅行记录与记账",
+  "short_name": "途记",
   "description": "计划 / 现实双模式行程管理，打卡清单、携带物品清单与消费红线记账，数据保存在本机。",
   "start_url": "./index.html",
   "scope": "./",
@@ -10,7 +10,7 @@
   "theme_color": "#3b6ef5",
   "lang": "zh-CN",
   "icons": [
-    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
-    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+    { "src": "icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
   ]
 }
