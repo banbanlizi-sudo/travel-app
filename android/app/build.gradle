@@ -1,5 +1,15 @@
 apply plugin: 'com.android.application'
 
+// —— 固定签名（可选）——
+// CI 会用 GitHub Secrets 生成 android/key.properties 和 android/app/travel-release.keystore；
+// 本机没有这两个文件时，退回 Capacitor 默认行为（release 不签名 / debug 用调试签名）。
+def keyPropsFile = rootProject.file('key.properties')
+def keyProps = new Properties()
+def hasSigningKey = keyPropsFile.exists()
+if (hasSigningKey) {
+    keyPropsFile.withInputStream { keyProps.load(it) }
+}
+
 android {
     namespace "com.travelpackage.app"
     compileSdk rootProject.ext.compileSdkVersion
@@ -16,10 +26,35 @@ android {
             ignoreAssetsPattern '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        release {
+            if (hasSigningKey) {
+                storeFile file(keyProps['storeFile'])
+                storePassword keyProps['storePassword']
+                keyAlias keyProps['keyAlias']
+                keyPassword keyProps['keyPassword']
+                if (keyProps['storeType']) {
+                    storeType keyProps['storeType']
+                }
+                enableV1Signing true
+                enableV2Signing true
+                enableV3Signing true
+            }
+        }
+    }
     buildTypes {
+        debug {
+            // 调试包也用同一把密钥签，这样 debug 包之间可以互相覆盖安装
+            if (hasSigningKey) {
+                signingConfig signingConfigs.release
+            }
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (hasSigningKey) {
+                signingConfig signingConfigs.release
+            }
         }
     }
 }

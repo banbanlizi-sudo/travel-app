@@ -7,3 +7,12 @@ android/.idea/
 android/captures/
 *.iml
 .DS_Store
+
+# 签名密钥：绝不提交（CI 从 Secrets 还原）
+android/key.properties
+android/app/*.keystore
+android/app/*.jks
+android/app/*.p12
+*.p12
+key.pem
+cert.pem
