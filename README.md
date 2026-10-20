@@ -64,7 +64,29 @@ git add . && git commit -m "更新" && git push
 
 - **Actions 构建失败**：先看报错日志；最常见是网络原因，重新跑一次（Re-run jobs）即可。
 - **想改应用名/图标**：应用名在 `android/app/src/main/res/values/strings.xml`；图标替换 `android/app/src/main/res/mipmap-*/` 下的 png。
-- **想上架应用商店**：需要签名 release 包（生成 keystore 后配置 `signingConfig`），这是后续可加的步骤。
+
+---
+
+## 六、固定签名（让新版能覆盖安装旧版，数据不丢）
+
+默认情况下 CI 每次构建都会重新生成一把调试签名，导致**新版无法覆盖安装旧版**；而卸载会清空应用内的 WebView 存储（=全部行程数据）。
+所以本工程改成了「从 GitHub Secrets 取固定 keystore 签名」：
+
+**仓库 Settings → Secrets and variables → Actions** 里需要 4 个 secret：
+
+| Secret | 说明 |
+|---|---|
+| `KEYSTORE_BASE64` | keystore 文件（PKCS12/JKS）的 base64，单行 |
+| `KEYSTORE_PASSWORD` | keystore 口令 |
+| `KEY_ALIAS` | key 别名 |
+| `KEY_PASSWORD` | key 口令（PKCS12 格式需与 KEYSTORE_PASSWORD 相同） |
+
+CI 会做三件事：① `base64 -d` 还原成 `android/app/travel-release.keystore`；② 生成 `android/key.properties`（已 gitignore）；③ 构建时用 `signingConfigs.release` 给 **debug 和 release 两个包都签名**，并在日志的 `Verify signature` 步骤打印证书 SHA-256 指纹。
+
+- 任何时候这个指纹都应该是同一个值 —— 变了就说明密钥被换过，那一次就会装不上。
+- 本机（没有 JDK）生成密钥的方法见项目根目录 `signing-keys/使用说明.md`（openssl 生成 PKCS12）。
+- **第一次**从"随机调试签名"切到"固定签名"时，手机上已有的旧包仍需 `导出备份 → 卸载 → 安装 → 导入备份` 一次；之后就能一直覆盖升级。
+- 构建日志里若出现 `缺少固定签名密钥` 报错，就是 secret 没配。
 
 ---
 
