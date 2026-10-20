@@ -87,12 +87,21 @@ input:focus,textarea:focus,select:focus{border-color:var(--pri)}
 .lane{position:absolute;top:0;bottom:0;border-left:1px solid var(--line)}
 .lane:first-child{border-left:0}
 .lane .lanehd{position:absolute;top:0;left:0;right:0;font-size:9px;text-align:center;color:var(--sub);background:var(--card2);border-bottom:1px solid var(--line);padding:1px 0;z-index:5}
-.blk{position:absolute;left:0;right:0;border-radius:9px;overflow:hidden;touch-action:pan-y;box-shadow:0 1px 5px rgba(18,28,58,.16);border-left:4px solid transparent}
+.lanes.stick .lane .lanehd{position:sticky;top:0;left:0;right:0;z-index:6;font-size:10px;font-weight:700;color:var(--pri)}
+.blk{position:absolute;left:0;right:0;border-radius:9px;overflow:hidden;touch-action:pan-y;box-shadow:0 1px 5px rgba(18,28,58,.16);border-left:4px solid transparent;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
 .blk .in{padding:4px 7px;height:100%;display:flex;flex-direction:column;gap:1px;pointer-events:none;justify-content:center}
 .blk .t1{display:flex;align-items:center;gap:4px;font-size:12px;font-weight:700;line-height:1.25}
 .blk .t1 .ttl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .blk .t2{font-size:10px;color:var(--sub);display:flex;gap:5px;align-items:center;flex-wrap:wrap}
 .blk .teamtag{font-size:9px;background:var(--card2);border:1px solid var(--line);color:var(--sub);border-radius:5px;padding:0 4px}
+/* 浏览页连续轴：所有天一条时间轴，无卡片边界；跨天块从当日 24:00 续画到后续天 */
+.bcont{background:var(--card);border-radius:13px;box-shadow:var(--sh);margin:10px 12px;padding:6px 10px 8px}
+.bseg{margin:0}
+.bseghd{display:flex;align-items:baseline;gap:8px;font-size:13.5px;padding:8px 2px 2px;cursor:pointer;border-top:1px solid var(--line)}
+.bseg:first-child .bseghd{border-top:none;padding-top:2px}
+.bseghd .tiny{margin-left:0}
+.bseghd .money{margin-left:auto}
+.blk.cont .t2{color:var(--sub)}
 .blk .grip{position:absolute;left:0;top:0;bottom:0;width:15px;touch-action:none;cursor:grab}
 .blk .t1{touch-action:none;cursor:grab;user-select:none;-webkit-user-select:none}
 .blk .rz{position:absolute;left:0;right:0;bottom:0;height:13px;touch-action:none;cursor:ns-resize}
@@ -122,6 +131,8 @@ input:focus,textarea:focus,select:focus{border-color:var(--pri)}
 .sheet{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-radius:18px 18px 0 0;padding:14px 14px calc(env(safe-area-inset-bottom) + 14px);
   transform:translateY(102%);transition:transform .24s cubic-bezier(.3,.8,.3,1);z-index:1201;max-height:88vh;overflow:auto;box-shadow:var(--sh2)}
 .sheet.on{transform:none}
+.sheet{user-select:none;-webkit-user-select:none;-webkit-touch-callout:none} /* 编辑弹层防误选；输入框例外 */
+.sheet input,.sheet textarea{user-select:text;-webkit-user-select:text} /* 改数/全选复制照常 */
 .sheet h3{margin:2px 0 12px;font-size:15px;display:flex;align-items:center;gap:8px}
 .sheet h3 .spacer{flex:1}
 .fld{margin-bottom:10px}
@@ -130,8 +141,8 @@ input:focus,textarea:focus,select:focus{border-color:var(--pri)}
 .grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:9px}
 .chips{display:flex;flex-wrap:wrap;gap:7px}
 .chips .tdel{display:inline-flex;align-items:center;justify-content:center;width:17px;height:17px;margin-left:6px;margin-right:-3px;border-radius:50%;background:rgba(0,0,0,.16);font-size:10px;line-height:1}
-.chips button{padding:7px 12px;border-radius:9px;border:1px solid var(--line);background:var(--card2);font-size:13px;color:var(--sub)}
-.chips button.on{color:#fff;font-weight:600;border-color:transparent}
+.chips button{padding:7px 12px;border-radius:9px;border:1px solid var(--line);background:var(--card2);font-size:13px;color:var(--sub);user-select:none;-webkit-user-select:none;-webkit-touch-callout:none}
+.chips button.on{background:var(--pri);color:#fff;font-weight:600;border-color:transparent}
 .swatches{display:flex;flex-wrap:wrap;gap:9px}
 .swatches button{width:34px;height:34px;border-radius:50%;border:2.5px solid transparent;flex:0 0 auto}
 .swatches button.on{border-color:var(--text);transform:scale(1.12)}
@@ -201,6 +212,7 @@ input:focus,textarea:focus,select:focus{border-color:var(--pri)}
     <div class="hd" data-page-node-id="LgDkIiqWMJbQ7F1lyniu7j">
       <button class="back" id="pkgBack" data-page-node-id="Pz8aASOc2fnRmxzSKymNJV">←</button>
       <div class="name" id="pkgName" data-page-node-id="kyAVGY5Q7bqk6fHDHZOFxk">行程包</div>
+      <button class="tbtn" id="pkgAA" data-page-node-id="AApkgBtn001">AA</button>
       <button class="tbtn" id="btnTodo" data-page-node-id="RfyxxGm9K4w48of2hVkKTn">to-do</button>
       <button class="tbtn" id="btnBrowse" data-page-node-id="OezZ1N5bS24wFeCJi2UJWp">☰ 行程卡</button>
     </div>
@@ -289,12 +301,23 @@ const uid=p=>p+Date.now().toString(36).slice(-4)+Math.random().toString(36).slic
 const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 const fmtHM=m=>{m=Math.round(m);return pad2(Math.floor(m/60))+':'+pad2(m%60);};
+/* 跨天时间显示：>=1440 → 次日/第三天 HH:MM（用于跨天块的结束时刻） */
+const fmtHMspan=m=>{m=Math.round(m);const d=Math.floor(m/1440),r=m%1440;
+  if(d<=0)return fmtHM(r); if(d===1)return '次日 '+fmtHM(r); return '第'+(d+1)+'天 '+fmtHM(r);};
 const parseHM=s=>{const a=String(s||'0:00').split(':');return (parseInt(a[0],10)||0)*60+(parseInt(a[1],10)||0);};
 const durLabel=m=>{const h=Math.floor(m/60),mm=m%60;return (h?h+'h':'')+(mm||!h?mm+'分':'');};
+const durLabelX=m=>{const d=Math.floor(m/1440),r=m%1440;return (d?d+'天':'')+(r?durLabel(r):'')||'0分';};
+const MAX_XDAY_DUR=4320; // 单块最长持续（分钟）：跨天上限 3 天
+/* 住宿相关（seed/migrate 在加载时即调用，必须定义在初始化之前） */
+const stayOut=e=>(e&&e.out!=null)?+e.out:720;
+/* 住宿块时长由退房时间倒推：入住当天画到 24:00，次日 0:00 续到退房时刻 */
+const stayDur=(start,out)=>clamp((1440-start)+((out==null?720:+out)||0),5,MAX_XDAY_DUR);
+/* 取 arr/计划项/地点卡的有效退房时间（优先自身 out，再地点卡，再默认 12:00） */
+const stayOutOf=(x,l)=>(x&&x.out!=null)?+x.out:(l?stayOut(l):720);
 const money=n=>'¥'+(Math.round((+n||0)*100)/100);
 const PALETTE=['#3b6ef5','#16a34a','#d97706','#e5484d','#9333ea','#0891b2','#db2777','#65a30d','#ca8a04','#475569','#0d9488','#7c3aed'];
-const COST_CATS=['食物','交通','门票','项目','额外花销'];
-const COST_COLORS={'食物':'#16a34a','交通':'#0891b2','门票':'#3b6ef5','项目':'#9333ea','额外花销':'#d97706'};
+const COST_CATS=['食物','交通','门票','项目','住宿','额外花销'];
+const COST_COLORS={'食物':'#16a34a','交通':'#0891b2','门票':'#3b6ef5','项目':'#9333ea','住宿':'#db2777','额外花销':'#d97706'};
 const TODO_CATS=[{k:'spot',n:'景点'},{k:'food',n:'美食'},{k:'act',n:'项目'}];
 const RATING={S:{c:'#c9971a'},A:{c:'#3b6ef5'},B:{c:'#16a34a'},C:{c:'#9aa4b2'}};
 const numCN=n=>['一','二','三','四','五','六','七','八','九','十'][clamp(n-1,0,9)]||n;
@@ -305,56 +328,108 @@ const tint=(c,a)=>c+a;
 const KEY='travel_app_v5';
 function newToilet(){return {id:uid('l'),name:'厕所',color:'#9aa4b2',rating:'C',dur:10,cost:0,costCat:'额外花销',booking:'',note:''};}
 function seed(){
-  const l1={id:uid('l'),name:'景区1',color:'#3b6ef5',rating:'S',dur:120,cost:120,costCat:'门票',booking:'提前1天线上预约',note:'带身份证'};
-  const l2={id:uid('l'),name:'坎门渔港',color:'#16a34a',rating:'A',dur:90,cost:88,costCat:'食物',booking:'排号',note:''};
-  const l3={id:uid('l'),name:'玉环湿地公园',color:'#d97706',rating:'B',dur:120,cost:60,costCat:'门票',booking:'',note:'观鸟点在东侧'};
+  /* 台州 5 日山海之旅（示例数据）：
+     覆盖 6 类花费 / S·A·B·C 评级 / 全员+单人+同时段重叠块 / who·paid 组合（AA 有账可算）/
+     连住两晚 + 换酒店 + 本晚价格覆盖 + 跨天夜班火车（次日接续）/ 计划卡（含住宿项）/ 多类型额外花销 */
+  const l1={id:uid('l'),name:'新荣记·临海店',color:'#16a34a',rating:'S',dur:90,cost:520,costCat:'食物',booking:'提前3天订位',note:'沙蒜豆面 · 家烧鲳鱼'};
+  const l2={id:uid('l'),name:'姜汤面·老街店',color:'#65a30d',rating:'B',dur:90,cost:60,costCat:'食物',booking:'',note:'姜汤面 + 麦虾'};
+  const l3={id:uid('l'),name:'海鲜排档·临海',color:'#d97706',rating:'A',dur:90,cost:180,costCat:'食物',booking:'',note:'三门小海鲜 · 现点现烧'};
+  const l4={id:uid('l'),name:'坎门渔港海鲜',color:'#ca8a04',rating:'S',dur:90,cost:280,costCat:'食物',booking:'排号',note:'现挑现加工 · 码头排档'};
+  const l5={id:uid('l'),name:'嵌糕·台州小吃',color:'#ea580c',rating:'B',dur:60,cost:40,costCat:'食物',booking:'',note:'温岭嵌糕 · 现蒸'};
+  const l6={id:uid('l'),name:'麦饼·早餐',color:'#f59e0b',rating:'B',dur:30,cost:30,costCat:'食物',booking:'',note:'台州麦饼 · 现做'};
+  const l7={id:uid('l'),name:'台州府城墙',color:'#3b6ef5',rating:'A',dur:120,cost:130,costCat:'门票',booking:'',note:'江南长城 · 登顾景楼'};
+  const l8={id:uid('l'),name:'神仙居',color:'#0d9488',rating:'S',dur:210,cost:220,costCat:'门票',booking:'提前1天线上预约',note:'南天顶 + 如意桥'};
+  const l9={id:uid('l'),name:'漩门湾湿地公园',color:'#0891b2',rating:'B',dur:90,cost:80,costCat:'门票',booking:'',note:'观鸟点在东侧'};
+  const l10={id:uid('l'),name:'紫阳街',color:'#9333ea',rating:'B',dur:180,cost:0,costCat:'项目',booking:'',note:'逛吃老街 · 小吃自费'};
+  const l11={id:uid('l'),name:'大鹿岛',color:'#7c3aed',rating:'S',dur:180,cost:320,costCat:'项目',booking:'提前1天订船票',note:'门票 + 往返船票'};
+  const l12={id:uid('l'),name:'屿山民宿',color:'#db2777',rating:'A',dur:900,cost:380,costCat:'住宿',booking:'',note:'含早 · 步行到紫阳街',out:11*60};
+  const l13={id:uid('l'),name:'坎门海韵民宿',color:'#e5484d',rating:'B',dur:990,cost:320,costCat:'住宿',booking:'',note:'面朝大海 · 码头步行5分钟',out:12*60};
+  const l14={id:uid('l'),name:'高铁·南京南→临海',color:'#475569',rating:'A',dur:190,cost:464,costCat:'交通',booking:'',note:'约 3 小时 · 二等座'};
+  const l15={id:uid('l'),name:'包车·神仙居往返',color:'#334155',rating:'A',dur:510,cost:400,costCat:'交通',booking:'',note:'一站式往返 · 含等候'};
+  const l16={id:uid('l'),name:'城际班车·临海→坎门',color:'#64748b',rating:'C',dur:70,cost:160,costCat:'交通',booking:'',note:'先退房再出发'};
+  const l17={id:uid('l'),name:'出租车',color:'#94a3b8',rating:'C',dur:70,cost:80,costCat:'交通',booking:'',note:'网约车 · 按需叫车'};
+  const l18={id:uid('l'),name:'夜班火车·台州西→南京',color:'#1e293b',rating:'A',dur:390,cost:600,costCat:'交通',booking:'',note:'硬卧 · 21:00 开 · 次日 03:30 到'};
   const lc=newToilet();
-  const it=(l,start)=>({id:uid('i'),locId:l.id,start,dur:l.dur});
+  const tm1={id:uid('tm'),name:'沣'}, tm2={id:uid('tm'),name:'洋子'};
+  const it=(l,start,dur)=>({id:uid('i'),locId:l.id,start,dur:dur==null?l.dur:dur});
+  const stay=(l,start)=>{ const o=stayOut(l); return {id:uid('i'),locId:l.id,start,dur:stayDur(start,o),out:o}; };
   return {
     v:5, activeId:'pk1',
     packages:[{
       id:'pk1', name:'台州',
-      locs:[l1,l2,l3,lc],
+      locs:[l1,l2,l3,l4,l5,l6,l7,l8,l9,l10,l11,l12,l13,l14,l15,l16,l17,l18,lc],
       plans:[
-        {id:uid('p'),name:'计划1',items:[it(l1,8*60),it(l2,11*60),it(l3,14*60)]},
-        {id:uid('p'),name:'计划2',items:[it(l3,9*60),it(l2,17*60)]}
+        {id:uid('p'),name:'临海古城一日',items:[it(l7,8*60+30,120),it(l10,10*60+30,180),it(l1,14*60,90),it(l2,18*60,90),stay(l12,20*60)]},
+        {id:uid('p'),name:'玉环海岛一日',items:[it(l4,10*60+30,90),it(l11,13*60,180),it(l9,16*60+30,90),it(l5,18*60+30,60),stay(l13,19*60+30)]}
       ],
       days:[
-        {id:uid('d'),name:'第一天',date:'2026-10-20',arrs:[
-          {id:uid('a'),locId:l1.id,start:8*60,dur:120,teamId:null},
-          {id:uid('a'),locId:l2.id,start:11*60,dur:90,teamId:null},
-          {id:uid('a'),locId:l1.id,start:14*60,dur:120,teamId:null},
-          {id:uid('a'),locId:l2.id,start:18*60,dur:120,teamId:null}
-        ],extras:[{id:uid('e'),name:'矿泉水/零食',amount:15,cat:'额外花销',at:10*60+30}]},
-        {id:uid('d'),name:'第二天',date:'2026-10-21',arrs:[
-          {id:uid('a'),locId:l3.id,start:9*60,dur:120,teamId:null},
-          {id:uid('a'),locId:l2.id,start:17*60,dur:120,teamId:null}
+        {id:uid('d'),name:'第一天 · 临海古城',date:'2026-10-23',arrs:[
+          {id:uid('a'),locId:l14.id,start:8*60+30,dur:190,teamId:null,who:'all',paid:tm1.id},
+          {id:uid('a'),locId:l1.id,start:12*60,dur:90,teamId:null,who:'all',paid:tm2.id},
+          {id:uid('a'),locId:l7.id,start:14*60,dur:150,teamId:tm1.id,who:tm1.id,paid:tm2.id},
+          {id:uid('a'),locId:l10.id,start:14*60,dur:180,teamId:tm2.id,who:'all',paid:tm1.id},
+          {id:uid('a'),locId:l2.id,start:18*60,dur:90,teamId:null,who:'all',paid:tm1.id},
+          {id:uid('a'),locId:l12.id,start:20*60,dur:stayDur(20*60,stayOut(l12)),teamId:null,who:'all',paid:tm2.id,out:stayOut(l12),price:null},
+          {id:uid('a'),locId:lc.id,start:11*60+45,dur:10,teamId:null,who:'all',paid:tm1.id}
+        ],extras:[{id:uid('e'),name:'紫阳街伴手礼',amount:120,cat:'额外花销',at:19*60,out:720,who:'all',paid:tm2.id}]},
+        {id:uid('d'),name:'第二天 · 神仙居',date:'2026-10-24',arrs:[
+          {id:uid('a'),locId:l6.id,start:8*60,dur:30,teamId:null,who:'all',paid:tm1.id},
+          {id:uid('a'),locId:l15.id,start:9*60,dur:510,teamId:null,who:'all',paid:tm1.id},
+          {id:uid('a'),locId:l8.id,start:10*60+30,dur:210,teamId:null,who:'all',paid:tm2.id},
+          {id:uid('a'),locId:l3.id,start:18*60+30,dur:90,teamId:null,who:'all',paid:tm2.id},
+          {id:uid('a'),locId:l12.id,start:20*60,dur:stayDur(20*60,stayOut(l12)),teamId:null,who:'all',paid:tm1.id,out:stayOut(l12),price:450}
+        ],extras:[{id:uid('e'),name:'景区摆渡车',amount:50,cat:'交通',at:10*60,out:720,who:tm1.id,paid:tm1.id}]},
+        {id:uid('d'),name:'第三天 · 玉环坎门',date:'2026-10-25',arrs:[
+          {id:uid('a'),locId:l16.id,start:11*60+30,dur:70,teamId:null,who:'all',paid:tm1.id},
+          {id:uid('a'),locId:l4.id,start:13*60,dur:90,teamId:null,who:'all',paid:tm1.id},
+          {id:uid('a'),locId:l11.id,start:15*60,dur:180,teamId:null,who:'all',paid:tm1.id},
+          {id:uid('a'),locId:l13.id,start:19*60+30,dur:stayDur(19*60+30,stayOut(l13)),teamId:null,who:'all',paid:tm2.id,out:stayOut(l13),price:null}
+        ],extras:[{id:uid('e'),name:'海鲜加工费',amount:60,cat:'食物',at:18*60,out:720,who:'all',paid:tm1.id}]},
+        {id:uid('d'),name:'第四天 · 湿地与返程',date:'2026-10-26',arrs:[
+          {id:uid('a'),locId:l9.id,start:8*60+30,dur:90,teamId:null,who:'all',paid:tm2.id},
+          {id:uid('a'),locId:l5.id,start:12*60,dur:60,teamId:null,who:'all',paid:tm2.id},
+          {id:uid('a'),locId:l17.id,start:14*60,dur:70,teamId:null,who:'all',paid:tm1.id},
+          {id:uid('a'),locId:l18.id,start:21*60,dur:390,teamId:null,who:'all',paid:tm1.id}
+        ],extras:[{id:uid('e'),name:'台州海鲜带回家',amount:150,cat:'食物',at:20*60,out:720,who:'all',paid:tm2.id}]},
+        {id:uid('d'),name:'第五天 · 抵家',date:'2026-10-27',arrs:[
+          {id:uid('a'),locId:l17.id,start:3*60+40,dur:30,teamId:null,who:'all',paid:tm1.id},
+          {id:uid('a'),locId:l6.id,start:9*60,dur:30,teamId:null,who:'all',paid:tm2.id}
         ],extras:[]}
       ],
-      teams:[],
+      teams:[tm1,tm2],
       todos:[
-        {id:uid('t'),text:'大鹿岛',cat:'spot',done:true},
-        {id:uid('t'),text:'漩门湾观鸟',cat:'spot',done:false},
-        {id:uid('t'),text:'海鲜排档',cat:'food',done:false},
-        {id:uid('t'),text:'姜汤面',cat:'food',done:true},
-        {id:uid('t'),text:'玻璃栈道',cat:'act',done:false},
-        {id:uid('t'),text:'快艇出海',cat:'act',done:false}
+        {id:uid('t'),text:'神仙居预约',cat:'spot',done:true},
+        {id:uid('t'),text:'大鹿岛船票',cat:'spot',done:false},
+        {id:uid('t'),text:'新荣记订位',cat:'food',done:true},
+        {id:uid('t'),text:'姜汤面 / 嵌糕打卡',cat:'food',done:false},
+        {id:uid('t'),text:'石塘千年曙光园日出',cat:'act',done:false},
+        {id:uid('t'),text:'漩门湾观鸟',cat:'act',done:false}
       ]
     }],
-    ui:{snap:10,view:'home',pkgTab:'days',dayId:null,planId:null,teamFilter:'all',hideHints:false,returnView:null}
+    ui:{snap:10,view:'home',pkgTab:'days',dayId:null,planId:null,teamFilter:'all',hideHints:false,returnView:null,splitStay:false,meId:null}
   };
 }
 function ensureToilet(p){ if(!p.locs.some(l=>l.name==='厕所')) p.locs.push(newToilet()); }
 function migrate(d){
   d.v=d.v||5; d.packages=d.packages||[]; d.activeId=d.activeId||(d.packages[0]&&d.packages[0].id);
-  d.ui=Object.assign({snap:10,view:'home',pkgTab:'days',dayId:null,planId:null,teamFilter:'all',hideHints:false,returnView:null},d.ui||{});
+  d.ui=Object.assign({snap:10,view:'home',pkgTab:'days',dayId:null,planId:null,teamFilter:'all',hideHints:false,returnView:null,splitStay:false,meId:null},d.ui||{});
   d.packages.forEach(p=>{
     p.locs=p.locs||[]; p.plans=p.plans||[]; p.days=p.days||[]; p.teams=p.teams||[]; p.todos=p.todos||[];
     const cc=v=>v==='项目费'?'项目':v==='食物费'?'食物':v;
-    p.locs.forEach(l=>{ l.rating=l.rating||'C'; l.dur=l.dur||60; l.cost=l.cost||0; l.costCat=cc(l.costCat)||'门票'; l.booking=l.booking||''; l.note=l.note||''; });
+    p.locs.forEach(l=>{ l.rating=l.rating||'C'; l.dur=l.dur||60; l.cost=l.cost||0; l.costCat=cc(l.costCat)||'门票'; l.booking=l.booking||''; l.note=l.note||'';
+      if(l.costCat==='住宿'){ l.out=l.out==null?720:+l.out; } });
     ensureToilet(p);
-    p.plans.forEach(pl=>{ pl.items=(pl.items||[]).map(i=>Object.assign({id:i.id||uid('i'),locId:i.locId,start:i.start||0,dur:i.dur||60},i)); });
-    p.days.forEach(dy=>{ dy.arrs=dy.arrs||[]; dy.extras=(dy.extras||[]).map(e=>Object.assign({},e,{cat:cc(e.cat)})); dy.date=dy.date||''; });
+    p.plans.forEach(pl=>{ pl.items=(pl.items||[]).map(i=>{ const l=p.locs.find(x=>x.id===i.locId);
+      const ni=Object.assign({id:i.id||uid('i'),locId:i.locId,start:i.start||0,dur:i.dur||60},i);
+      if(l&&l.costCat==='住宿'&&ni.start+ni.dur<=1440) ni.dur=stayDur(ni.start,stayOutOf(ni,l)); // 旧计划项：时长改按退房倒推
+      return ni; }); });
+    p.days.forEach(dy=>{ dy.arrs=(dy.arrs||[]).map(a=>{ const l=p.locs.find(x=>x.id===a.locId);
+        const na=Object.assign({},a,{who:a.who||'all',paid:a.paid||null});
+        na.price=(a.price==null||a.price==='')?null:+a.price;
+        if(l&&l.costCat==='住宿'){ na.out=a.out==null?(l.out==null?720:l.out):+a.out;
+          if(na.start+na.dur<=1440) na.dur=stayDur(na.start,na.out); } // 旧住宿块：当天内结束的，时长改按退房倒推（已跨天的保持手动值）
+        return na; });
+      dy.extras=(dy.extras||[]).map(e=>Object.assign({},e,{cat:cc(e.cat),out:e.out==null?720:+e.out,who:e.who||'all',paid:e.paid||null})); dy.date=dy.date||''; });
   });
   return d;
 }
@@ -370,16 +445,30 @@ function doUndo(){ if(!undoStack.length) return; S=JSON.parse(undoStack.pop()); 
 const PK=()=>S.packages.find(p=>p.id===S.activeId)||S.packages[0];
 const dayById=id=>PK().days.find(d=>d.id===id);
 const planById=id=>PK().plans.find(p=>p.id===id);
-const locById=id=>PK().locs.find(l=>l.id===id);
-const teamById=id=>PK().teams.find(t=>t.id===id);
+const locById=(id,p)=>((p||PK()).locs).find(l=>l.id===id);
+const teamById=(id,p)=>((p||PK()).teams).find(t=>t.id===id);
+/* 新建行程卡默认日期 = 现有最晚日期 +1 天 */
+const nextDayDate=p=>{ const dts=(p.days||[]).map(x=>x.date).filter(Boolean).sort();
+  if(!dts.length) return '';
+  const b=new Date(dts[dts.length-1]+'T00:00:00'); b.setDate(b.getDate()+1); return dateStr(b); };
 const locCost=l=>+l.cost||0;
-const arrCost=a=>{ const l=locById(a.locId); return l?locCost(l):0; };
-const dayPlanCost=d=>d.arrs.reduce((s,a)=>s+arrCost(a),0);
-const dayExtraCost=d=>(d.extras||[]).reduce((s,e)=>s+(+e.amount||0),0);
-const dayCost=d=>dayPlanCost(d)+dayExtraCost(d);
-const planCost=p=>(p.items||[]).reduce((s,i)=>{ const l=locById(i.locId); return s+(l?locCost(l):0); },0);
-const pkgActual=p=>p.days.reduce((s,d)=>s+dayCost(d),0);
-const pkgPlan=p=>p.plans.reduce((s,pl)=>s+planCost(pl),0);
+const arrCost=(a,p)=>{ const l=locById(a.locId,p); if(!l) return 0; return (a.price!=null&&a.price!=='')?+a.price:locCost(l); };
+const arrCounted=(a,p)=>arrCost(a,p);
+/* tf=人员 id 时只计「本人 + 全员」的块与 extra（与时间轴显示过滤一致：!teamId/!who 或 ===tf） */
+const dayPlanCost=(d,p,tf)=>{ p=p||PK(); return (d.arrs||[]).reduce((s,a)=>{
+  if(tf&&a.teamId&&a.teamId!==tf) return s;
+  return s+arrCounted(a,p); },0); };
+const extraCounted=e=>+e.amount||0;
+const dayExtraCost=(d,p,tf)=>{
+  p=p||PK();
+  return (d.extras||[]).reduce((s,e)=>{
+    if(tf&&e.who&&e.who!=='all'&&e.who!==tf) return s; // 他人个人花销不计入本人视图
+    return s+extraCounted(e); },0);
+};
+const dayCost=(d,p,tf)=>dayPlanCost(d,p,tf)+dayExtraCost(d,p,tf);
+const planCost=(pl,p)=>(pl.items||[]).reduce((s,i)=>{ const l=locById(i.locId,p); return s+(l?locCost(l):0); },0);
+const pkgActual=p=>p.days.reduce((s,d)=>s+dayCost(d,p),0);
+const pkgPlan=p=>p.plans.reduce((s,pl)=>s+planCost(pl,p),0);
 const pkgRange=p=>{
   const ds=p.days.map(d=>d.date).filter(Boolean).sort();
   return ds.length?(dShort(ds[0])+(ds.length>1?' ~ '+dShort(ds[ds.length-1]):'')):'';
@@ -388,18 +477,85 @@ function costRowsFor(p,cat){
   const locOf=id=>p.locs.find(l=>l.id===id);
   const rows=[];
   p.days.forEach(d=>{
-    d.arrs.forEach(a=>{ const l=locOf(a.locId); if(l&&locCost(l)>0) rows.push({day:d,name:l.name,cat:l.costCat||'门票',amount:locCost(l),kind:'plan',rating:l.rating}); });
+    d.arrs.forEach(a=>{ const l=locOf(a.locId); if(l&&arrCost(a,p)>0) rows.push({day:d,name:l.name,cat:l.costCat||'门票',amount:arrCost(a,p),kind:'plan',rating:l.rating}); });
     (d.extras||[]).forEach(e=>rows.push({day:d,name:e.name,cat:e.cat||'额外花销',amount:+e.amount||0,kind:'extra'}));
   });
   return cat?rows.filter(r=>r.cat===cat):rows;
 }
 function costRows(cat){ return costRowsFor(PK(),cat); }
 const totalCost=cat=>costRows(cat).reduce((s,r)=>s+r.amount,0);
-function dayCatSegs(d){
-  const m={};
-  d.arrs.forEach(a=>{ const l=locById(a.locId); if(l&&locCost(l)>0){ const c=l.costCat||'门票'; m[c]=(m[c]||0)+locCost(l); } });
-  (d.extras||[]).forEach(e=>{ const c=e.cat||'额外花销'; m[c]=(m[c]||0)+(+e.amount||0); });
+function dayCatSegs(d,p){
+  p=p||PK(); const m={};
+  d.arrs.forEach(a=>{ const l=locById(a.locId,p); if(l&&arrCost(a,p)>0){ const c=l.costCat||'门票'; m[c]=(m[c]||0)+arrCounted(a,p); } });
+  (d.extras||[]).forEach(e=>{ const c=e.cat||'额外花销'; m[c]=(m[c]||0)+extraCounted(e); });
   return COST_CATS.filter(c=>m[c]).map(c=>({cat:c,amt:m[c]}));
+}
+
+/* ==================== 人员 / 住宿 / AA 辅助 ==================== */
+/* meId：S.ui.meId 若不属于当前行程包的人员（复制包 / 切换包 / 导入后），回退第一位人员，避免记成死 id */
+const meId=()=>{ const p=PK(); const t=p.teams.find(x=>x.id===S.ui.meId); return t?t.id:((p.teams[0]&&p.teams[0].id)||null); };
+const personName=(p,id)=>id===meId()?'我':((p.teams.find(t=>t.id===id)||{}).name||'');
+function packArrs(arrs){
+  const m=new Map();
+  const sorted=arrs.slice().sort((a,b)=>(a.start-b.start)||(b.dur-a.dur));
+  let group=[],gEnd=-1;
+  const flush=()=>{ if(!group.length)return;
+    const cols=[];
+    group.forEach(a=>{ let ci=0; while(ci<cols.length&&a.start<cols[ci])ci++; if(ci>=cols.length)cols.push(0); cols[ci]=Math.max(cols[ci],a.start+a.dur); m.set(a.id,{ci:ci,n:0}); });
+    const n=Math.max(1,cols.length);
+    group.forEach(a=>{ m.get(a.id).n=n; });
+    group=[]; };
+  sorted.forEach(a=>{ if(group.length&&a.start>=gEnd){ flush(); gEnd=-1; } group.push(a); gEnd=Math.max(gEnd,a.start+a.dur); });
+  flush();
+  return m;
+}
+/* 从昨日延续到当天的跨天块 → 当天的接续段副本（只画 0:00→结束时刻，不计入本卡花费）。
+   跨 3 天以上时接力：昨日的接续段若仍越过 24:00，继续向后传。 */
+function contsFromPrev(d,i,p){
+  if(i<=0) return [];
+  const pd=p.days[i-1]; if(!pd) return [];
+  const out=[];
+  const carry=a=>{
+    const end=a.start+a.dur;
+    if(end>1440) out.push(Object.assign({},a,{
+      start:0, dur:end-1440, _cont:true,
+      _contFrom:(a._contFrom!=null?a._contFrom:a.start)
+    }));
+  };
+  (pd.arrs||[]).forEach(carry);
+  contsFromPrev(pd,i-1,p).forEach(carry); // 接续段自身再跨天 → 继续接力
+  return out;
+}
+function whoPaidChips(pre,who,paid){
+  const p=PK(); if(!p.teams.length) return '';
+  const lbl=id=>id===meId()?'我':((p.teams.find(t=>t.id===id)||{}).name||id);
+  const ws=[['all','共同']].concat(p.teams.map(t=>[t.id,lbl(t.id)]));
+  const ps=p.teams.map(t=>[t.id,lbl(t.id)]);
+  return '<div class="grid2"><div class="fld"><label>算谁的</label><div class="chips" id="'+pre+'Who">'
+    +ws.map(x=>'<button type="button" data-v="'+x[0]+'"'+((who||'all')===x[0]?' class="on"':'')+'>'+esc(x[1])+'</button>').join('')+'</div></div>'
+    +'<div class="fld"><label>谁付的</label><div class="chips" id="'+pre+'Paid">'
+    +ps.map(x=>'<button type="button" data-v="'+x[0]+'"'+((paid||meId())===x[0]?' class="on"':'')+'>'+esc(x[1])+'</button>').join('')+'</div></div></div>';
+}
+function bindChips(sel){ $$(sel+' button').forEach(b=>b.onclick=()=>{ $$(sel+' button').forEach(x=>x.classList.remove('on')); b.classList.add('on'); }); }
+function chipVal(sel){ const b=$(sel+' button.on'); return b?b.dataset.v:null; }
+function aaCalc(p){
+  const ids=p.teams.map(t=>t.id), me=meId();
+  const paid={},owe={}; ids.forEach(id=>{paid[id]=0;owe[id]=0;});
+  const add=(amt,who,by)=>{ if(by&&paid[by]!=null)paid[by]+=amt;
+    if(who==='all')ids.forEach(id=>owe[id]+=amt/ids.length);
+    else if(owe[who]!=null)owe[who]+=amt; };
+  p.days.forEach(d=>{
+    d.arrs.forEach(a=>{ const l=p.locs.find(x=>x.id===a.locId); if(!l||!(arrCost(a,p)>0))return; add(arrCost(a,p),a.who||'all',a.paid||me); });
+    (d.extras||[]).forEach(e=>{ const amt=+e.amount||0; if(!amt)return; add(amt,e.who||'all',e.paid||me); });
+  });
+  const bal=ids.map(id=>({id:id,paid:paid[id],owe:owe[id],bal:paid[id]-owe[id]}));
+  const debtors=bal.filter(x=>x.bal<-0.005).sort((a,b)=>a.bal-b.bal);
+  const creditors=bal.filter(x=>x.bal>0.005).sort((a,b)=>b.bal-a.bal);
+  const moves=[]; let ci=0;
+  debtors.forEach(dr=>{ let rest=-dr.bal;
+    while(rest>0.005&&ci<creditors.length){ const cr=creditors[ci]; const m=Math.min(rest,cr.bal);
+      moves.push({from:dr.id,to:cr.id,amt:m}); rest-=m; cr.bal-=m; if(cr.bal<=0.005)ci++; } });
+  return {ids:ids,me:me,bal:bal,moves:moves};
 }
 
 /* ==================== 通用 UI ==================== */
@@ -422,6 +578,7 @@ function longPress(el,opt){
   const activate=e=>{
     if(act) return;
     act=true;
+    try{ const sel=window.getSelection&&window.getSelection(); if(sel&&sel.removeAllRanges) sel.removeAllRanges(); }catch(_){} // 清掉长按期间误触选中的文字
     try{ navigator.vibrate&&navigator.vibrate(12); }catch(_){}
     try{ el.setPointerCapture(e.pointerId); }catch(_){}
     document.addEventListener('touchmove',onDocTouch,{passive:false});
@@ -463,6 +620,7 @@ function directDrag(el,opt){
   let pid=null,act=false;
   function onDocTouch(e){ if(act) e.preventDefault(); }
   const down=e=>{ if(pid!==null||(e.button&&e.button>0)) return; pid=e.pointerId; act=true;
+    try{ const sel=window.getSelection&&window.getSelection(); if(sel&&sel.removeAllRanges) sel.removeAllRanges(); }catch(_){} // 清掉按下时误触选中的文字
     document.addEventListener('touchmove',onDocTouch,{passive:false});
     try{ el.setPointerCapture(pid); }catch(_){}
     o.onStart&&o.onStart(e); };
@@ -534,19 +692,32 @@ function bindCard(el,box,opt){
 }
 
 /* ==================== 时间轴渲染 ==================== */
-function blkHtml(a,HH,o){
+/* o.clipDay：单天视图把跨天块截断到 24:00；a._cont：从昨日延续过来的接续段副本（只画当天那段，不计价） */
+function blkHtml(a,HH,o,pk){
   const l=locById(a.locId); if(!l) return '';
-  const c=l.color||'#7b8496', y=a.start/60*HH, h=Math.max(a.dur/60*HH-2,16);
+  const c=l.color||'#7b8496';
+  const cont=!!a._cont;
+  const y=(cont?0:a.start)/60*HH;
+  const endAbs=cont?a.dur:a.start+a.dur;              // 接续段的 dur 即当天结束时刻
+  const clipEnd=o.clipDay?1440:endAbs;
+  const h=Math.max((Math.min(endAbs,clipEnd)-(cont?0:a.start))/60*HH-2,16);
   const rt=RATING[l.rating]||RATING.C;
   const tm=teamById(a.teamId);
-  const tag=(tm&&(o.teamFilter==='all'))?'<span class="teamtag">'+esc(tm.name)+'</span>':'';
-  const tail=o.noteInBlk?(l.note?' · '+esc(l.note):(locCost(l)>0?' · '+money(locCost(l)):'')):(locCost(l)>0?' · '+money(locCost(l)):'');
-  const t2=(h>=36)?'<div class="t2">'+fmtHM(a.start)+' ~ '+fmtHM(a.start+a.dur)+tail+'</div>':'';
-  return '<div class="blk" data-arr="'+a.id+'" style="top:'+y+'px;height:'+h+'px;background:'+tint(c,'26')+';border-left-color:'+c+'">'
-    +(o.interactive?'<div class="grip"></div><div class="rz"></div>':'')
+  const tag=tm?(o.lanes?'':'<span class="teamtag">'+esc(tm.name)+'</span>'):(o.lanes?'<span class="teamtag">共同</span>':'');
+  const xday=endAbs>1440&&!cont;
+  const stayTail=(l.costCat==='住宿'&&!xday)?(' · 退房'+fmtHM(stayOut(a))):''; // 跨天块结束时刻即退房，不再重复标注
+  let t2txt;
+  if(cont) t2txt='0:00 ~ '+fmtHM(Math.min(endAbs,1440))+' · ← 前一日 '+fmtHM(a._contFrom||0)+' 延续'+(endAbs>1440?' · 后续天继续':' · 金额计入首日');
+  else if(xday) t2txt=fmtHM(a.start)+' ~ '+fmtHMspan(endAbs)+' · 跨'+(Math.ceil(endAbs/1440)-1)+'天';
+  else t2txt=fmtHM(a.start)+' ~ '+fmtHM(a.start+a.dur);
+  const tail=((o.noteInBlk&&l.note)?' · '+esc(l.note):(cont?'':(arrCost(a)>0?' · '+money(arrCost(a)):'')))+stayTail;
+  const t2=(h>=36)?'<div class="t2">'+t2txt+tail+'</div>':'';
+  const L=pk?pk.ci/pk.n*100:0, W=pk?100/pk.n:100;
+  return '<div class="blk'+(cont?' cont':'')+'" data-arr="'+a.id+'"'+(cont?' data-cont="'+(a._contFrom||0)+'"':'')+' style="top:'+y+'px;height:'+h+'px;left:'+L+'%;width:calc('+W+'% - 2px);right:auto;background:'+tint(c,cont?'14':'26')+';border-left-color:'+c+'">'
+    +(o.interactive&&h>=30&&!cont?'<div class="grip"></div>'+(l.costCat==='住宿'?'':'<div class="rz"></div>'):'') // 住宿时长由退房倒推，不提供时长把手
     +'<div class="in"><div class="t1" style="color:'+c+'">'
-      +'<span class="rt" style="background:'+rt.c+'">'+esc(l.rating||'C')+'</span>'
-      +'<span class="ttl">'+esc(l.name)+'</span>'+tag+'</div>'+t2+'</div></div>';
+    +'<span class="rt" style="background:'+rt.c+'">'+esc(l.rating||'C')+'</span>'
+    +'<span class="ttl">'+esc(l.name)+'</span>'+tag+'</div>'+t2+'</div></div>';
 }
 function tlMarkup(arrs,extras,HH,opt){
   const o=Object.assign({interactive:false,showHalf:true,teamFilter:'all',costCol:true,lanes:null},opt);
@@ -561,19 +732,21 @@ function tlMarkup(arrs,extras,HH,opt){
   let inner='';
   if(o.lanes&&o.lanes.length>1){
     const n=o.lanes.length;
-    inner='<div class="lanes'+(o.compact?' compact':'')+'">';
+    inner='<div class="lanes'+(o.compact?' compact':'')+(o.interactive?' stick':'')+'">';
     o.lanes.forEach((ln,i)=>{
+      const pk=packArrs(ln.arrs||[]);
       inner+='<div class="lane" style="left:'+(i*100/n)+'%;width:'+(100/n)+'%"><div class="lanehd">'+esc(ln.title)+'</div>';
-      (ln.arrs||[]).forEach(a=>{ inner+=blkHtml(a,HH,Object.assign({},o,{teamFilter:'all'})); });
+      (ln.arrs||[]).forEach(a=>{ inner+=blkHtml(a,HH,Object.assign({},o,{teamFilter:'all'}),pk.get(a.id)); });
       inner+='</div>';
     });
     inner+='</div>';
   } else {
-    (arrs||[]).filter(a=>o.teamFilter==='all'||!a.teamId||a.teamId===o.teamFilter)
-      .forEach(a=>{ inner+=blkHtml(a,HH,o); });
+    const vis=(arrs||[]).filter(a=>o.teamFilter==='all'||!a.teamId||a.teamId===o.teamFilter);
+    vis.forEach(a=>{ inner+=blkHtml(a,HH,o); });
   }
   let exl='';
-  (extras||[]).forEach(e=>{
+  const exVis=(extras||[]).filter(e=>o.teamFilter==='all'||!e.who||e.who==='all'||e.who===o.teamFilter); // 与他人个人花销在单人视图下隐藏
+  exVis.forEach(e=>{
     const y=(e.at||9*60)/60*HH, w=clamp(2+Math.sqrt(+e.amount||0)/3,2,6);
     exl+='<div class="expl" data-ex="'+e.id+'" style="top:'+y+'px"><div class="ln" style="border-top-width:'+w.toFixed(1)+'px"></div>'
       +(o.interactive?'<div class="eh" data-e="'+e.id+'">'+esc(e.name)+' '+money(e.amount)+'</div>':'')
@@ -583,10 +756,11 @@ function tlMarkup(arrs,extras,HH,opt){
   if(o.costCol){
     const list=(arrs||[]).filter(a=>o.teamFilter==='all'||!a.teamId||a.teamId===o.teamFilter);
     list.forEach(a=>{
-      const l=locById(a.locId); if(!l||!(locCost(l)>0)) return;
-      cost+='<div class="ce" style="top:'+(a.start/60*HH)+'px">'+money(l.cost)+'</div>';
+      if(a._cont) return; // 接续段不重复显示价格
+      const l=locById(a.locId); if(!l||!(arrCost(a)>0)) return;
+      cost+='<div class="ce" style="top:'+(a.start/60*HH)+'px">'+money(arrCost(a))+'</div>'; // 用实付价（含本晚价格覆盖）
     });
-    (extras||[]).forEach(e=>{
+    exVis.forEach(e=>{
       cost+='<div class="ct" style="top:'+((e.at||9*60)/60*HH)+'px">额外 '+money(e.amount)+'</div>';
     });
   }
@@ -644,7 +818,21 @@ function regenIds(p){
   p.days=p.days.map(d=>Object.assign({},d,{id:uid('d'),
     arrs:(d.arrs||[]).map(a=>Object.assign({},a,{id:uid('a'),locId:lm[a.locId]||a.locId})),
     extras:(d.extras||[]).map(e=>Object.assign({},e,{id:uid('e')}))}));
-  p.teams=p.teams.map(t=>Object.assign({},t,{id:uid('tm')}));
+  /* 人员 id 重生成后，必须同步重映射所有引用（teamId / 算谁的 who / 谁付的 paid），
+     否则副本激活后人员标签丢失、单人视图过滤失效、AA 已付与应付全部漏算 */
+  const tm={};
+  p.teams=p.teams.map(t=>{ const ni=uid('tm'); tm[t.id]=ni; return Object.assign({},t,{id:ni}); });
+  p.days.forEach(d=>{
+    (d.arrs||[]).forEach(a=>{
+      if(a.teamId&&tm[a.teamId]!=null) a.teamId=tm[a.teamId];
+      if(a.who&&a.who!=='all'&&tm[a.who]!=null) a.who=tm[a.who];
+      if(a.paid&&tm[a.paid]!=null) a.paid=tm[a.paid];
+    });
+    (d.extras||[]).forEach(e=>{
+      if(e.who&&e.who!=='all'&&tm[e.who]!=null) e.who=tm[e.who];
+      if(e.paid&&tm[e.paid]!=null) e.paid=tm[e.paid];
+    });
+  });
   p.todos=p.todos.map(t=>Object.assign({},t,{id:uid('t')}));
   return p;
 }
@@ -666,28 +854,34 @@ function pkgMenu(p){
     save(); closeSheet(); render(); toast('已删除','撤销',doUndo); };
   $('#mCancel').onclick=closeSheet;
 }
+const LAST_EXPORT_KEY='travel_app_last_export';
+const daysSinceExport=()=>{ const t=+(localStorage.getItem(LAST_EXPORT_KEY)||0); if(!t) return null; return Math.floor((Date.now()-t)/86400000); };
 $('#homeMore').onclick=()=>{
+  const dse=daysSinceExport();
+  const expHint=dse==null?'还没导出过备份，建议现在就导一份':(dse>=14?('距上次导出备份已 '+dse+' 天，建议尽快导出'):('距上次导出备份 '+dse+' 天'));
+  const expStyle=dse!=null&&dse>=14?' style="color:var(--red)"':'';
   openSheet('<h3>更多</h3>'
     +'<button class="btn gh full" id="mCost">¥ 花销统计</button>'
     +'<button class="btn gh full" id="mHint">'+(S.ui.hideHints?'显示提示文字':'隐藏提示文字')+'</button>'
     +'<button class="btn gh full" id="mExp">导出备份 JSON</button>'
     +'<button class="btn gh full" id="mImp">导入备份</button>'
     +'<button class="btn gh full" id="mReset">重置为示例数据</button>'
-    +'<div class="hint">数据保存在本机浏览器，建议定期导出备份。</div>');
+    +'<div class="hint"'+expStyle+'>'+expHint+'。AA 结算请在对应行程包页右上角点「AA」。数据保存在本机浏览器，建议定期导出备份。</div>');
   $('#mCost').onclick=()=>{ closeSheet(); S.ui.view='cost'; save(); render(); };
   $('#mHint').onclick=()=>{ snapState();
     S.ui.hideHints=!S.ui.hideHints; save(); closeSheet(); render();
     toast(S.ui.hideHints?'已隐藏提示文字':'已显示提示文字'); };
   $('#mExp').onclick=()=>{ const json=JSON.stringify(S,null,2);
+    const markExport=()=>{ try{ localStorage.setItem(LAST_EXPORT_KEY,String(Date.now())); }catch(e){} };
     if(window.Capacitor){ // 安卓应用内无法直接下载文件，改为可复制文本
       openSheet('<h3>导出备份</h3><div class="fld"><label>全部数据（复制后粘贴到备忘录/微信收藏保存）</label><textarea id="expTx" readonly rows="9" style="width:100%;font-size:10.5px;line-height:1.4">'+esc(json)+'</textarea></div>'
         +'<button class="btn full" id="expCopy">复制到剪贴板</button>'
         +'<button class="btn gh full" id="expCancel">关闭</button>');
       $('#expCopy').onclick=()=>{ const t=$('#expTx'); t.focus(); t.select();
-        try{ document.execCommand('copy'); toast('已复制，请粘贴保存'); }catch(e){ toast('请长按文本全选复制'); } };
+        try{ document.execCommand('copy'); markExport(); toast('已复制，请粘贴保存'); }catch(e){ toast('请长按文本全选复制'); } };
       $('#expCancel').onclick=closeSheet; return; }
     const blob=new Blob([json],{type:'application/json'});
-    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='travel-backup.json'; a.click(); closeSheet(); toast('已导出'); };
+    const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download='travel-backup.json'; a.click(); markExport(); closeSheet(); toast('已导出'); };
   $('#mImp').onclick=()=>{ const inp=document.createElement('input'); inp.type='file'; inp.accept='.json';
     inp.onchange=()=>{ const f=inp.files[0]; if(!f) return; const fr=new FileReader();
       fr.onload=()=>{ try{ snapState(); S=migrate(JSON.parse(fr.result)); save(); closeSheet(); render(); toast('导入成功','撤销',doUndo); }catch(e){ toast('文件格式不正确'); } };
@@ -796,9 +990,12 @@ function applyPlanToDay(planId,chipId){
   const pl=planById(planId); if(!pl) return;
   snapState();
   let d=dayById(chipId), created=false;
-  if(!d){ d={id:uid('d'),name:'第'+numCN(PK().days.length+1)+'天',date:'',arrs:[],extras:[]}; PK().days.push(d); created=true; }
+  if(!d){ d={id:uid('d'),name:'第'+numCN(PK().days.length+1)+'天',date:nextDayDate(PK()),arrs:[],extras:[]}; PK().days.push(d); created=true; }
   const oldArrs=d.arrs;
-  d.arrs=pl.items.map(i=>({id:uid('a'),locId:i.locId,start:i.start,dur:i.dur,teamId:null}));
+  d.arrs=pl.items.map(i=>{ const l=locById(i.locId);
+    const a={id:uid('a'),locId:i.locId,start:i.start,dur:i.dur,teamId:null};
+    if(l&&l.costCat==='住宿'){ a.out=i.out==null?stayOut(l):+i.out; a.price=(i.price==null||i.price==='')?null:+i.price; }
+    return a; });
   save(); render();
   toast('「'+d.name+'」已替换为「'+pl.name+'」'+(created?' · 已新建行程卡':''),'撤销',()=>{ snapState(); d.arrs=oldArrs; save(); render(); toast('已还原'); });
 }
@@ -858,6 +1055,9 @@ function renderLocsTab(){
         p.locs.splice(clamp(ins,0,p.locs.length),0,l);
         save(); render(); toast('顺序已调整','撤销',doUndo); },
       onDelete:()=>{ if(l.name==='厕所'){ toast('「厕所」为保留地点，不能删除'); return; }
+        const usedP=PK().plans.filter(x=>(x.items||[]).some(i=>i.locId===l.id)).length;
+        const usedD=PK().days.filter(dd=>dd.arrs.some(a=>a.locId===l.id)).length;
+        if((usedP||usedD)&&!confirm('该地点被 '+usedP+' 张计划卡、'+usedD+' 张行程卡引用，删除后这些条目一并移除。继续？')) return;
         snapState(); PK().locs=PK().locs.filter(x=>x.id!==l.id);
         PK().plans.forEach(x=>x.items=x.items.filter(i=>i.locId!==l.id));
         PK().days.forEach(dd=>{ dd.arrs=dd.arrs.filter(a=>a.locId!==l.id); });
@@ -897,10 +1097,13 @@ function locEditor(id,opt){
     +'<div class="fld"><label>评级</label><div class="chips" id="leR">'
       +['S','A','B','C'].map(r=>'<button data-r="'+r+'"'+(rating===r?' class="on" style="background:'+RATING[r].c+'"':'')+'>'+r+'</button>').join('')
     +'</div></div></div>'
-    +'<div class="grid2"><div class="fld"><label>时间段 · 分钟</label><input id="leD" type="number" step="5" value="'+(l?l.dur||60:60)+'"></div>'
+    +'<div class="grid2" id="leDurRow"><div class="fld"><label>时间段 · 分钟</label><input id="leD" type="number" step="5" value="'+(l?l.dur||60:60)+'"></div>'
     +'<div class="fld"><label>预览时长</label><input id="leDD" disabled value="'+durLabel(l?l.dur||60:60)+'"></div></div>'
     +'<div class="grid2"><div class="fld"><label>花费</label><input id="leCst" type="number" step="0.01" value="'+(l&&l.cost?l.cost:'')+'" placeholder="0"></div>'
     +'<div class="fld"><label>花费类型</label><select id="leCC">'+COST_CATS.map(c=>'<option'+((l&&l.costCat)===c?' selected':'')+'>'+c+'</option>').join('')+'</select></div></div>'
+    +'<div class="grid2" id="leStayRow" style="display:none"><div class="fld"><label>退房时间</label><input id="leOut" type="time" value="'+fmtHM(stayOut(l))+'"></div>'
+      +'<div class="fld"><label>　</label><div class="hint" style="margin:0">块画到次日退房时间</div></div></div>'
+    +'<div class="hint" id="leStayHint" style="display:none">住宿按天登记：每天一条住宿记录；块从入住画到次日退房、跨页连续显示，相邻天再登记同一酒店即自动连住。</div>'
     +'<div class="fld"><label>预约</label><input id="leB" value="'+esc(l?l.booking:'')+'" placeholder="如：提前1天预约"></div>'
     +'<div class="fld"><label>备注</label><input id="leNote" value="'+esc(l?l.note:'')+'"></div>'
     +'<button class="btn full" id="leOk">保存</button>'
@@ -909,11 +1112,17 @@ function locEditor(id,opt){
   $$('#leR button').forEach(b=>b.onclick=()=>{ rating=b.dataset.r;
     $$('#leR button').forEach(x=>{ x.classList.toggle('on',x===b); x.style.background=x===b?RATING[rating].c:''; }); });
   $('#leD').oninput=()=>{ $('#leDD').value=durLabel(clamp(parseInt($('#leD').value,10)||0,0,1440)); };
+  const syncStay=()=>{ const st=$('#leCC').value==='住宿';
+    $('#leDurRow').style.display=st?'none':'';
+    $('#leStayRow').style.display=st?'':'none';
+    $('#leStayHint').style.display=st?'':'none'; };
+  $('#leCC').onchange=syncStay; syncStay();
   $('#leOk').onclick=()=>{
     const name=$('#leN').value.trim(); if(!name){ toast('请填写名称'); return; }
     const dur=clamp(parseInt($('#leD').value,10)||60,5,1440);
     snapState();
     const data={name,color,rating,dur,cost:+$('#leCst').value||0,costCat:$('#leCC').value,booking:$('#leB').value.trim(),note:$('#leNote').value.trim()};
+    if(data.costCat==='住宿'){ data.out=parseHM($('#leOut').value||'12:00'); }
     if(l) Object.assign(l,data);
     else PK().locs.push(Object.assign({id:uid('l')},data));
     save(); closeSheet();
@@ -951,7 +1160,7 @@ function teamModes(p){
   if(!p.teams.length) return [['all','全体']];
   return [['all','全体'],['par','并联']].concat(p.teams.map(t=>[t.id,t.name]));
 }
-function renderDay(){
+function renderDay(keepScroll){
   const p=PK(), d=dayById(S.ui.dayId);
   if(!d){ S.ui.view='pkg'; render(); return; }
   const rng=d.date?dShort(d.date):'';
@@ -961,26 +1170,33 @@ function renderDay(){
   $('#teamTool').style.display=hasTeams?'':'none';
   if(hasTeams){
     $('#teamSeg').innerHTML=teamModes(p).map(m=>'<button data-v="'+m[0]+'"'+(S.ui.teamFilter===m[0]?' class="on"':'')+'>'+m[1]+'</button>').join('')
-      +'<button data-v="__new">＋团队</button>';
+      +'<button data-v="__new">＋人员</button>';
     $$('#teamSeg button').forEach(b=>b.onclick=()=>{
       if(b.dataset.v==='__new'){ addTeam(); return; }
-      S.ui.teamFilter=b.dataset.v; save(); renderDay(); });
+      S.ui.teamFilter=b.dataset.v; save(); renderDay(true); });
   }
-  const lanes=(hasTeams&&S.ui.teamFilter==='par')?[ {title:'全体',arrs:d.arrs.filter(a=>!a.teamId)} ].concat(p.teams.map(t=>({title:t.name,arrs:d.arrs.filter(a=>a.teamId===t.id)}))):null;
-  $('#dayBody').innerHTML=tlMarkup(d.arrs,d.extras,HH_EDIT,{
-      interactive:true,noteInBlk:true,teamFilter:lanes?'all':S.ui.teamFilter,lanes:lanes})
+  const di=p.days.indexOf(d);
+  const conts=contsFromPrev(d,di,p);
+  const arrsAll=conts.concat(d.arrs);
+  const lanes=(hasTeams&&S.ui.teamFilter==='par')?p.teams.map(t=>({title:t.name,arrs:arrsAll.filter(a=>!a.teamId||a.teamId===t.id)})):null;
+  const scrollEl=$('#dayScroll'), sc0=keepScroll&&scrollEl?scrollEl.scrollTop:0;
+  $('#dayBody').innerHTML=tlMarkup(arrsAll,d.extras,HH_EDIT,{
+      interactive:true,noteInBlk:true,clipDay:true,teamFilter:lanes?'all':S.ui.teamFilter,lanes:lanes})
     +'<div style="height:26px"></div>'
-    +'<div class="hint">长按安排块拖动改时间 · 拖底部横条改时长 · 点安排块编辑 / 换团队 / 移除 · 红线标签可拖动调整花销时间</div>';
+    +'<div class="hint">长按安排块拖动改时间 · 拖底部横条改时长 · 点安排块编辑 / 改所属人员 / 移除 · 红线标签可拖动调整花销时间</div>';
   bindDayTimeline(d);
-  const first=d.arrs.length?Math.min.apply(null,d.arrs.map(a=>a.start)):8*60;
-  $('#dayScroll').scrollTop=clamp(first/60*HH_EDIT-130,0,1e6);
+  if(keepScroll&&scrollEl) scrollEl.scrollTop=sc0;
+  else {
+    const first=d.arrs.length?Math.min.apply(null,d.arrs.map(a=>a.start)):8*60;
+    $('#dayScroll').scrollTop=clamp(first/60*HH_EDIT-130,0,1e6);
+  }
   renderLocBar(d);
 }
 function addTeam(){
-  const v=prompt('团队名称','团队'+(PK().teams.length+1)); if(v===null) return;
-  snapState(); const t={id:uid('tm'),name:v.trim()||'团队'};
+  const v=prompt('人员名称','人员'+(PK().teams.length+1)); if(v===null) return;
+  snapState(); const t={id:uid('tm'),name:v.trim()||'人员'+(PK().teams.length+1)};
   PK().teams.push(t); S.ui.teamFilter=t.id;
-  save(); render(); toast('已创建 '+t.name,'撤销',doUndo);
+  save(); render(); toast('已添加人员 '+t.name,'撤销',doUndo);
 }
 function renderLocBar(d){
   const p=PK();
@@ -997,10 +1213,13 @@ function renderLocBar(d){
 function appendArr(d,l,start){
   const pxPerMin=HH_EDIT/60;
   snapState();
+  const stay=l.costCat==='住宿';
   let st=start;
-  if(st==null){ let last=0; d.arrs.forEach(a=>{ last=Math.max(last,a.start+a.dur); }); st=clamp(Math.ceil(last/S.ui.snap)*S.ui.snap,0,1440-(l.dur||60)); }
-  const a={id:uid('a'),locId:l.id,start:clamp(st,0,1440-(l.dur||60)),dur:l.dur||60,teamId:null};
-  d.arrs.push(a); save(); renderDay();
+  if(st==null){ let last=0; d.arrs.forEach(a=>{ last=Math.max(last,a.start+a.dur); }); st=Math.ceil(last/S.ui.snap)*S.ui.snap; }
+  st=clamp(st,0,stay?1439:1440-(l.dur||60));
+  const a={id:uid('a'),locId:l.id,start:st,dur:stay?stayDur(st,stayOut(l)):(l.dur||60),teamId:null,who:'all',paid:meId()};
+  if(stay){ a.out=stayOut(l); a.price=null; }
+  d.arrs.push(a); save(); renderDay(true);
   toast('已加入「'+l.name+'」 '+fmtHM(a.start),'撤销',doUndo);
 }
 function laneAtX(col,x){
@@ -1016,6 +1235,7 @@ function laneAtX(col,x){
 function edgeScroll(scrollEl,e){
   if(!scrollEl) return;
   const r=scrollEl.getBoundingClientRect(), M=64, sp=13;
+  if(r.bottom<=r.top||r.right<=r.left) return;
   if(e.clientY<r.top+M) scrollEl.scrollTop-=sp*(1-(e.clientY-r.top)/M);
   else if(e.clientY>r.bottom-M) scrollEl.scrollTop+=sp*(1-(r.bottom-e.clientY)/M);
 }
@@ -1036,13 +1256,11 @@ function bindLocDrag(chip,loc,d){
       if(col){
         const rc=col.getBoundingClientRect();
         const st=clamp(Math.round(((e.clientY-rc.top)/(HH_EDIT/60))/S.ui.snap)*S.ui.snap,0,1435);
-        const li=laneAtX(col,e.clientX);
-        const lanes=$$('.lane',col);
-        let teamId=null;
-        if(lanes.length&&li!=null&&li>0){ const hd=$$('.lane',col)[li].querySelector('.lanehd'); const nm=hd?hd.textContent:''; const tm=PK().teams.find(t=>t.name===nm); teamId=tm?tm.id:null; }
-        const a={id:uid('a'),locId:loc.id,start:st,dur:loc.dur||60,teamId:teamId};
-        d.arrs.push(a); save(); renderDay();
-        toast('已加入「'+loc.name+'」 '+fmtHM(st)+(teamId?' · '+teamById(teamId).name:''),'撤销',doUndo);
+        const stay=loc.costCat==='住宿';
+        const a={id:uid('a'),locId:loc.id,start:st,dur:stay?stayDur(st,stayOut(loc)):(loc.dur||60),teamId:null,who:'all',paid:meId()};
+        if(stay){ a.out=stayOut(loc); a.price=null; }
+        d.arrs.push(a); save(); renderDay(true);
+        toast('已加入「'+loc.name+'」 '+fmtHM(st)+' · 默认全员','撤销',doUndo);
       } else { undoStack.pop(); toast('已取消'); }
     }
   });
@@ -1052,44 +1270,71 @@ function bindDayTimeline(d){
   const pxPerMin=HH_EDIT/60;
   const redrawCosts=()=>{
     const cc=$('#dayBody .costcol'); if(!cc) return;
+    const tf=(S.ui.teamFilter!=='all'&&S.ui.teamFilter!=='par')?S.ui.teamFilter:null; // 与 renderDay 的 teamFilter 保持一致（并联模式='all'）
     const entries=[];
-    d.arrs.filter(a=>S.ui.teamFilter!=='par'||true).forEach(a=>{
-      const l=locById(a.locId); if(l&&locCost(l)>0) entries.push({y:a.start*pxPerMin,txt:money(l.cost),cls:'ce'}); });
-    (d.extras||[]).forEach(e=>entries.push({y:(e.at||9*60)*pxPerMin,txt:'额外 '+money(e.amount),cls:'ct'}));
+    d.arrs.forEach(a=>{
+      if(tf&&a.teamId&&a.teamId!==tf) return;
+      const l=locById(a.locId); if(l&&arrCost(a)>0) entries.push({y:a.start*pxPerMin,txt:money(arrCost(a)),cls:'ce'}); });
+    (d.extras||[]).forEach(e=>{
+      if(tf&&e.who&&e.who!=='all'&&e.who!==tf) return; // 他人个人花销在单人视图下隐藏
+      entries.push({y:(e.at||9*60)*pxPerMin,txt:'额外 '+money(e.amount),cls:'ct'}); });
     cc.innerHTML=entries.map(x=>'<div class="'+x.cls+'" style="top:'+x.y+'px">'+esc(x.txt)+'</div>').join('');
   };
   $$('.blk',col).forEach(blk=>{
-    const a=d.arrs.find(x=>x.id===blk.dataset.arr); if(!a) return;
-    let startY=0,startVal=0,moved=false,snapped=false,justTapped=false;
+    let a=d.arrs.find(x=>x.id===blk.dataset.arr);
+    if(!a){
+      // 接续段（从昨日延续）：不可拖动，点击打开原块编辑（跨 3 天以上时原块可能在更早的天）
+      if(blk.dataset.cont==null) return;
+      const p2=PK(), di2=p2.days.indexOf(d);
+      let pd=null, pa=null;
+      for(let k=di2-1;k>=0&&!pa;k--){
+        const dd=p2.days[k], f=(dd.arrs||[]).find(x=>x.id===blk.dataset.arr);
+        if(f){ pa=f; pd=dd; }
+      }
+      if(pa) blk.addEventListener('click',()=>openArr(pa,pd));
+      return;
+    }
+    let startY=0,startVal=0,moved=false,snapped=false,justTapped=false,downAt=0,scroll0=0,noClickUntil=0;
     const applyStart=ns=>{
-      ns=clamp(Math.round(ns/S.ui.snap)*S.ui.snap,0,1440-a.dur);
-      a.start=ns; blk.style.top=(ns*pxPerMin)+'px'; moved=true; redrawCosts();
+      // 普通块不越 24:00；跨天块（start+dur>1440，如 23:00 的航班或 16h 住宿）可停在当天任意时刻（当天段画到 24:00，其余续到后续天）
+      ns=clamp(Math.round(ns/S.ui.snap)*S.ui.snap,0,a.start+a.dur>1440?1439:Math.max(0,1440-a.dur));
+      a.start=ns;
+      const la=locById(a.locId);
+      if(la&&la.costCat==='住宿') a.dur=stayDur(ns,stayOut(a)); // 拖着走=改入住时刻，退房时间不变、时长重算
+      blk.style.top=(ns*pxPerMin)+'px'; moved=true; redrawCosts();
     };
     const applyDur=nd=>{
-      nd=clamp(Math.round(nd/S.ui.snap)*S.ui.snap,S.ui.snap,1440-a.start);
-      a.dur=nd; blk.style.height=Math.max(nd*pxPerMin-2,16)+'px'; moved=true; redrawCosts();
+      nd=clamp(Math.round(nd/S.ui.snap)*S.ui.snap,S.ui.snap,MAX_XDAY_DUR); // 允许跨天（单块最长持续 3 天）
+      a.dur=nd; blk.style.height=Math.max((Math.min(a.start+nd,1440)-a.start)/60*HH_EDIT-2,16)+'px'; moved=true; redrawCosts();
     };
-    const startCommon=e=>{ snapState(); snapped=true; startY=e.clientY; startVal=a.start; moved=false; justTapped=false; blk.classList.add('drag'); };
+    const sc=()=>$('#dayScroll');
+    const autoScroll=e=>{ const el=sc(); if(el) edgeScroll(el,e); };
+    const scrollDelta=()=>{ const el=sc(); return el?el.scrollTop-scroll0:0; };
+    const startCommon=e=>{ snapState(); snapped=true; startY=e.clientY; startVal=a.start; moved=false; justTapped=false; downAt=Date.now(); scroll0=sc()?sc().scrollTop:0; blk.classList.add('drag'); };
     longPress(blk,{ignore:e=>{ const t=e.target; return !!(t&&t.closest&&t.closest('.rz,.grip,.eh,.t1')); },
       onStart:startCommon,
-      onMove:e=>applyStart(startVal+(e.clientY-startY)/pxPerMin),
+      onMove:e=>{ autoScroll(e); applyStart(startVal+(e.clientY-startY+scrollDelta())/pxPerMin); },
       onEnd:(e,mv)=>{ blk.classList.remove('drag');
-        if(mv&&moved){ save(); renderDay(); toast('已调整到 '+fmtHM(a.start),'撤销',doUndo); }
-        else if(snapped&&!moved) undoStack.pop(); },
+        if(mv&&moved){ save(); renderDay(true); toast('已调整到 '+fmtHM(a.start),'撤销',doUndo); }
+        else if(snapped&&!moved){ undoStack.pop(); if(Date.now()-downAt>300) noClickUntil=Date.now()+400; } },
       onCancel:()=>{ if(snapped&&!moved) undoStack.pop(); },
       tapLong:()=>{ justTapped=true; openArr(a,d); } });
     const dragMove=el=>directDrag(el,{onStart:startCommon,
-      onMove:e=>applyStart(startVal+(e.clientY-startY)/pxPerMin),
-      onEnd:()=>{ blk.classList.remove('drag'); if(moved){ save(); renderDay(); toast('已调整到 '+fmtHM(a.start),'撤销',doUndo); } else undoStack.pop(); }});
+      onMove:e=>{ autoScroll(e); applyStart(startVal+(e.clientY-startY+scrollDelta())/pxPerMin); },
+      onEnd:()=>{ blk.classList.remove('drag');
+        if(moved){ save(); renderDay(true); toast('已调整到 '+fmtHM(a.start),'撤销',doUndo); }
+        else { undoStack.pop(); if(Date.now()-downAt>300) noClickUntil=Date.now()+400; } }});
     const grip=$('.grip',blk);
     if(grip) dragMove(grip);
     const t1=$('.t1',blk);
     if(t1) dragMove(t1);
     const rz=$('.rz',blk);
-    if(rz) directDrag(rz,{onStart:e=>{ snapState(); snapped=true; startY=e.clientY; startVal=a.dur; moved=false; blk.classList.add('drag'); },
-      onMove:e=>applyDur(startVal+(e.clientY-startY)/pxPerMin),
-      onEnd:()=>{ blk.classList.remove('drag'); if(moved){ save(); renderDay(); toast('时长 '+durLabel(a.dur),'撤销',doUndo); } else undoStack.pop(); }});
-    blk.addEventListener('click',()=>{ if(moved||justTapped) return; openArr(a,d); });
+    if(rz) directDrag(rz,{onStart:e=>{ snapState(); snapped=true; startY=e.clientY; startVal=a.dur; moved=false; downAt=Date.now(); scroll0=sc()?sc().scrollTop:0; blk.classList.add('drag'); },
+      onMove:e=>{ autoScroll(e); applyDur(startVal+(e.clientY-startY+scrollDelta())/pxPerMin); },
+      onEnd:()=>{ blk.classList.remove('drag');
+        if(moved){ save(); renderDay(true); toast('时长 '+durLabelX(a.dur),'撤销',doUndo); }
+        else { undoStack.pop(); if(Date.now()-downAt>300) noClickUntil=Date.now()+400; } }});
+    blk.addEventListener('click',()=>{ if(moved||justTapped||Date.now()<noClickUntil) return; openArr(a,d); });
   });
   // 红色花销线：拖动标签调整时间点
   $$('.expl',col).forEach(ex=>{
@@ -1104,7 +1349,7 @@ function bindDayTimeline(d){
         ex.style.top=(na*pxPerMin)+'px';
         h.textContent=e.name+' '+money(e.amount);
       },
-      onEnd:()=>{ if(moved){ save(); renderDay(); toast('花销时间已调到 '+fmtHM(e.at),'撤销',doUndo); } else undoStack.pop(); }
+      onEnd:()=>{ if(moved){ save(); renderDay(true); toast('花销时间已调到 '+fmtHM(e.at),'撤销',doUndo); } else undoStack.pop(); }
     });
     h.addEventListener('click',()=>{ if(moved) return; extraList(d); });
   });
@@ -1113,48 +1358,82 @@ function openArr(a,d){
   const l=locById(a.locId); if(!l) return;
   const tm=teamById(a.teamId);
   const p=PK();
+  const isStay=l.costCat==='住宿';
   openSheet('<h3>'+esc(l.name)+'<span class="spacer"></span><span class="rt" style="background:'+(RATING[l.rating]||RATING.C).c+'">'+esc(l.rating||'C')+'</span>'
-    +'<span class="tiny">'+esc(tm?tm.name:'全体')+'</span></h3>'
+    +'<span class="tiny">'+esc(tm?tm.name:'全员')+'</span></h3>'
     +'<div class="grid2"><div class="fld"><label>开始时间</label><input id="arS" type="time" value="'+fmtHM(a.start)+'"></div>'
-    +'<div class="fld"><label>时长 · 分钟</label><input id="arD" type="number" step="5" value="'+a.dur+'"></div></div>'
-    +'<div class="fld"><label>所属团队</label><div class="chips" id="arT">'
-      +'<button data-t=""'+(!a.teamId?' class="on"':'')+'>全体</button>'
-      +p.teams.map(t=>'<button data-t="'+t.id+'"'+(a.teamId===t.id?' class="on" style="background:var(--pri)"':'')+'>'+esc(t.name)+'<span class="tdel" data-del="'+t.id+'">✕</span></button>').join('')
-      +'<button data-t="__new">＋ 新团队</button></div></div>'
+    +(isStay
+      ?'<div class="fld"><label>时段</label><div class="hint" id="arSpan" style="margin:0">'+esc(fmtHM(a.start)+' → 次日 '+fmtHM(stayOut(a))+'（'+durLabelX(stayDur(a.start,stayOut(a)))+'）')+'</div></div>'
+      :'<div class="fld"><label>时长 · 分钟</label><input id="arD" type="number" step="5" value="'+a.dur+'" placeholder="超过当天剩余即为跨天"></div>')
+    +'</div>'
+    +((!isStay&&a.start+a.dur>1440)?'<div class="hint">当前跨天：'+fmtHM(a.start)+' 持续到 '+fmtHMspan(a.start+a.dur)+'（共 '+durLabelX(a.dur)+'）。当天块画到 24:00，剩余时段在后续行程卡续画；花费只计入首日。</div>':'')
+    +'<div class="fld"><label>所属人员</label><div class="chips" id="arT">'
+    +'<button data-t=""'+(!a.teamId?' class="on"':'')+'>全员</button>'
+    +p.teams.map(t=>'<button data-t="'+t.id+'"'+(a.teamId===t.id?' class="on"':'')+'>'+esc(t.name)+'<span class="tdel" data-del="'+t.id+'">✕</span></button>').join('')
+    +'<button data-t="__new">＋ 新人员</button></div></div>'
+    +(isStay
+      ?'<div class="grid2"><div class="fld"><label>本晚价格</label><input id="arPrice" type="number" step="0.01" value="'+(a.price!=null&&a.price!==''?a.price:'')+'" placeholder="留空 = 地点卡 '+money(locCost(l))+'"></div>'
+      +'<div class="fld"><label>退房时间</label><input id="arOut" type="time" value="'+fmtHM(stayOut(a))+'"></div></div>'
+      +'<div class="hint">住宿按天登记（一天一条）：块从入住画到次日退房（如 23:55 → 次日 12:00），跨页连续显示；相邻天再登记同一酒店即自动连住。节假日价格不同就每天分别填「本晚价格」。</div>'
+      :'')
+    +whoPaidChips('ar',a.who,a.paid)
     +'<div class="hint">花费 '+money(locCost(l))+' · '+esc(l.costCat)+(l.booking?'　预约：'+esc(l.booking):'')+(l.note?'　备注：'+esc(l.note):'')+'</div>'
     +'<button class="btn full" id="arOk">保存</button>'
-    +(p.teams.length?'<button class="btn gold full" id="arSync">同步到所有团队</button>':'')
+    +(p.teams.length?'<button class="btn gold full" id="arSync">复制一份给每个人员</button>':'')
     +'<button class="btn gh full" id="arLoc">编辑地点卡</button>'
     +'<button class="btn red full" id="arDel">从本行程卡移除</button>'
     +'<button class="btn gh full" id="arCancel">取消</button>');
   $$('#arT button').forEach(b=>b.onclick=()=>{
     if(b.dataset.t==='__new'){ closeSheet(); addTeam(); openArr(a,d); return; }
-    $$('#arT button').forEach(x=>x.classList.toggle('on',x===b));
+    $$('#arT button').forEach(x=>x.classList.remove('on'));
+    b.classList.add('on');
   });
+  /* 住宿：改开始/退房时间时实时刷新「时段」派生文案 */
+  if(isStay){
+    const syncSpan=()=>{ const s=parseHM($('#arS').value||'0:00'), o=parseHM($('#arOut').value||'12:00');
+      $('#arSpan').textContent=fmtHM(s)+' → 次日 '+fmtHM(o)+'（'+durLabelX(stayDur(s,o))+'）'; };
+    $('#arS').oninput=syncSpan; $('#arOut').oninput=syncSpan;
+  }
+  bindChips('#arWho'); bindChips('#arPaid');
   $$('#arT .tdel').forEach(x=>x.onclick=ev=>{
     ev.stopPropagation();
     const t=PK().teams.find(y=>y.id===x.dataset.del); if(!t) return;
-    if(!confirm('删除团队「'+t.name+'」？其专属安排将归入全体。')) return;
+    if(!confirm('删除人员「'+t.name+'」？其专属安排将归入全员。')) return;
     snapState();
     const pk=PK();
     pk.teams=pk.teams.filter(y=>y.id!==t.id);
-    d.arrs.forEach(ar=>{ if(ar.teamId===t.id) ar.teamId=null; });
+    /* 清理全包引用（不只当前天）：teamId→全员、who→共同、paid→记到"我"名下 */
+    pk.days.forEach(dd=>{
+      (dd.arrs||[]).forEach(ar=>{ if(ar.teamId===t.id) ar.teamId=null; if(ar.who===t.id) ar.who='all'; if(ar.paid===t.id) ar.paid=meId(); });
+      (dd.extras||[]).forEach(e=>{ if(e.who===t.id) e.who='all'; if(e.paid===t.id) e.paid=meId(); });
+    });
     if(S.ui.teamFilter===t.id) S.ui.teamFilter='all';
-    save(); closeSheet(); render(); toast('已删除团队 '+t.name,'撤销',doUndo);
+    save(); closeSheet(); render(); toast('已删除人员 '+t.name,'撤销',doUndo);
   });
   $('#arOk').onclick=()=>{
     snapState();
     a.start=clamp(parseHM($('#arS').value),0,1439);
-    a.dur=clamp(parseInt($('#arD').value,10)||a.dur,5,1440);
+    if(l.costCat==='住宿'){ a.dur=stayDur(a.start,parseHM($('#arOut').value||'12:00')); } // 时长由退房时间倒推
+    else a.dur=clamp(parseInt($('#arD').value,10)||a.dur,5,MAX_XDAY_DUR);
     const sel=$('#arT button.on'); if(sel) a.teamId=sel.dataset.t||null;
+    a.who=chipVal('#arWho')||'all'; a.paid=chipVal('#arPaid')||meId();
+    if(l.costCat==='住宿'){
+      const pv=$('#arPrice').value;
+      a.price=(pv===''||pv==null)?null:+pv;
+      a.out=parseHM($('#arOut').value||'12:00');
+    }
     save(); closeSheet(); render(); toast('已保存','撤销',doUndo);
   };
   const sy=$('#arSync');
   if(sy) sy.onclick=()=>{
-    if(!confirm('把这条安排复制到每一个团队？')) return;
+    if(!confirm('给每个人员各复制一份（各自独立，可再改时间）？')) return;
     snapState();
-    PK().teams.forEach(t=>{ if(t.id!==a.teamId) d.arrs.push({id:uid('a'),locId:a.locId,start:a.start,dur:a.dur,teamId:t.id}); });
-    save(); closeSheet(); render(); toast('已同步到全部团队','撤销',doUndo);
+    /* 每人各一张：原件归它真正归属的人（无 teamId 或 teamId 已失效时归"我"）。
+       否则原件若仍是"共同"，会和副本的个人全额叠加，把总额算成 人数+1 份 */
+    const base=(a.teamId&&PK().teams.some(t=>t.id===a.teamId))?a.teamId:meId();
+    if(base){ a.teamId=base; a.who=base; }
+    PK().teams.forEach(t=>{ if(t.id!==base) d.arrs.push(Object.assign({},a,{id:uid('a'),teamId:t.id,who:t.id,paid:meId()})); });
+    save(); closeSheet(); render(); toast('已复制给每个人员','撤销',doUndo);
   };
   $('#arLoc').onclick=()=>{ closeSheet(); locEditor(l.id); };
   $('#arDel').onclick=()=>{ snapState(); d.arrs=d.arrs.filter(x=>x.id!==a.id); save(); closeSheet(); render(); toast('已从'+d.name+'移除（地点卡保留）','撤销',doUndo); };
@@ -1174,26 +1453,36 @@ $('#dayImport').onclick=()=>{
 $('#dayAddCost').onclick=()=>{
   const d=dayById(S.ui.dayId);
   openSheet('<h3>额外花销<span class="spacer"></span><span class="tiny">'+esc(d.name)+'</span></h3>'
-    +'<div class="grid2"><div class="fld"><label>名称</label><input id="ecN" placeholder="如：打车"></div>'
+    +'<div class="grid2"><div class="fld"><label>名称</label><input id="ecN" placeholder="如：打车 / 酒店名"></div>'
     +'<div class="fld"><label>金额</label><input id="ecA" type="number" step="0.01" placeholder="0"></div></div>'
     +'<div class="grid2"><div class="fld"><label>类型</label><select id="ecC">'+COST_CATS.map(c=>'<option'+(c==='额外花销'?' selected':'')+'>'+c+'</option>').join('')+'</select></div>'
     +'<div class="fld"><label>时间点</label><input id="ecT" type="time" value="12:00"></div></div>'
+    +'<div class="grid2" id="ecStayRow" style="display:none"><div class="fld"><label>退房时间</label><input id="ecOut" type="time" value="12:00"></div>'
+    +'<div class="fld"><label>　</label><div class="hint" style="margin:0">按天登记，浏览页自动连成跨页住宿带</div></div></div>'
+    +whoPaidChips('ec','all',null)
     +'<button class="btn full" id="ecOk">保存，时间轴标红线</button>'
     +((d.extras||[]).length?'<button class="btn gh full" id="ecList">管理已有额外花销…</button>':''));
+  const syncStay=()=>{ $('#ecStayRow').style.display=$('#ecC').value==='住宿'?'':'none'; };
+  $('#ecC').onchange=syncStay; syncStay();
+  bindChips('#ecWho'); bindChips('#ecPaid');
   $('#ecOk').onclick=()=>{
     const name=$('#ecN').value.trim()||'额外花销', amt=+$('#ecA').value||0;
     if(!amt){ toast('请填写金额'); return; }
     snapState();
-    (d.extras=d.extras||[]).push({id:uid('e'),name,amount:amt,cat:$('#ecC').value,at:parseHM($('#ecT').value)});
+    (d.extras=d.extras||[]).push({id:uid('e'),name,amount:amt,cat:$('#ecC').value,at:parseHM($('#ecT').value),
+      out:parseHM($('#ecOut').value||'12:00'),
+      who:chipVal('#ecWho')||'all',paid:chipVal('#ecPaid')||meId()});
     save(); closeSheet(); render(); toast('已记录 '+money(amt),'撤销',doUndo);
   };
   const el=$('#ecList'); if(el) el.onclick=()=>{ closeSheet(); extraList(d); };
 };
 function extraList(d){
   openSheet('<h3>额外花销 · '+esc(d.name)+'</h3>'
-    +(d.extras||[]).map(e=>'<div class="sumrow" data-e="'+e.id+'" style="cursor:pointer"><span class="n">'+esc(e.name)+' <span class="tiny">'+fmtHM(e.at||0)+' · '+esc(e.cat)+'</span></span><span class="v">'+money(e.amount)+'</span><button class="tbtn" data-del="'+e.id+'">删除</button></div>').join('')
+    +'<button class="btn full" id="ecCopyStay">＋ 复制上一条住宿</button>'
+    +(d.extras||[]).map(e=>'<div class="sumrow" data-e="'+e.id+'" style="cursor:pointer"><span class="n">'+esc(e.name)+' <span class="tiny">'+fmtHM(e.at||0)+' · '+esc(e.cat)+(e.cat==='住宿'?' · 退房'+fmtHM(stayOut(e)):'')+(PK().teams.length?' · '+(e.who==='all'?'共同':personName(PK(),e.who))+'付':'')+'</span></span><span class="v">'+money(e.amount)+'</span><button class="tbtn" data-del="'+e.id+'">删除</button></div>').join('')
     +'<div class="sumrow"><span class="n"><b>小计</b></span><span class="v">'+money(dayExtraCost(d))+'</span></div>'
     +'<div class="hint">点任意条目即可编辑内容 / 时间点 / 金额；也可在时间轴上拖动红色标签调时间。</div>');
+  $('#ecCopyStay').onclick=()=>copyLastStay(d);
   $$('#sheet [data-e]').forEach(r=>r.onclick=ev=>{
     if(ev.target.dataset.del) return;
     extraEditor(d,r.dataset.e);
@@ -1202,6 +1491,15 @@ function extraList(d){
     ev.stopPropagation();
     snapState(); d.extras=d.extras.filter(x=>x.id!==b.dataset.del); save(); closeSheet(); render(); toast('已删除','撤销',doUndo); });
 }
+function copyLastStay(d){
+  const p=PK();
+  let src=null;
+  for(let i=p.days.length-1;i>=0&&!src;i--){ const s=(p.days[i].extras||[]).filter(e=>e.cat==='住宿').pop(); if(s) src=s; }
+  if(!src){ toast('还没有住宿记录可复制'); return; }
+  snapState();
+  (d.extras=d.extras||[]).push({id:uid('e'),name:src.name,amount:src.amount,cat:'住宿',at:src.at,out:src.out,who:src.who||'all',paid:src.paid||meId()});
+  save(); closeSheet(); render(); toast('已复制住宿「'+src.name+'」','撤销',doUndo);
+}
 function extraEditor(d,eid){
   const e=(d.extras||[]).find(x=>x.id===eid); if(!e) return;
   openSheet('<h3>编辑花销<span class="spacer"></span><span class="tiny">'+esc(d.name)+'</span></h3>'
@@ -1209,14 +1507,22 @@ function extraEditor(d,eid){
     +'<div class="fld"><label>金额</label><input id="eeA" type="number" step="0.01" value="'+(+e.amount||0)+'"></div></div>'
     +'<div class="grid2"><div class="fld"><label>类型</label><select id="eeC">'+COST_CATS.map(c=>'<option'+(e.cat===c?' selected':'')+'>'+c+'</option>').join('')+'</select></div>'
     +'<div class="fld"><label>时间点</label><input id="eeT" type="time" value="'+fmtHM(e.at||0)+'"></div></div>'
+    +'<div class="grid2" id="eeStayRow"><div class="fld"><label>退房时间</label><input id="eeOut" type="time" value="'+fmtHM(stayOut(e))+'"></div>'
+      +'<div class="fld"><label>　</label><div class="hint" style="margin:0">按天登记，块画到次日退房</div></div></div>'
+    +whoPaidChips('ee',e.who,e.paid)
     +'<button class="btn full" id="eeOk">保存</button>'
     +'<button class="btn red full" id="eeDel">删除</button>'
     +'<button class="btn gh full" id="eeBack">返回列表</button>');
+  const syncStay=()=>{ $('#eeStayRow').style.display=$('#eeC').value==='住宿'?'':'none'; };
+  $('#eeC').onchange=syncStay; syncStay();
+  bindChips('#eeWho'); bindChips('#eePaid');
   $('#eeOk').onclick=()=>{ snapState();
     e.name=$('#eeN').value.trim()||e.name;
     e.amount=+$('#eeA').value||0;
     e.cat=$('#eeC').value;
     e.at=parseHM($('#eeT').value);
+    e.out=parseHM($('#eeOut').value||'12:00');
+    e.who=chipVal('#eeWho')||'all'; e.paid=chipVal('#eePaid')||meId();
     save(); closeSheet(); render(); toast('已保存','撤销',doUndo); };
   $('#eeDel').onclick=()=>{ snapState(); d.extras=d.extras.filter(x=>x.id!==e.id); save(); closeSheet(); render(); toast('已删除','撤销',doUndo); };
   $('#eeBack').onclick=()=>{ extraList(d); };
@@ -1224,15 +1530,15 @@ function extraEditor(d,eid){
 
 /* ==================== 计划卡编辑（整页时间轴 + 地点卡栏） ==================== */
 const HH_PLAN=56;
-function renderPlan(){
+function renderPlan(keepScroll){
   const p=PK(), pl=planById(S.ui.planId);
   if(!pl){ S.ui.view='pkg'; render(); return; }
   $('#planName').textContent=p.name+' · '+pl.name;
   $$('#planSnapSeg button').forEach(b=>b.classList.toggle('on',+b.dataset.v===S.ui.snap));
   const cost=planCost(pl);
   $('#planBody').innerHTML=tlMarkup((pl.items||[]).map(i=>Object.assign({teamId:null},i)),[],HH_PLAN,{
-      interactive:true,costCol:false})
-    +'<div class="hint" style="padding-top:14px">计划费用 '+money(cost)+' · 长按块拖动改时间 / 拖底部改时长 / 点块编辑或移除</div>'
+      interactive:true,costCol:false,clipDay:true,noteInBlk:true})
+    +'<div class="hint" style="padding-top:14px">计划费用 '+money(cost)+' · 长按块拖动改时间 / 点块编辑或移除 · 住宿块按时长自动画到次日退房</div>'
     +'<div style="height:20px"></div>';
   // 右侧地点卡栏
   const col=$('#planBody .col');
@@ -1245,68 +1551,98 @@ function renderPlan(){
   $('#planBody .tgrid').appendChild(pal);
   bindPlanTimeline(pl);
   bindPalette(pal,pl);
-  const first=(pl.items||[]).length?Math.min.apply(null,pl.items.map(i=>i.start)):8*60;
-  $('#planScroll').scrollTop=clamp(first/60*HH_PLAN-130,0,1e6);
+  const scrollEl=$('#planScroll'), sc0=keepScroll&&scrollEl?scrollEl.scrollTop:0;
+  if(keepScroll&&scrollEl) scrollEl.scrollTop=sc0;
+  else {
+    const first=(pl.items||[]).length?Math.min.apply(null,pl.items.map(i=>i.start)):8*60;
+    $('#planScroll').scrollTop=clamp(first/60*HH_PLAN-130,0,1e6);
+  }
 }
 function bindPlanTimeline(pl){
   const col=$('#planBody .col'); if(!col) return;
   const pxPerMin=HH_PLAN/60;
   $$('.blk',col).forEach(blk=>{
     const it=(pl.items||[]).find(x=>x.id===blk.dataset.arr); if(!it) return;
-    let startY=0,startVal=0,moved=false,snapped=false,justTapped=false;
+    let startY=0,startVal=0,moved=false,snapped=false,justTapped=false,downAt=0,scroll0=0,noClickUntil=0;
     const applyStart=ns=>{
-      ns=clamp(Math.round(ns/S.ui.snap)*S.ui.snap,0,1440-it.dur);
-      it.start=ns; blk.style.top=(ns*pxPerMin)+'px'; moved=true;
+      // 同行程卡时间轴：按是否真的跨午夜（start+dur>1440）判断可拖范围
+      ns=clamp(Math.round(ns/S.ui.snap)*S.ui.snap,0,it.start+it.dur>1440?1439:Math.max(0,1440-it.dur));
+      it.start=ns;
+      const li=locById(it.locId);
+      if(li&&li.costCat==='住宿') it.dur=stayDur(ns,stayOutOf(it,li)); // 计划项住宿同样按退房倒推
+      blk.style.top=(ns*pxPerMin)+'px'; moved=true;
     };
     const applyDur=nd=>{
-      nd=clamp(Math.round(nd/S.ui.snap)*S.ui.snap,S.ui.snap,1440-it.start);
-      it.dur=nd; blk.style.height=Math.max(nd*pxPerMin-2,16)+'px'; moved=true;
+      nd=clamp(Math.round(nd/S.ui.snap)*S.ui.snap,S.ui.snap,MAX_XDAY_DUR); // 允许跨天（单块最长持续 3 天）
+      it.dur=nd; blk.style.height=Math.max((Math.min(it.start+nd,1440)-it.start)/60*HH_PLAN-2,16)+'px'; moved=true;
     };
-    const startCommon=e=>{ snapState(); snapped=true; startY=e.clientY; startVal=it.start; moved=false; justTapped=false; blk.classList.add('drag'); };
+    const sc=()=>$('#planScroll');
+    const autoScroll=e=>{ const el=sc(); if(el) edgeScroll(el,e); };
+    const scrollDelta=()=>{ const el=sc(); return el?el.scrollTop-scroll0:0; };
+    const startCommon=e=>{ snapState(); snapped=true; startY=e.clientY; startVal=it.start; moved=false; justTapped=false; downAt=Date.now(); scroll0=sc()?sc().scrollTop:0; blk.classList.add('drag'); };
     longPress(blk,{ignore:e=>{ const t=e.target; return !!(t&&t.closest&&t.closest('.rz,.grip,.eh,.t1')); },
       onStart:startCommon,
-      onMove:e=>applyStart(startVal+(e.clientY-startY)/pxPerMin),
+      onMove:e=>{ autoScroll(e); applyStart(startVal+(e.clientY-startY+scrollDelta())/pxPerMin); },
       onEnd:(e,mv)=>{ blk.classList.remove('drag');
-        if(mv&&moved){ save(); renderPlan(); toast('已调整到 '+fmtHM(it.start),'撤销',doUndo); }
-        else if(snapped&&!moved) undoStack.pop(); },
+        if(mv&&moved){ save(); renderPlan(true); toast('已调整到 '+fmtHM(it.start),'撤销',doUndo); }
+        else if(snapped&&!moved){ undoStack.pop(); if(Date.now()-downAt>300) noClickUntil=Date.now()+400; } },
       onCancel:()=>{ if(snapped&&!moved) undoStack.pop(); },
       tapLong:()=>{ justTapped=true; openPlanItem(pl,it); } });
-    const dragMove=el=>directDrag(el,{onStart:startCommon,onMove:e=>applyStart(startVal+(e.clientY-startY)/pxPerMin),
-      onEnd:()=>{ blk.classList.remove('drag'); if(moved){ save(); renderPlan(); toast('已调整到 '+fmtHM(it.start),'撤销',doUndo); } else undoStack.pop(); }});
+    const dragMove=el=>directDrag(el,{onStart:startCommon,
+      onMove:e=>{ autoScroll(e); applyStart(startVal+(e.clientY-startY+scrollDelta())/pxPerMin); },
+      onEnd:()=>{ blk.classList.remove('drag');
+        if(moved){ save(); renderPlan(true); toast('已调整到 '+fmtHM(it.start),'撤销',doUndo); }
+        else { undoStack.pop(); if(Date.now()-downAt>300) noClickUntil=Date.now()+400; } }});
     const grip=$('.grip',blk);
     if(grip) dragMove(grip);
     const t1=$('.t1',blk);
     if(t1) dragMove(t1);
     const rz=$('.rz',blk);
-    if(rz) directDrag(rz,{onStart:e=>{ snapState(); snapped=true; startY=e.clientY; startVal=it.dur; moved=false; blk.classList.add('drag'); },
-      onMove:e=>applyDur(startVal+(e.clientY-startY)/pxPerMin),
-      onEnd:()=>{ blk.classList.remove('drag'); if(moved){ save(); renderPlan(); toast('时长 '+durLabel(it.dur),'撤销',doUndo); } else undoStack.pop(); }});
-    blk.addEventListener('click',()=>{ if(moved||justTapped) return; openPlanItem(pl,it); });
+    if(rz) directDrag(rz,{onStart:e=>{ snapState(); snapped=true; startY=e.clientY; startVal=it.dur; moved=false; downAt=Date.now(); scroll0=sc()?sc().scrollTop:0; blk.classList.add('drag'); },
+      onMove:e=>{ autoScroll(e); applyDur(startVal+(e.clientY-startY+scrollDelta())/pxPerMin); },
+      onEnd:()=>{ blk.classList.remove('drag');
+        if(moved){ save(); renderPlan(true); toast('时长 '+durLabelX(it.dur),'撤销',doUndo); }
+        else { undoStack.pop(); if(Date.now()-downAt>300) noClickUntil=Date.now()+400; } }});
+    blk.addEventListener('click',()=>{ if(moved||justTapped||Date.now()<noClickUntil) return; openPlanItem(pl,it); });
   });
 }
 function openPlanItem(pl,it){
   const l=locById(it.locId); if(!l) return;
+  const isStay=l.costCat==='住宿';
   openSheet('<h3>'+esc(l.name)+'<span class="spacer"></span><span class="tiny" style="background:var(--plan);border-color:var(--plan-b)">计划项</span></h3>'
     +'<div class="grid2"><div class="fld"><label>开始时间</label><input id="piS" type="time" value="'+fmtHM(it.start)+'"></div>'
-    +'<div class="fld"><label>时长 · 分钟</label><input id="piD" type="number" step="5" value="'+it.dur+'"></div></div>'
+    +(isStay
+      ?'<div class="fld"><label>时段</label><div class="hint" id="piSpan" style="margin:0">'+esc(fmtHM(it.start)+' → 次日 '+fmtHM(stayOutOf(it,l))+'（'+durLabelX(stayDur(it.start,stayOutOf(it,l)))+'）')+'</div></div>'
+      :'<div class="fld"><label>时长 · 分钟</label><input id="piD" type="number" step="5" value="'+it.dur+'"></div>')
+    +'</div>'
+    +(isStay
+      ?'<div class="grid2"><div class="fld"><label>退房时间</label><input id="piOut" type="time" value="'+fmtHM(stayOutOf(it,l))+'"></div>'
+      +'<div class="fld"><label>　</label><div class="hint" style="margin:0">块画到次日退房</div></div></div>'
+      :'')
     +'<div class="fld"><label>换地点</label><div class="chips" id="piL">'
       +PK().locs.map(x=>'<button data-l="'+x.id+'"'+(x.id===it.locId?' class="on"':'')+'>'+esc(x.name)+'</button>').join('')
     +'</div></div>'
-    +'<div class="hint">花费 '+money(locCost(l))+' · '+esc(l.costCat)+(l.booking?'　预约：'+esc(l.booking):'')+'</div>'
+    +'<div class="hint">花费 '+money(locCost(l))+' · '+esc(l.costCat)+(l.booking?'　预约：'+esc(l.booking):'')+(l.note?'　备注：'+esc(l.note):'')+'</div>'
     +'<button class="btn full" id="piOk">保存</button>'
     +'<button class="btn gh full" id="piLoc">编辑地点卡</button>'
     +'<button class="btn red full" id="piDel">从计划卡移除</button>'
     +'<button class="btn gh full" id="piCancel">取消</button>');
   $$('#piL button').forEach(b=>b.onclick=()=>{ $$('#piL button').forEach(x=>x.classList.toggle('on',x===b)); });
+  if(isStay){
+    const syncSpan=()=>{ const s=parseHM($('#piS').value||'0:00'), o=parseHM($('#piOut').value||'12:00');
+      $('#piSpan').textContent=fmtHM(s)+' → 次日 '+fmtHM(o)+'（'+durLabelX(stayDur(s,o))+'）'; };
+    $('#piS').oninput=syncSpan; $('#piOut').oninput=syncSpan;
+  }
   $('#piOk').onclick=()=>{
     snapState();
     it.start=clamp(parseHM($('#piS').value),0,1439);
-    it.dur=clamp(parseInt($('#piD').value,10)||it.dur,5,1440);
+    if(isStay){ it.dur=stayDur(it.start,parseHM($('#piOut').value||'12:00')); it.out=parseHM($('#piOut').value||'12:00'); }
+    else it.dur=clamp(parseInt($('#piD').value,10)||it.dur,5,MAX_XDAY_DUR);
     const sel=$('#piL button.on'); if(sel&&sel.dataset.l) it.locId=sel.dataset.l;
-    save(); closeSheet(); renderPlan(); toast('已保存','撤销',doUndo);
+    save(); closeSheet(); renderPlan(true); toast('已保存','撤销',doUndo);
   };
   $('#piLoc').onclick=()=>{ closeSheet(); locEditor(l.id); };
-  $('#piDel').onclick=()=>{ snapState(); pl.items=pl.items.filter(x=>x.id!==it.id); save(); closeSheet(); renderPlan(); toast('已移除','撤销',doUndo); };
+  $('#piDel').onclick=()=>{ snapState(); pl.items=pl.items.filter(x=>x.id!==it.id); save(); closeSheet(); renderPlan(true); toast('已移除','撤销',doUndo); };
   $('#piCancel').onclick=closeSheet;
 }
 function bindPalette(pal,pl){
@@ -1317,8 +1653,12 @@ function bindPalette(pal,pl){
       snapState();
       let last=0; (pl.items||[]).forEach(i=>{ last=Math.max(last,i.start+i.dur); });
       pl.items=pl.items||[];
-      pl.items.push({id:uid('i'),locId:l.id,start:clamp(Math.ceil(last/S.ui.snap)*S.ui.snap,0,1435),dur:l.dur||60});
-      save(); renderPlan(); toast('已加入「'+l.name+'」','撤销',doUndo); };
+      const stay=l.costCat==='住宿';
+      const st=clamp(Math.ceil(last/S.ui.snap)*S.ui.snap,0,1435);
+      const it={id:uid('i'),locId:l.id,start:st,dur:stay?stayDur(st,stayOut(l)):(l.dur||60)};
+      if(stay){ it.out=stayOut(l); }
+      pl.items.push(it);
+      save(); renderPlan(true); toast('已加入「'+l.name+'」','撤销',doUndo); };
     let ghost=null,offY=0;
     longPress(ch,{
       onStart:e=>{ snapState();
@@ -1335,9 +1675,12 @@ function bindPalette(pal,pl){
         if(col){
           const rc=col.getBoundingClientRect();
           const st=clamp(Math.round(((e.clientY-rc.top)/(HH_PLAN/60))/S.ui.snap)*S.ui.snap,0,1435);
+          const stay=l.costCat==='住宿';
           pl.items=pl.items||[];
-          pl.items.push({id:uid('i'),locId:l.id,start:st,dur:l.dur||60});
-          save(); renderPlan(); toast('已在 '+fmtHM(st)+' 安排「'+l.name+'」','撤销',doUndo);
+          const it2={id:uid('i'),locId:l.id,start:st,dur:stay?stayDur(st,stayOut(l)):(l.dur||60)};
+          if(stay){ it2.out=stayOut(l); }
+          pl.items.push(it2);
+          save(); renderPlan(true); toast('已在 '+fmtHM(st)+' 安排「'+l.name+'」','撤销',doUndo);
         } else { undoStack.pop(); toast('已取消'); }
       }
     });
@@ -1363,7 +1706,10 @@ function renderBrowse(){
     $$('#bTeamSeg button').forEach(b=>b.onclick=()=>{ S.ui.teamFilter=b.dataset.v; save(); renderBrowse(); });
   }
   const lanesMode=hasTeams&&S.ui.teamFilter==='par';
-  const statList=p.days.map(d=>({d:d,cost:dayCost(d)}));
+  /* 单人视图：统计与每天头部只算该人（本人 + 全员）块，与时间轴显示一致 */
+  const tf=(hasTeams&&S.ui.teamFilter!=='all'&&S.ui.teamFilter!=='par')?S.ui.teamFilter:null;
+  const dcost=d=>dayCost(d,p,tf);
+  const statList=p.days.map(d=>({d:d,cost:dcost(d)}));
   const actTotal=statList.reduce((s,x)=>s+x.cost,0);
   let statCard='';
   if(actTotal>0){
@@ -1378,27 +1724,32 @@ function renderBrowse(){
       return '<span class="li"><span class="sw" style="background:'+col+'"></span><b>'+esc(x.d.name)+'</b> '+money(x.cost)+' · '+Math.round(x.cost/actTotal*100)+'%</span>';
     }).join('');
     statCard='<div style="background:var(--card);border-radius:13px;box-shadow:var(--sh);padding:11px 12px;margin-bottom:10px;border-left:5px solid var(--pri)">'
-      +'<div class="t1" style="font-size:13.5px">实际统计<span class="tiny">计划 '+money(pkgPlan(p))+'</span>'
+      +'<div class="t1" style="font-size:13.5px">实际统计'+(tf?'<span class="tiny">仅 '+esc((teamById(tf)||{}).name||'')+'</span>':'')+'<span class="tiny">计划 '+money(pkgPlan(p))+'</span>'
       +'<span style="flex:1"></span><span class="tiny money" style="font-size:14px">'+money(actTotal)+'</span></div>'
       +'<div class="pbar" style="margin-top:8px">'+segs+'</div>'
       +'<div class="pleg">'+leg+'</div>'
       +'<div class="hint" style="padding-top:6px">格子宽度 = 该张行程卡花费占比，点格子进入该卡。</div>'
       +'</div>';
   }
+  /* 连续轴：所有天拼成一条时间轴（无卡片边界），跨天块从当日 24:00 续画到后续天 */
+  const daySeg=(d,i)=>{
+    const conts=contsFromPrev(d,i,p);
+    const arrsAll=conts.concat(d.arrs);
+    const lanes=lanesMode?p.teams.map(t=>({title:t.name,arrs:arrsAll.filter(a=>!a.teamId||a.teamId===t.id)})):null;
+    return '<div class="bseg">'
+      +'<div class="bseghd" data-day="'+d.id+'"><b>'+esc(d.name)+'</b>'
+      +(d.date?'<span class="tiny">'+d.date+'</span>':'')
+      +'<span style="flex:1"></span>'
+      +'<span class="tiny money">'+money(dcost(d))+'</span></div>'
+      +'<div style="margin-top:4px">'+tlMarkup(arrsAll,d.extras,HH_BROWSE,{interactive:false,showHalf:false,clipDay:true,teamFilter:lanesMode?'all':S.ui.teamFilter,lanes:lanes})+'</div>'
+    +'</div>';
+  };
   $('#browseBody').innerHTML='<div class="hint" style="padding:10px 12px 0">向下滑动查看全部行程卡；同一地点同色并显示评级；右侧为该卡花费。</div>'
     +'<div class="wrap" style="padding-top:0">'+statCard+'</div>'
-    +p.days.map(d=>{
-      const lanes=lanesMode?[ {title:'全体',arrs:d.arrs.filter(a=>!a.teamId)} ].concat(p.teams.map(t=>({title:t.name,arrs:d.arrs.filter(a=>a.teamId===t.id)}))):null;
-      return '<div class="pkcard card-day" data-id="'+d.id+'" style="margin:10px 12px;padding:10px 10px 8px">'
-        +'<div class="t1" style="font-size:14px"><span class="ttl">'+esc(d.name)+'</span>'
-        +(d.date?'<span class="tiny">'+d.date+'</span>':'')
-        +'<span class="tiny money">'+money(dayCost(d))+'</span></div>'
-        +'<div style="margin-top:6px">'+tlMarkup(d.arrs,d.extras,HH_BROWSE,{interactive:false,showHalf:false,teamFilter:lanesMode?'all':S.ui.teamFilter,lanes:lanes})+'</div>'
-      +'</div>';
-    }).join('')
-    +'<div class="hint" style="padding:0 14px">点任意行程卡进入编辑。</div>';
-  $$('#browseBody .pkcard').forEach(el=>{
-    el.addEventListener('click',()=>{ if(el.dataset.noClick) return; S.ui.dayId=el.dataset.id; S.ui.view='day'; S.ui.returnView='browse'; save(); render(); });
+    +'<div class="bcont">'+p.days.map(daySeg).join('')+'</div>'
+    +'<div class="hint" style="padding:0 14px">点某天的标题行进编辑；酒店块按退房时间整段跨页（画到次日退房），航班 / 火车 / 项目等超过当天剩余也会跨天续画，花费只计首日。</div>';
+  $$('#browseBody .bseghd').forEach(el=>{
+    el.addEventListener('click',()=>{ S.ui.dayId=el.dataset.day; S.ui.view='day'; S.ui.returnView='browse'; save(); render(); });
   });
   $$('#browseBody .pseg').forEach(el=>{
     el.addEventListener('click',()=>{ S.ui.dayId=el.dataset.day; S.ui.view='day'; S.ui.returnView='browse'; save(); render(); });
@@ -1460,6 +1811,23 @@ function renderCost(){
     seg.onclick=ev=>{ ev.stopPropagation(); costCellSheet(p,seg.dataset.c,{open:true}); };
   });
 }
+function aaSheet(){
+  const p=PK();
+  if(!p.teams.length){ toast('先在行程卡里添加人员'); return; }
+  const r=aaCalc(p);
+  const nm=id=>{ const t=p.teams.find(x=>x.id===id); return t?(id===r.me?'我（'+t.name+'）':t.name):id; };
+  openSheet('<h3>AA 结算<span class="spacer"></span><span class="tiny">'+esc(p.name)+'</span></h3>'
+    +'<div class="hint">共同花费按当前 '+p.teams.length+' 人均摊，个人花费全额计入；由一人统一记录全部花销。</div>'
+    +r.bal.map(b=>'<div class="sumrow"><span class="n">'+esc(nm(b.id))+'</span><span class="v" style="'+(b.bal>0.005?'color:var(--red)':(b.bal<-0.005?'':'color:var(--sub)'))+'">'+(b.bal>0.005?'+':'')+money(b.bal)+'</span></div>'
+      +'<div class="sumrow" style="padding-top:0"><span class="n tiny">已付 '+money(b.paid)+' · 应付 '+money(b.owe)+'</span></div>').join('')
+    +(r.moves.length?'<div class="fld"><label>转账建议</label>'+r.moves.map(m=>'<div class="sumrow"><span class="n">'+esc(nm(m.from))+' 转 '+esc(nm(m.to))+'</span><span class="v money">'+money(m.amt)+'</span></div>').join('')+'</div>':'<div class="hint">账目已平，无需转账。</div>')
+    +'<div class="fld"><label>结算视角（我是谁）</label><div class="chips" id="aaMe">'
+    +p.teams.map(t=>'<button type="button" data-v="'+t.id+'"'+(t.id===r.me?' class="on"':'')+'>'+esc(t.name)+'</button>').join('')+'</div></div>'
+    +'<button class="btn gh full" id="aaCancel">关闭</button>');
+  $$('#aaMe button').forEach(b=>b.onclick=()=>{ snapState(); S.ui.meId=b.dataset.v; save(); closeSheet(); aaSheet(); });
+  $('#aaCancel').onclick=closeSheet;
+}
+$('#pkgAA').onclick=()=>{ aaSheet(); };
 function costCellSheet(p,cat,opt){
   opt=opt||{};
   const rows=cat==='__all'?costRowsFor(p):costRowsFor(p,cat);
@@ -1477,6 +1845,8 @@ $('#costBack').onclick=()=>{ S.ui.view='home'; save(); render(); };
 function rrPath(ctx,x,y,w,h,r){ ctx.beginPath(); ctx.moveTo(x+r,y); ctx.arcTo(x+w,y,x+w,y+h,r); ctx.arcTo(x+w,y+h,x,y+h,r); ctx.arcTo(x,y+h,x,y,r); ctx.arcTo(x,y,x+w,y,r); ctx.closePath(); }
 function shotLong(){
   const p=PK();
+  /* 与浏览页一致：单人筛选时只导出该人（本人 + 全员）的安排 */
+  const tf=(p.teams.length&&S.ui.teamFilter!=='all'&&S.ui.teamFilter!=='par')?S.ui.teamFilter:null;
   const cv=document.createElement('canvas');
   const ctx=cv.getContext&&cv.getContext('2d');
   if(!ctx||!ctx.measureText){ toast('当前环境不支持生成图片'); return; }
@@ -1485,13 +1855,15 @@ function shotLong(){
   const cards=p.days.map(d=>{
     const rows=[];
     d.arrs.slice().sort((a,b)=>a.start-b.start).forEach(a=>{
+      if(tf&&a.teamId&&a.teamId!==tf) return;
       const l=p.locs.find(x=>x.id===a.locId); if(!l) return;
-      rows.push({t:fmtHM(a.start)+'~'+fmtHM(a.start+a.dur),n:l.name,c:l.color||'#8a94a6',r:l.rating||'C',cost:locCost(l),extra:false});
+      rows.push({t:fmtHM(a.start)+'~'+fmtHMspan(a.start+a.dur),n:l.name,c:l.color||'#8a94a6',r:l.rating||'C',cost:arrCost(a,p),extra:false});
     });
     (d.extras||[]).slice().sort((a,b)=>(a.at||0)-(b.at||0)).forEach(e=>{
+      if(tf&&e.who&&e.who!=='all'&&e.who!==tf) return; // 与他人个人花销在单人导出下跳过
       rows.push({t:fmtHM(e.at||0),n:e.name,c:'#d97706',r:'',cost:+e.amount||0,extra:true});
     });
-    return {d:d,rows:rows,cost:dayCost(d)};
+    return {d:d,rows:rows,cost:dayCost(d,p,tf)};
   });
   let H=HEADH;
   cards.forEach(c=>{ H+=CPADY*2+32+(c.rows.length?c.rows.length*ROWH:22)+GAP; });
@@ -1507,9 +1879,9 @@ function shotLong(){
   ctx.fillStyle='#161a22'; ctx.font=F('700',21);
   ctx.fillText(clipText(p.name,W-PAD*2-120),PAD,PAD+22);
   ctx.textAlign='right'; ctx.fillStyle='#e5484d'; ctx.font=F('700',18);
-  ctx.fillText(money(pkgActual(p)),W-PAD,PAD+22);
+  ctx.fillText(money(cards.reduce((s,c)=>s+c.cost,0)),W-PAD,PAD+22);
   ctx.textAlign='left'; ctx.fillStyle='#7b8496'; ctx.font=F('400',12);
-  ctx.fillText((rng?rng+' · ':'')+p.days.length+' 张行程卡 · 实际统计 · 生成于 '+dateStr(now)+' '+pad2(now.getHours())+':'+pad2(now.getMinutes()),PAD,PAD+46);
+  ctx.fillText((rng?rng+' · ':'')+p.days.length+' 张行程卡 · 实际统计'+(tf?'（仅 '+((teamById(tf)||{}).name||'')+'）':'')+' · 生成于 '+dateStr(now)+' '+pad2(now.getHours())+':'+pad2(now.getMinutes()),PAD,PAD+46);
   // 各行程卡
   let y=HEADH;
   cards.forEach(c=>{
@@ -1574,9 +1946,7 @@ $$('#pkgSeg button').forEach(b=>b.onclick=()=>{ S.ui.pkgTab=b.dataset.v; save();
 $('#pkgAdd').onclick=()=>{
   if(S.ui.pkgTab==='days'){
     snapState();
-    const pk=PK(), dts=pk.days.map(x=>x.date).filter(Boolean).sort();
-    let date='';
-    if(dts.length){ const b=new Date(dts[dts.length-1]+'T00:00:00'); b.setDate(b.getDate()+1); date=dateStr(b); }
+    const pk=PK(), date=nextDayDate(pk);
     pk.days.push({id:uid('d'),name:'第'+numCN(pk.days.length+1)+'天',date:date,arrs:[],extras:[]});
     save(); render(); toast('已新建行程卡'+(date?' · 日期 '+date:''),'撤销',doUndo);
   } else if(S.ui.pkgTab==='plans'){
@@ -1602,7 +1972,44 @@ function render(){
 }
 render();
 window.addEventListener('beforeunload',save);
-if('serviceWorker' in navigator){ window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{})); }
+/* ==================== 安卓原生：返回键逐层后退 ==================== */
+(function(){
+  const Cap=window.Capacitor, AppP=Cap&&Cap.Plugins&&Cap.Plugins.App;
+  if(!AppP||!AppP.addListener) return;
+  const stepBack=()=>{
+    if($('#mask').classList.contains('on')){ closeSheet(); return true; }   /* 先关浮层 */
+    const v=S.ui.view;
+    if(v==='home') return false;                                            /* 首页再按则退出应用 */
+    if(v==='day'){ const rv=S.ui.returnView||'pkg'; S.ui.returnView=null; S.ui.view=rv; }
+    else if(v==='browse'){ S.ui.view='pkg'; S.ui.teamFilter='all'; }
+    else if(v==='plan'){ S.ui.view='pkg'; }
+    else { S.ui.view='home'; }                                              /* pkg / cost → 首页 */
+    save(); render(); return true;
+  };
+  try{ AppP.addListener('backButton',()=>{ if(!stepBack()){ try{ AppP.exitApp(); }catch(e){} } }); }catch(e){}
+})();
+if('serviceWorker' in navigator && !window.Capacitor){ window.addEventListener('load',()=>{
+  navigator.serviceWorker.register('sw.js').catch(()=>{});
+  /* 版本刷新提示：发现新版本即提醒；controllerchange 后自动刷新一次（防循环） */
+  let refreshing=false;
+  navigator.serviceWorker.addEventListener('controllerchange',()=>{
+    if(refreshing) return; refreshing=true; location.reload();
+  });
+  const hintSwUpdate=reg=>{
+    reg.addEventListener('updatefound',()=>{
+      const nw=reg.installing; if(!nw) return;
+      nw.addEventListener('statechange',()=>{
+        if(nw.state==='installed'&&navigator.serviceWorker.controller){
+          toast('发现新版本，刷新后生效','刷新',()=>location.reload());
+        }
+      });
+    });
+  };
+  navigator.serviceWorker.ready.then(hintSwUpdate).catch(()=>{});
+  document.addEventListener('visibilitychange',()=>{
+    if(document.visibilityState==='visible') navigator.serviceWorker.ready.then(r=>r.update().catch(()=>{})).catch(()=>{});
+  });
+}); }
 </script>
 </body>
 </html>

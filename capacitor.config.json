@@ -5,7 +5,8 @@
   "bundledWebRuntime": false,
   "android": {
     "allowMixedContent": true,
-    "backgroundColor": "#eef1f7"
+    "backgroundColor": "#eef1f7",
+    "adjustMarginsForEdgeToEdge": "auto"
   },
   "server": {
     "androidScheme": "https"
