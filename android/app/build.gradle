@@ -29,16 +29,11 @@ android {
     signingConfigs {
         release {
             if (hasSigningKey) {
-                storeFile file(keyProps['storeFile'])
-                storePassword keyProps['storePassword']
-                keyAlias keyProps['keyAlias']
-                keyPassword keyProps['keyPassword']
-                if (keyProps['storeType']) {
-                    storeType keyProps['storeType']
-                }
-                enableV1Signing true
-                enableV2Signing true
-                enableV3Signing true
+                storeFile = file(keyProps['storeFile'])
+                storePassword = keyProps['storePassword']
+                keyAlias = keyProps['keyAlias']
+                keyPassword = keyProps['keyPassword']
+                storeType = (keyProps['storeType'] ?: 'PKCS12')
             }
         }
     }
@@ -46,14 +41,14 @@ android {
         debug {
             // 调试包也用同一把密钥签，这样 debug 包之间可以互相覆盖安装
             if (hasSigningKey) {
-                signingConfig signingConfigs.release
+                signingConfig = signingConfigs.release
             }
         }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             if (hasSigningKey) {
-                signingConfig signingConfigs.release
+                signingConfig = signingConfigs.release
             }
         }
     }

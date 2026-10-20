@@ -44,28 +44,80 @@ jobs:
           KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         run: |
-          if [ -z "$KEYSTORE_BASE64" ]; then
-            echo "::error title=缺少固定签名密钥::仓库 Secrets 里没有 KEYSTORE_BASE64。没有它每次构建都会生成新签名，新版无法覆盖安装旧版，请先在 Settings → Secrets and variables → Actions 里添加 4 个密钥。"
+          set -e
+          # secret 里可能被粘贴进换行/空格，统一清掉
+          KS_B64="$(printf '%s' "$KEYSTORE_BASE64" | tr -d '\r\n')"
+          STORE_PASS="$(printf '%s' "$KEYSTORE_PASSWORD" | tr -d '\r\n')"
+          KEY_PASS="$(printf '%s' "$KEY_PASSWORD" | tr -d '\r\n')"
+          ALIAS="$(printf '%s' "$KEY_ALIAS" | tr -d '\r\n')"
+
+          if [ -z "$KS_B64" ]; then
+            echo "::error title=缺少 KEYSTORE_BASE64::仓库 Secrets 里没有签名密钥。没有它每次构建都会生成新签名，新版无法覆盖安装旧版。"
             exit 1
           fi
-          echo "$KEYSTORE_BASE64" | base64 -d > android/app/travel-release.keystore
+          if [ -z "$STORE_PASS" ]; then
+            echo "::error title=缺少 KEYSTORE_PASSWORD::KEYSTORE_PASSWORD 为空或不存在，keystore 无法打开。"
+            exit 1
+          fi
+          if [ -z "$KEY_PASS" ]; then
+            echo "::warning title=KEY_PASSWORD 为空::PKCS12 格式下两个口令必须一致，本次自动改用 KEYSTORE_PASSWORD。"
+            KEY_PASS="$STORE_PASS"
+          fi
+
+          echo "$KS_B64" | base64 -d > android/app/travel-release.keystore
+          echo "keystore 文件大小: $(stat -c %s android/app/travel-release.keystore) 字节"
+
+          # 用 keytool 真跑一遍，把"口令错 / 别名错 / 文件坏"区分开
+          set +e
+          OUT=$(keytool -list -v -keystore android/app/travel-release.keystore -storetype PKCS12 -storepass "$STORE_PASS" 2>&1)
+          RC=$?
+          set -e
+          if [ "$RC" -ne 0 ]; then
+            echo "::error title=keystore 打不开（口令不对或文件损坏）::$(printf '%s' "$OUT" | head -c 800 | tr '\n' ' ' | tr -d '%')"
+            exit 1
+          fi
+          KEYSTORE_ALIAS=$(printf '%s\n' "$OUT" | sed -n 's/^Alias name: //p' | head -1)
+          echo "keystore 内实际别名: [$KEYSTORE_ALIAS]，Secrets 里 KEY_ALIAS: [$ALIAS]"
+          if [ -z "$ALIAS" ]; then
+            ALIAS="$KEYSTORE_ALIAS"
+          fi
+          if ! printf '%s\n' "$OUT" | grep -qx "Alias name: $ALIAS"; then
+            echo "::warning title=KEY_ALIAS 与密钥不匹配::Secrets 里是 [$ALIAS]，密钥里是 [$KEYSTORE_ALIAS]，本次自动改用密钥内的别名。"
+            ALIAS="$KEYSTORE_ALIAS"
+          fi
           printf 'storeFile=travel-release.keystore\nstorePassword=%s\nkeyAlias=%s\nkeyPassword=%s\nstoreType=PKCS12\n' \
-            "$KEYSTORE_PASSWORD" "$KEY_ALIAS" "$KEY_PASSWORD" > android/key.properties
-          echo "keystore 就绪：$(stat -c %s android/app/travel-release.keystore) 字节"
+            "$STORE_PASS" "$ALIAS" "$KEY_PASS" > android/key.properties
+          echo "key.properties 已生成：alias=$ALIAS"
 
       - name: Build Debug APK
+        id: build_debug
+        continue-on-error: true
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug --no-daemon
+          set -o pipefail
+          ./gradlew assembleDebug --no-daemon --stacktrace 2>&1 | tee /tmp/gradle-debug.log
+
+      # 失败时把关键报错贴成注解（Actions 注释可公开读取，方便排查）
+      - name: Report build error
+        if: steps.build_debug.outcome != 'success'
+        run: |
+          LOG=/tmp/gradle-debug.log
+          [ -f "$LOG" ] || { echo "::error title=无构建日志::gradle 没有产生日志"; exit 0; }
+          A=$(awk '/^FAILURE:/{f=1} f{print}' "$LOG" | head -30 | tr '\n' '~' | tr -d '%' | head -c 1200)
+          echo "::error title=Gradle失败原因::$A"
+          B=$(grep -inE "keystore|storepass|keypass|alias|Unrecoverable|signing config|Invalid|error:" "$LOG" | head -12 | tr '\n' '~' | tr -d '%' | head -c 1200)
+          echo "::error title=Gradle关键字行::$B"
 
       - name: Build Release APK (signed)
+        if: steps.build_debug.outcome == 'success'
         run: |
           cd android
           ./gradlew assembleRelease --no-daemon
 
       # 把签名证书指纹打到日志里，方便核对是不是同一把密钥（应始终相同）
       - name: Verify signature
+        if: steps.build_debug.outcome == 'success'
         run: |
           APK=$(ls android/app/build/outputs/apk/release/app-release*.apk | head -1)
           BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
@@ -73,9 +125,14 @@ jobs:
           "$BT/apksigner" verify --print-certs "$APK" | sed -n '1,8p'
 
       - uses: actions/upload-artifact@v4
+        if: steps.build_debug.outcome == 'success'
         with:
           name: travel-app-apk
           path: |
             android/app/build/outputs/apk/debug/app-debug.apk
             android/app/build/outputs/apk/release/app-release*.apk
           if-no-files-found: error
+
+      - name: Fail job if build failed
+        if: steps.build_debug.outcome != 'success'
+        run: exit 1
