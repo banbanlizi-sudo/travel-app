@@ -58,6 +58,12 @@ input:focus,textarea:focus,select:focus{border-color:var(--pri)}
 .pkcard{position:relative;background:var(--card);border-radius:13px;box-shadow:var(--sh);padding:12px 13px;margin-bottom:9px;border-left:5px solid var(--pri);touch-action:pan-y}
 .pkcard .t1{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:650}
 .pkcard .t1 .ttl{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+/* 行程密度环：SVG 同心圆环，环的颜色=密度等级（绿→橘→红），弧长=占全天的比例 */
+.dens{width:17px;height:17px;flex:0 0 auto;align-self:center;margin-left:2px;display:block}
+.dens circle{fill:none;stroke-width:5}
+.dens .dt{stroke:var(--line)}
+.dens.empty .dt{stroke:var(--line);opacity:.75}
+.bseghd .dens{margin-left:0}
 .pkcard .t2{display:flex;gap:6px;align-items:center;margin-top:5px;flex-wrap:wrap}
 .pkcard.drag{box-shadow:var(--sh2);z-index:990}
 .tiny{font-size:10.5px;padding:1.5px 6px;border-radius:6px;background:var(--card2);border:1px solid var(--line);color:var(--sub);white-space:nowrap}
@@ -526,6 +532,39 @@ function contsFromPrev(d,i,p){
   contsFromPrev(pd,i-1,p).forEach(carry); // 接续段自身再跨天 → 继续接力
   return out;
 }
+/* ==================== 行程密度环 ====================
+   口径：当天全部块（含前一日延续段）按"不重复时间"合并去重；
+        住宿不计（睡觉不算安排），交通计（赶路就是消耗）；跨天块只算当天可见部分（0..1440）。 */
+const DENS_LO=300, DENS_HI=720;   // 5h → 纯绿，12h → 纯红（两个数字可直接调）
+const DENS_C=+(2*Math.PI*15).toFixed(2); // 环周长（viewBox 36、r=15）= 94.25
+function busyMin(list,p){
+  const iv=[];
+  (list||[]).forEach(a=>{
+    const l=locById(a.locId,p); if(l&&l.costCat==='住宿') return;
+    const s=clamp(a.start,0,1440), e=clamp(a.start+(a.dur||0),0,1440);
+    if(e>s) iv.push([s,e]);
+  });
+  iv.sort((x,y)=>x[0]-y[0]);
+  let busy=0, ce=-1;
+  iv.forEach(([s,e])=>{ const st=Math.max(s,ce); if(e>st){ busy+=e-st; ce=e; } });
+  return busy;
+}
+function densDay(d,i,p){ return busyMin(contsFromPrev(d,i,p||PK()).concat((d.arrs||[])),p||PK()); }
+function densPlan(pl,p){ return busyMin(pl.items||[],p||PK()); }
+function densHue(r){ // 0=绿(145°) → 0.5=橘(35°) → 1=红(0°)
+  const t=clamp(r,0,1);
+  return Math.round(t<=0.5?145-110*(t/0.5):35-35*((t-0.5)/0.5));
+}
+function densRing(busy){
+  if(!busy) return '<svg class="dens empty" title="这一天还没有安排" viewBox="0 0 36 36" aria-hidden="true"><circle class="dt" cx="18" cy="18" r="15"/></svg>';
+  const lvl=clamp((busy-DENS_LO)/(DENS_HI-DENS_LO),0,1);
+  const arc=clamp(busy/1440,0,1);
+  const len=Math.min(arc*DENS_C,DENS_C).toFixed(2);
+  return '<svg class="dens" title="安排 '+durLabel(busy)+' · 占全天 '+Math.round(arc*100)+'%" viewBox="0 0 36 36" aria-hidden="true">'
+    +'<circle class="dt" cx="18" cy="18" r="15"/>'
+    +'<circle class="da" cx="18" cy="18" r="15" transform="rotate(-90 18 18)"'
+    +' style="stroke:hsl('+densHue(lvl)+',78%,47%)" stroke-dasharray="'+len+' '+DENS_C+'"/></svg>';
+}
 function whoPaidChips(pre,who,paid){
   const p=PK(); if(!p.teams.length) return '';
   const lbl=id=>id===meId()?'我':((p.teams.find(t=>t.id===id)||{}).name||id);
@@ -908,8 +947,8 @@ function renderPkg(){
 function renderDaysTab(){
   const p=PK();
   $('#pkgBody').innerHTML='<div class="hint">行程卡是实际执行的每一天：点卡片编辑时间轴与日期；长按可重命名 / 删除；拖动调整前后顺序。计划卡拖到下方行程卡条，直接替换该天安排。</div>'
-    +p.days.map(d=>'<div class="pkcard card-day" data-id="'+d.id+'">'
-      +'<div class="t1"><span class="ttl">'+esc(d.name)+'</span>'+(d.date?'<span class="tiny">'+dShort(d.date)+'</span>':'')+'</div>'
+    +p.days.map((d,i)=>'<div class="pkcard card-day" data-id="'+d.id+'">'
+      +'<div class="t1"><span class="ttl">'+esc(d.name)+'</span>'+(d.date?'<span class="tiny">'+dShort(d.date)+'</span>':'')+densRing(densDay(d,i,p))+'</div>'
       +'<div class="t2"><span class="tiny">'+d.arrs.length+' 项安排</span><span class="tiny money">'+money(dayCost(d))+'</span></div>'
     +'</div>').join('')
     +(p.days.length?'':'<div class="empty">还没有行程卡<br>点右上角「＋ 添加」创建</div>');
@@ -964,7 +1003,7 @@ function renderPlansTab(){
   const p=PK();
   $('#pkgBody').innerHTML='<div class="hint">计划卡是提前安排好的一日行程，由地点卡组成；实际旅行中只修改行程卡，临时变动时把计划卡导入行程卡再改。</div>'
     +p.plans.map(pl=>'<div class="pkcard card-plan" data-id="'+pl.id+'">'
-      +'<div class="t1"><span class="ttl">'+esc(pl.name)+'</span></div>'
+      +'<div class="t1"><span class="ttl">'+esc(pl.name)+'</span>'+densRing(densPlan(pl,p))+'</div>'
       +'<div class="t2"><span class="tiny">'+pl.items.length+' 个地点</span><span class="tiny money">'+money(planCost(pl))+'</span></div>'
     +'</div>').join('')
     +(p.plans.length?'':'<div class="empty">还没有计划卡<br>点右上角「＋ 添加」创建</div>');
@@ -1739,7 +1778,7 @@ function renderBrowse(){
     return '<div class="bseg">'
       +'<div class="bseghd" data-day="'+d.id+'"><b>'+esc(d.name)+'</b>'
       +(d.date?'<span class="tiny">'+d.date+'</span>':'')
-      +'<span style="flex:1"></span>'
+      +'<span style="flex:1"></span>'+densRing(densDay(d,i,p))
       +'<span class="tiny money">'+money(dcost(d))+'</span></div>'
       +'<div style="margin-top:4px">'+tlMarkup(arrsAll,d.extras,HH_BROWSE,{interactive:false,showHalf:false,clipDay:true,teamFilter:lanesMode?'all':S.ui.teamFilter,lanes:lanes})+'</div>'
     +'</div>';
