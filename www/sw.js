@@ -1,5 +1,5 @@
 /* 行程 App · 离线缓存 */
-const CACHE = 'travel-app-v5.26';
+const CACHE = 'travel-app-v5.27';
 const ASSETS = ['./', './index.html', './manifest.json', './icon.png'];
 
 self.addEventListener('install', e => {

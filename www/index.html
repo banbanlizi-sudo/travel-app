@@ -460,16 +460,21 @@ const nextDayDate=p=>{ const dts=(p.days||[]).map(x=>x.date).filter(Boolean).sor
 const locCost=l=>+l.cost||0;
 const arrCost=(a,p)=>{ const l=locById(a.locId,p); if(!l) return 0; return (a.price!=null&&a.price!=='')?+a.price:locCost(l); };
 const arrCounted=(a,p)=>arrCost(a,p);
-/* tf=人员 id 时只计「本人 + 全员」的块与 extra（与时间轴显示过滤一致：!teamId/!who 或 ===tf） */
-const dayPlanCost=(d,p,tf)=>{ p=p||PK(); return (d.arrs||[]).reduce((s,a)=>{
-  if(tf&&a.teamId&&a.teamId!==tf) return s;
-  return s+arrCounted(a,p); },0); };
+/* tf=人员 id 时与 AA 结算同口径（aaCalc）：按「算谁的」归属——本人块全额、
+   全员（who='all'）块按人数均摊、他人块不计；不传 tf（全体视图）全额计 */
+const dayPlanCost=(d,p,tf)=>{ p=p||PK(); const n=(p.teams||[]).length||1; return (d.arrs||[]).reduce((s,a)=>{
+  if(!tf) return s+arrCounted(a,p);
+  const who=a.who||'all';
+  if(who==='all') return s+arrCounted(a,p)/n;
+  return who===tf?s+arrCounted(a,p):s; },0); };
 const extraCounted=e=>+e.amount||0;
 const dayExtraCost=(d,p,tf)=>{
-  p=p||PK();
+  p=p||PK(); const n=(p.teams||[]).length||1;
   return (d.extras||[]).reduce((s,e)=>{
-    if(tf&&e.who&&e.who!=='all'&&e.who!==tf) return s; // 他人个人花销不计入本人视图
-    return s+extraCounted(e); },0);
+    if(!tf) return s+extraCounted(e);
+    const who=e.who||'all';
+    if(who==='all') return s+extraCounted(e)/n;
+    return who===tf?s+extraCounted(e):s; },0);
 };
 const dayCost=(d,p,tf)=>dayPlanCost(d,p,tf)+dayExtraCost(d,p,tf);
 const planCost=(pl,p)=>(pl.items||[]).reduce((s,i)=>{ const l=locById(i.locId,p); return s+(l?locCost(l):0); },0);
@@ -1778,7 +1783,7 @@ function renderBrowse(){
       +'<span style="flex:1"></span><span class="tiny money" style="font-size:14px">'+money(actTotal)+'</span></div>'
       +'<div class="pbar" style="margin-top:8px">'+segs+'</div>'
       +'<div class="pleg">'+leg+'</div>'
-      +'<div class="hint" style="padding-top:6px">格子宽度 = 该张行程卡花费占比，点格子进入该卡。</div>'
+      +'<div class="hint" style="padding-top:6px">'+(tf?'共同（全员）项已按 '+p.teams.length+' 人均摊，与 AA 结算同口径；':'')+'格子宽度 = 该张行程卡花费占比，点格子进入该卡。</div>'
       +'</div>';
   }
   /* 连续轴：所有天拼成一条时间轴（无卡片边界），跨天块从当日 24:00 续画到后续天 */
